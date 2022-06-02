@@ -8,7 +8,7 @@ public class GameContext {
     private String prevalentWind;
     private boolean riichi;
     private boolean doubleRiichi;
-    private boolean oneShot;
+    private boolean ippatsu;
     private boolean robbedKan;
     private boolean deadWallDraw;
     private boolean lastDiscard;
@@ -25,12 +25,12 @@ public class GameContext {
         this.doubleRiichi = doubleRiichi;
     }
 
-    public boolean isOneShot() {
-        return oneShot;
+    public boolean isIppatsu() {
+        return ippatsu;
     }
 
-    public void setOneShot(boolean oneShot) {
-        this.oneShot = oneShot;
+    public void setIppatsu(boolean ippatsu) {
+        this.ippatsu = ippatsu;
     }
 
     public boolean isRobbedKan() {

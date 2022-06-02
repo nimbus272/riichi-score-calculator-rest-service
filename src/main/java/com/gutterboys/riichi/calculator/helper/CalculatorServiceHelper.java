@@ -39,10 +39,10 @@ public class CalculatorServiceHelper {
         ronToNonDealer = (int) Math.ceil((double) ronToNonDealer / 100);
 
         if (context.isTsumo()) {
-            response.setTsumoToNonDealer((int) dealerPaymentTsumo * 100);
-            response.setTsumoToDealer((int) nonDealerPaymentTsumo * 100);
-            LOGGER.debug("Tsumo to non dealer: {}, Tsumo to dealer: {}", response.getTsumoToNonDealer(),
-                    response.getTsumoToDealer());
+            response.setTsumoFromNonDealer((int) dealerPaymentTsumo * 100);
+            response.setTsumoFromDealer((int) nonDealerPaymentTsumo * 100);
+            LOGGER.debug("Tsumo to non dealer: {}, Tsumo to dealer: {}", response.getTsumoFromNonDealer(),
+                    response.getTsumoFromDealer());
             return;
         } else {
             response.setRonToDealer((int) ronToDealer * 100);
@@ -52,6 +52,74 @@ public class CalculatorServiceHelper {
             return;
         }
 
+    }
+
+    public void determineSpecialScoring(ScoreResponse response) {
+
+        if (response.getHan() > 12) {
+            response.setYakuman(true);
+            return;
+        } else if (response.getHan() > 10) {
+            response.setSanbaiman(true);
+            return;
+        } else if (response.getHan() > 7) {
+            response.setBaiman(true);
+            return;
+        } else if (response.getHan() > 5) {
+            response.setHaneman(true);
+            return;
+        } else if (response.getHan() > 4) {
+            response.setMangan(true);
+            return;
+        }
+    }
+
+    public void setSpecialScoring(GameContext gameContext, ScoreResponse response) {
+        if (response.isMangan()) {
+            if (gameContext.isTsumo()) {
+                response.setTsumoFromDealer(4000);
+                response.setTsumoFromNonDealer(2000);
+            } else {
+                response.setRonToDealer(12000);
+                response.setRonToNonDealer(8000);
+            }
+        } else if (response.isHaneman()) {
+            if (gameContext.isTsumo()) {
+                response.setTsumoFromDealer(6000);
+                response.setTsumoFromNonDealer(3000);
+            } else {
+                response.setRonToDealer(18000);
+                response.setRonToNonDealer(12000);
+            }
+
+        } else if (response.isBaiman()) {
+            if (gameContext.isTsumo()) {
+                response.setTsumoFromDealer(8000);
+                response.setTsumoFromNonDealer(4000);
+            } else {
+                response.setRonToDealer(24000);
+                response.setRonToNonDealer(16000);
+            }
+
+        } else if (response.isSanbaiman()) {
+            if (gameContext.isTsumo()) {
+                response.setTsumoFromDealer(12000);
+                response.setTsumoFromNonDealer(6000);
+            } else {
+                response.setRonToDealer(36000);
+                response.setRonToNonDealer(24000);
+            }
+
+        } else if (response.isYakuman()) {
+            if (gameContext.isTsumo()) {
+                response.setTsumoFromDealer(16000);
+                response.setTsumoFromNonDealer(8000);
+            } else {
+                response.setRonToDealer(48000);
+                response.setRonToNonDealer(32000);
+            }
+
+        }
     }
 
 }
