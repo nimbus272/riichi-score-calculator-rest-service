@@ -12,51 +12,15 @@ public class ScoreResponse extends GenericResponse {
     private int tsumoFromDealer;
     private int ronToNonDealer;
     private int ronToDealer;
+    private String specialScoreType;
     private List<String> qualifiedYaku = new ArrayList<String>();
-    private boolean mangan;
-    private boolean haneman;
-    private boolean baiman;
-    private boolean sanbaiman;
-    private boolean yakuman;
 
-    public boolean isMangan() {
-        return mangan;
+    public String getSpecialScoreType() {
+        return specialScoreType;
     }
 
-    public void setMangan(boolean mangan) {
-        this.mangan = mangan;
-    }
-
-    public boolean isHaneman() {
-        return haneman;
-    }
-
-    public void setHaneman(boolean haneman) {
-        this.haneman = haneman;
-    }
-
-    public boolean isBaiman() {
-        return baiman;
-    }
-
-    public void setBaiman(boolean baiman) {
-        this.baiman = baiman;
-    }
-
-    public boolean isSanbaiman() {
-        return sanbaiman;
-    }
-
-    public void setSanbaiman(boolean sanbaiman) {
-        this.sanbaiman = sanbaiman;
-    }
-
-    public boolean isYakuman() {
-        return yakuman;
-    }
-
-    public void setYakuman(boolean yakuman) {
-        this.yakuman = yakuman;
+    public void setSpecialScoreType(String specialScoreType) {
+        this.specialScoreType = specialScoreType;
     }
 
     public List<String> getQualifiedYaku() {
@@ -71,8 +35,8 @@ public class ScoreResponse extends GenericResponse {
         return tsumoFromDealer;
     }
 
-    public void setTsumoFromDealer(int tsumoToDealer) {
-        this.tsumoFromDealer = tsumoToDealer;
+    public void setTsumoFromDealer(int tsumoFromDealer) {
+        this.tsumoFromDealer = tsumoFromDealer;
     }
 
     public int getBaseScore() {

@@ -33,8 +33,7 @@ public class CalculatorService {
         helper.determineSpecialScoring(response);
 
         // run additional logic for scoring multipliers
-        if (response.isMangan() || response.isHaneman() || response.isBaiman() || response.isSanbaiman()
-                || response.isYakuman()) {
+        if (response.getSpecialScoreType() != null) {
             helper.setSpecialScoring(gameContext, response);
             return;
         }
