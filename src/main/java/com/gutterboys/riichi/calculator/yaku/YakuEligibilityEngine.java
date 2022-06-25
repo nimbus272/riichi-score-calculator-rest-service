@@ -3,10 +3,12 @@ package com.gutterboys.riichi.calculator.yaku;
 import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 import com.gutterboys.riichi.calculator.model.GameContext;
 import com.gutterboys.riichi.calculator.model.ScoreResponse;
 
+@Component
 public class YakuEligibilityEngine {
 
     // autowiring a set of an interface will get every implementation of that

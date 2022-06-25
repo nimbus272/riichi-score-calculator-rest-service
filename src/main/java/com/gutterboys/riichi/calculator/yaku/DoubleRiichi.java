@@ -1,8 +1,11 @@
 package com.gutterboys.riichi.calculator.yaku;
 
+import org.springframework.stereotype.Component;
+
 import com.gutterboys.riichi.calculator.model.GameContext;
 import com.gutterboys.riichi.calculator.model.ScoreResponse;
 
+@Component
 public class DoubleRiichi implements Yaku {
 
     @Override

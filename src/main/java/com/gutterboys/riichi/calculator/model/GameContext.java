@@ -1,8 +1,11 @@
 package com.gutterboys.riichi.calculator.model;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class GameContext {
 
-    private String hand;
+    private List<String> hand = new ArrayList<String>();
     private String winningTile;
     private String seatWind;
     private String prevalentWind;
@@ -73,12 +76,8 @@ public class GameContext {
         this.winningTile = winningTile;
     }
 
-    public String getHand() {
+    public List<String> getHand() {
         return hand;
-    }
-
-    public void setHand(String hand) {
-        this.hand = hand;
     }
 
     public boolean isRiichi() {
