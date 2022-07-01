@@ -16,7 +16,7 @@ public class Tanyao implements Yaku {
         }
         if (isTanyao) {
             response.setHan(response.getHan() + 1);
-            response.getQualifiedYaku().add("Tanyao");
+            response.getQualifiedYaku().add("Tanyao (All Simples)");
             return;
         }
     }

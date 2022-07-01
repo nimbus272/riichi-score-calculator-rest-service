@@ -6,6 +6,7 @@ import java.util.List;
 public class GameContext {
 
     private List<String> hand = new ArrayList<String>();
+    private List<Meld> melds = new ArrayList<Meld>();
     private String winningTile;
     private String seatWind;
     private String prevalentWind;
@@ -19,6 +20,10 @@ public class GameContext {
     private boolean opened;
     private int dora;
     private int honba;
+
+    public List<Meld> getMelds() {
+        return melds;
+    }
 
     public boolean isDoubleRiichi() {
         return doubleRiichi;

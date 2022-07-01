@@ -1,10 +1,14 @@
 package com.gutterboys.riichi.calculator.helper;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
 import com.gutterboys.riichi.calculator.constants.SpecialScoringType;
 import com.gutterboys.riichi.calculator.model.GameContext;
+import com.gutterboys.riichi.calculator.model.Meld;
 import com.gutterboys.riichi.calculator.model.ScoreResponse;
 
 import ch.qos.logback.classic.Logger;
@@ -122,6 +126,16 @@ public class CalculatorServiceHelper {
                     response.setRonToNonDealer(32000);
                 }
                 break;
+        }
+    }
+
+    public void breakIntoMelds(GameContext gameContext) {
+        List<String> hand = new ArrayList<String>(gameContext.getHand());
+
+        while (hand.size() != 0) {
+            Meld meld = new Meld();
+            String startingTile = hand.get(0);
+
         }
     }
 

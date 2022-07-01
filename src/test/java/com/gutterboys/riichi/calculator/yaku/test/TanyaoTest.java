@@ -52,7 +52,7 @@ public class TanyaoTest {
         tanyao.execute(gameContext, response);
 
         assertEquals(0, response.getHan());
-        assertFalse(response.getQualifiedYaku().contains("Tanyao"));
+        assertFalse(response.getQualifiedYaku().contains("Tanyao (All Simples)"));
     }
 
     @Test
@@ -65,7 +65,7 @@ public class TanyaoTest {
         tanyao.execute(gameContext, response);
 
         assertEquals(0, response.getHan());
-        assertFalse(response.getQualifiedYaku().contains("Tanyao"));
+        assertFalse(response.getQualifiedYaku().contains("Tanyao (All Simples)"));
     }
 
     @Test
@@ -78,7 +78,7 @@ public class TanyaoTest {
         tanyao.execute(gameContext, response);
 
         assertEquals(0, response.getHan());
-        assertFalse(response.getQualifiedYaku().contains("Tanyao"));
+        assertFalse(response.getQualifiedYaku().contains("Tanyao (All Simples)"));
     }
 
 }
