@@ -1,11 +1,13 @@
 package com.gutterboys.riichi.calculator.helper;
 
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.gutterboys.riichi.calculator.constants.SpecialScoringType;
 import com.gutterboys.riichi.calculator.model.GameContext;
 import com.gutterboys.riichi.calculator.model.ScoreResponse;
+import com.gutterboys.riichi.calculator.yaku.YakuEligibilityEngine;
 
 import ch.qos.logback.classic.Logger;
 
@@ -14,24 +16,27 @@ public class ScoreUtil {
 
     private static final Logger LOGGER = (Logger) LoggerFactory.getLogger(ScoreUtil.class);
 
+    @Autowired
+    YakuEligibilityEngine engine;
+
     public void countDora(GameContext gameContext) {
         LOGGER.debug("Counting dora...");
         for (Integer tile : gameContext.getDoraTiles()) {
             switch ((int) gameContext.getHand().stream().filter(x -> x.equals(tile)).count()) {
                 case 1:
                     gameContext.setDoraCount(gameContext.getDoraCount() + 1);
-                    break;
+                    continue;
                 case 2:
                     gameContext.setDoraCount(gameContext.getDoraCount() + 2);
-                    break;
+                    continue;
                 case 3:
                     gameContext.setDoraCount(gameContext.getDoraCount() + 3);
-                    break;
+                    continue;
                 case 4:
                     gameContext.setDoraCount(gameContext.getDoraCount() + 4);
-                    break;
+                    continue;
                 default:
-                    break;
+                    continue;
             }
         }
     }
@@ -77,7 +82,12 @@ public class ScoreUtil {
 
     }
 
-    public void determineSpecialScoring(ScoreResponse response) {
+    public void handleSpecialScoring(GameContext gameContext, ScoreResponse response) {
+        determineSpecialScoring(response);
+        setSpecialScoring(gameContext, response);
+    }
+
+    private void determineSpecialScoring(ScoreResponse response) {
 
         if (response.getHan() > 12) {
             response.setSpecialScoreType(SpecialScoringType.YAKUMAN);
@@ -97,7 +107,7 @@ public class ScoreUtil {
         }
     }
 
-    public void setSpecialScoring(GameContext gameContext, ScoreResponse response) {
+    private void setSpecialScoring(GameContext gameContext, ScoreResponse response) {
         switch (response.getSpecialScoreType()) {
             case SpecialScoringType.MANGAN:
                 if (gameContext.isTsumo()) {

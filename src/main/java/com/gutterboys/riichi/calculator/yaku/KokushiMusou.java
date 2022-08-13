@@ -3,11 +3,14 @@ package com.gutterboys.riichi.calculator.yaku;
 import java.util.HashSet;
 import java.util.Set;
 
+import org.springframework.stereotype.Component;
+
 import com.gutterboys.riichi.calculator.constants.RiichiCalculatorConstants;
 
 import com.gutterboys.riichi.calculator.model.GameContext;
 import com.gutterboys.riichi.calculator.model.ScoreResponse;
 
+@Component
 public class KokushiMusou implements SpecialYaku {
 
     @Override

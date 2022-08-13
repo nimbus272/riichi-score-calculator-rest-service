@@ -25,19 +25,19 @@ public class HandSortUtil {
                     gameContext.getHand().remove(gameContext.getHand().indexOf(tile));
                     gameContext.getHand().add(0, 4);
                     gameContext.setDoraCount(gameContext.getDoraCount() + 1);
-                    break;
+                    continue;
                 case 35:
                     gameContext.getHand().remove(gameContext.getHand().indexOf(tile));
                     gameContext.getHand().add(0, 13);
                     gameContext.setDoraCount(gameContext.getDoraCount() + 1);
-                    break;
+                    continue;
                 case 36:
                     gameContext.getHand().remove(gameContext.getHand().indexOf(tile));
                     gameContext.getHand().add(0, 22);
                     gameContext.setDoraCount(gameContext.getDoraCount() + 1);
-                    break;
+                    continue;
                 default:
-                    break;
+                    continue;
             }
         }
         gameContext.getHand().addAll(newTiles);
@@ -64,6 +64,39 @@ public class HandSortUtil {
                 && hand.contains(tile - 1) && hand.contains(tile + 1)) {
             List<Integer> chi = new ArrayList<Integer>(Arrays.asList(tile - 1, tile, tile + 1));
             possibleChis.add(chi);
+        }
+    }
+
+    // TODO UNIT TESTS
+    public void checkHonors(GameContext gameContext) {
+        for (int i = 0; i < gameContext.getHand().size(); i++) {
+            int tile = gameContext.getHand().get(i);
+            if (RiichiCalculatorConstants.HONORS.contains(tile)) {
+                switch ((int) gameContext.getHand().stream().filter(x -> x == tile).count()) {
+                    case 1:
+                        continue;
+                    case 2:
+                        gameContext.getMelds().add(4, new ArrayList<Integer>(Arrays.asList(tile, tile)));
+                        CommonUtil.removeAndAddFromList(gameContext.getHand(), tile, 2);
+                        gameContext.setPairCount(gameContext.getPairCount() + 1);
+                        gameContext.setCurrentMeld(gameContext.getCurrentMeld() - 1);
+                        continue;
+                    case 3:
+                        gameContext.getMelds().add(gameContext.getCurrentMeld(),
+                                new ArrayList<Integer>(Arrays.asList(tile, tile, tile)));
+                        CommonUtil.removeAndAddFromList(gameContext.getHand(), tile, 3);
+                        gameContext.setPonCount(gameContext.getPonCount() + 1);
+                        continue;
+                    case 4:
+                        gameContext.getMelds().add(gameContext.getCurrentMeld(),
+                                new ArrayList<Integer>(Arrays.asList(tile, tile, tile, tile)));
+                        CommonUtil.removeAndAddFromList(gameContext.getHand(), tile, 4);
+                        gameContext.setKanCount(gameContext.getKanCount() + 1);
+                        continue;
+                    default:
+                        continue;
+                }
+            }
         }
     }
 

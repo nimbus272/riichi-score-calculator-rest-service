@@ -8,6 +8,7 @@ public class GameContext {
     private List<Integer> hand = new ArrayList<Integer>();
     private List<List<Integer>> melds = new ArrayList<List<Integer>>();
     private List<Integer> doraTiles = new ArrayList<Integer>();
+    private int currentMeld = 0;
     private int winningTile;
     private int seatWind;
     private int prevalentWind;
@@ -25,6 +26,14 @@ public class GameContext {
     private int kanCount;
     private int pairCount;
     private int doraCount = 0;
+
+    public int getCurrentMeld() {
+        return currentMeld;
+    }
+
+    public void setCurrentMeld(int currentMeld) {
+        this.currentMeld = currentMeld;
+    }
 
     public int getPairCount() {
         return pairCount;

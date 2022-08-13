@@ -25,7 +25,7 @@ public class HandSortUtilTest {
         @Before
         public void setUp() {
                 gameContext = new GameContext();
-                hand = new ArrayList();
+                hand = new ArrayList<Integer>();
         }
 
         @Test

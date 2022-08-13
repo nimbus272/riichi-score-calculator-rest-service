@@ -1,7 +1,6 @@
 package com.gutterboys.riichi.calculator.helper.test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.Arrays;
@@ -62,199 +61,197 @@ public class ScoreUtilTest {
     }
 
     @Test
-    public void determineSpecialScoring_ManganTest() {
+    public void handleSpecialScoring_ManganTest() {
         response.setHan(5);
 
-        util.determineSpecialScoring(response);
+        util.handleSpecialScoring(gameContext, response);
 
         assertEquals(SpecialScoringType.MANGAN, response.getSpecialScoreType());
     }
 
     @Test
-    public void determineSpecialScoring_HanemanTest() {
+    public void handleSpecialScoring_HanemanTest() {
         response.setHan(6);
 
-        util.determineSpecialScoring(response);
+        util.handleSpecialScoring(gameContext, response);
 
         assertEquals(SpecialScoringType.HANEMAN, response.getSpecialScoreType());
 
         response.setSpecialScoreType("");
         response.setHan(7);
 
-        util.determineSpecialScoring(response);
+        util.handleSpecialScoring(gameContext, response);
 
         assertEquals(SpecialScoringType.HANEMAN, response.getSpecialScoreType());
     }
 
     @Test
-    public void determineSpecialScoring_BaimanTest() {
+    public void handleSpecialScoring_BaimanTest() {
         response.setHan(8);
 
-        util.determineSpecialScoring(response);
+        util.handleSpecialScoring(gameContext, response);
 
         assertEquals(SpecialScoringType.BAIMAN, response.getSpecialScoreType());
 
         response.setSpecialScoreType("");
         response.setHan(9);
 
-        util.determineSpecialScoring(response);
+        util.handleSpecialScoring(gameContext, response);
 
         assertEquals(SpecialScoringType.BAIMAN, response.getSpecialScoreType());
 
         response.setSpecialScoreType("");
         response.setHan(10);
 
-        util.determineSpecialScoring(response);
+        util.handleSpecialScoring(gameContext, response);
 
         assertEquals(SpecialScoringType.BAIMAN, response.getSpecialScoreType());
     }
 
     @Test
-    public void determineSpecialScoring_SanbaimanTest() {
+    public void handleSpecialScoring_SanbaimanTest() {
         response.setHan(11);
 
-        util.determineSpecialScoring(response);
+        util.handleSpecialScoring(gameContext, response);
 
         assertEquals(SpecialScoringType.SANBAIMAN, response.getSpecialScoreType());
 
         response.setSpecialScoreType("");
         response.setHan(12);
 
-        util.determineSpecialScoring(response);
+        util.handleSpecialScoring(gameContext, response);
 
         assertEquals(SpecialScoringType.SANBAIMAN, response.getSpecialScoreType());
     }
 
     @Test
-    public void determineSpecialScoring_YakumanTest() {
+    public void handleSpecialScoring_YakumanTest() {
         response.setHan(13);
 
-        util.determineSpecialScoring(response);
+        util.handleSpecialScoring(gameContext, response);
 
         assertEquals(SpecialScoringType.YAKUMAN, response.getSpecialScoreType());
 
         response.setSpecialScoreType("");
         response.setHan(14);
 
-        util.determineSpecialScoring(response);
+        util.handleSpecialScoring(gameContext, response);
 
         assertEquals(SpecialScoringType.YAKUMAN, response.getSpecialScoreType());
     }
 
-    @Test
-    public void determineSpecialScoring_FourHanTest() {
+    @Test(expected = NullPointerException.class)
+    public void handleSpecialScoring_FourHanTest() {
         response.setHan(4);
 
-        util.determineSpecialScoring(response);
-
-        assertNull(response.getSpecialScoreType());
+        util.handleSpecialScoring(gameContext, response);
     }
 
     @Test
-    public void setSpecialScoring_ManganTsumoTest() {
+    public void handleSpecialScoring_ManganTsumoTest() {
         gameContext.setTsumo(true);
         response.setSpecialScoreType(SpecialScoringType.MANGAN);
 
-        util.setSpecialScoring(gameContext, response);
+        util.handleSpecialScoring(gameContext, response);
 
         assertEquals(4000, response.getTsumoFromDealer());
         assertEquals(2000, response.getTsumoFromNonDealer());
     }
 
     @Test
-    public void setSpecialScoring_ManganRonTest() {
+    public void handleSpecialScoring_ManganRonTest() {
         gameContext.setTsumo(false);
         response.setSpecialScoreType(SpecialScoringType.MANGAN);
 
-        util.setSpecialScoring(gameContext, response);
+        util.handleSpecialScoring(gameContext, response);
 
         assertEquals(12000, response.getRonToDealer());
         assertEquals(8000, response.getRonToNonDealer());
     }
 
     @Test
-    public void setSpecialScoring_HanemanTsumoTest() {
+    public void handleSpecialScoring_HanemanTsumoTest() {
         gameContext.setTsumo(true);
         response.setSpecialScoreType(SpecialScoringType.HANEMAN);
 
-        util.setSpecialScoring(gameContext, response);
+        util.handleSpecialScoring(gameContext, response);
 
         assertEquals(6000, response.getTsumoFromDealer());
         assertEquals(3000, response.getTsumoFromNonDealer());
     }
 
     @Test
-    public void setSpecialScoring_HanemanRonTest() {
+    public void handleSpecialScoring_HanemanRonTest() {
         gameContext.setTsumo(false);
         response.setSpecialScoreType(SpecialScoringType.HANEMAN);
 
-        util.setSpecialScoring(gameContext, response);
+        util.handleSpecialScoring(gameContext, response);
 
         assertEquals(18000, response.getRonToDealer());
         assertEquals(12000, response.getRonToNonDealer());
     }
 
     @Test
-    public void setSpecialScoring_BaimanTsumoTest() {
+    public void handleSpecialScoring_BaimanTsumoTest() {
         gameContext.setTsumo(true);
         response.setSpecialScoreType(SpecialScoringType.BAIMAN);
 
-        util.setSpecialScoring(gameContext, response);
+        util.handleSpecialScoring(gameContext, response);
 
         assertEquals(8000, response.getTsumoFromDealer());
         assertEquals(4000, response.getTsumoFromNonDealer());
     }
 
     @Test
-    public void setSpecialScoring_BaimanRonTest() {
+    public void handleSpecialScoring_BaimanRonTest() {
         gameContext.setTsumo(false);
         response.setSpecialScoreType(SpecialScoringType.BAIMAN);
 
-        util.setSpecialScoring(gameContext, response);
+        util.handleSpecialScoring(gameContext, response);
 
         assertEquals(24000, response.getRonToDealer());
         assertEquals(16000, response.getRonToNonDealer());
     }
 
     @Test
-    public void setSpecialScoring_SanbaimanTsumoTest() {
+    public void handleSpecialScoring_SanbaimanTsumoTest() {
         gameContext.setTsumo(true);
         response.setSpecialScoreType(SpecialScoringType.SANBAIMAN);
 
-        util.setSpecialScoring(gameContext, response);
+        util.handleSpecialScoring(gameContext, response);
 
         assertEquals(12000, response.getTsumoFromDealer());
         assertEquals(6000, response.getTsumoFromNonDealer());
     }
 
     @Test
-    public void setSpecialScoring_SanbaimanRonTest() {
+    public void handleSpecialScoring_SanbaimanRonTest() {
         gameContext.setTsumo(false);
         response.setSpecialScoreType(SpecialScoringType.SANBAIMAN);
 
-        util.setSpecialScoring(gameContext, response);
+        util.handleSpecialScoring(gameContext, response);
 
         assertEquals(36000, response.getRonToDealer());
         assertEquals(24000, response.getRonToNonDealer());
     }
 
     @Test
-    public void setSpecialScoring_YakumanTsumoTest() {
+    public void handleSpecialScoring_YakumanTsumoTest() {
         gameContext.setTsumo(true);
         response.setSpecialScoreType(SpecialScoringType.YAKUMAN);
 
-        util.setSpecialScoring(gameContext, response);
+        util.handleSpecialScoring(gameContext, response);
 
         assertEquals(16000, response.getTsumoFromDealer());
         assertEquals(8000, response.getTsumoFromNonDealer());
     }
 
     @Test
-    public void setSpecialScoring_YakumanRonTest() {
+    public void handleSpecialScoring_YakumanRonTest() {
         gameContext.setTsumo(false);
         response.setSpecialScoreType(SpecialScoringType.YAKUMAN);
 
-        util.setSpecialScoring(gameContext, response);
+        util.handleSpecialScoring(gameContext, response);
 
         assertEquals(48000, response.getRonToDealer());
         assertEquals(32000, response.getRonToNonDealer());

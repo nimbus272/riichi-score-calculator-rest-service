@@ -42,7 +42,12 @@ public class CalculatorService {
         gameContext.getHand().sort((a, b) -> a - b);
 
         // Evaluate special hand types
-        // scoreUtil.evaluateSpecialHandTypes(gameContext, response);
+        eligibilityEngine.executeSpecial(gameContext, response);
+
+        if (response.getQualifiedYaku().contains("Kokushi Musou (Thirteen Orphans)")) {
+            scoreUtil.handleSpecialScoring(gameContext, response);
+            return;
+        }
         // Sort Honors into melds
 
         // Check if we have more than one pair, if so error out

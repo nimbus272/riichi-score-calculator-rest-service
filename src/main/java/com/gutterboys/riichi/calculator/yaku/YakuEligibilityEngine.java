@@ -16,11 +16,20 @@ public class YakuEligibilityEngine {
     @Autowired
     Set<Yaku> allYaku;
 
+    @Autowired
+    Set<SpecialYaku> specialYaku;
+
     public void execute(GameContext gameContext, ScoreResponse response) {
         for (Yaku yaku : allYaku) {
             yaku.execute(gameContext, response);
         }
 
+    }
+
+    public void executeSpecial(GameContext gameContext, ScoreResponse response) {
+        for (SpecialYaku yaku : specialYaku) {
+            yaku.execute(gameContext, response);
+        }
     }
 
 }
