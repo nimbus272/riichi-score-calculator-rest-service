@@ -2,6 +2,7 @@ package com.gutterboys.riichi.calculator.helper;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
@@ -17,6 +18,28 @@ import ch.qos.logback.classic.Logger;
 public class ScoreUtil {
 
     private static final Logger LOGGER = (Logger) LoggerFactory.getLogger(ScoreUtil.class);
+
+    public void countDora(GameContext gameContext) {
+        LOGGER.debug("Counting dora...");
+        for (String tile : gameContext.getDoraTiles()) {
+            switch ((int) gameContext.getHand().stream().filter(x -> x.equals(tile)).count()) {
+                case 1:
+                    gameContext.setDoraCount(gameContext.getDoraCount() + 1);
+                    break;
+                case 2:
+                    gameContext.setDoraCount(gameContext.getDoraCount() + 2);
+                    break;
+                case 3:
+                    gameContext.setDoraCount(gameContext.getDoraCount() + 3);
+                    break;
+                case 4:
+                    gameContext.setDoraCount(gameContext.getDoraCount() + 4);
+                    break;
+                default:
+                    break;
+            }
+        }
+    }
 
     public void determineBaseScore(ScoreResponse response) {
 
@@ -128,15 +151,4 @@ public class ScoreUtil {
                 break;
         }
     }
-
-    public void breakIntoMelds(GameContext gameContext) {
-        List<String> hand = new ArrayList<String>(gameContext.getHand());
-
-        while (hand.size() != 0) {
-            Meld meld = new Meld();
-            String startingTile = hand.get(0);
-
-        }
-    }
-
 }

@@ -12,8 +12,18 @@ public class ScoreResponse extends GenericResponse {
     private int tsumoFromDealer;
     private int ronToNonDealer;
     private int ronToDealer;
+    private boolean doubleYakuman;
+
     private String specialScoreType;
     private List<String> qualifiedYaku = new ArrayList<String>();
+
+    public boolean isDoubleYakuman() {
+        return doubleYakuman;
+    }
+
+    public void setDoubleYakuman(boolean doubleYakuman) {
+        this.doubleYakuman = doubleYakuman;
+    }
 
     public String getSpecialScoreType() {
         return specialScoreType;

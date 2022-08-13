@@ -27,29 +27,33 @@ public class CalculatorService {
     public void evaluateHand(GameContext gameContext, ScoreResponse response) {
         LOGGER.debug("Calculating score...");
 
-        //if red fives
-            //swap out, increment dora
+        // if red fives
+        // swap out, increment dora
         handSortUtil.swapFives(gameContext);
-        //if dora list
-            //increment dora for each in hand
-        //if dora int
-            //add to dora on gamecontext
+        // if dora list
+        // increment dora for each in hand
+        // if dora int
+        // add to dora on gamecontext
+        if (gameContext.getDoraTiles().size() > 0) {
+            scoreUtil.countDora(gameContext);
+        }
+        
+        // Sort tiles by index
+        handSortUtil.sortTiles(gameContext);
+      
+        // Evaluate special hand types
+        // scoreUtil.evaluateSpecialHandTypes(gameContext, response);
+        // Sort Honors into melds
 
-        //Sort tiles by index
+        // Check if we have more than one pair, if so error out
 
-        //Evaluate special hand types
+        // Loop over remaining tiles in hand to see what melds can be made
 
-        //Sort Honors into melds
+        // isolate only possible melds
 
-        //Check if we have more than one pair, if so error out
+        // iterate until all tiles are sorted or it's impossible to reduce
 
-        //Loop over remaining tiles in hand to see what melds can be made
-
-        //isolate only possible melds
-
-        //iterate until all tiles are sorted or it's impossible to reduce
-
-        //profit
+        // profit
 
         LOGGER.debug("Successfully calculated score!");
 
