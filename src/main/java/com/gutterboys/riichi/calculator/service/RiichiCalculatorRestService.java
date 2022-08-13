@@ -29,7 +29,7 @@ public class RiichiCalculatorRestService {
 
     @GetMapping(value = "/test")
     public GenericResponse testEndpoint() {
-        LOGGER.info("hey we be loggin baby");
+        LOGGER.info("suck my butt asshole");
         GenericResponse response = new GenericResponse();
 
         response.getYakuList().addAll(allYaku);

@@ -14,9 +14,9 @@ import com.gutterboys.riichi.calculator.model.ScoreResponse;
 import ch.qos.logback.classic.Logger;
 
 @Component
-public class CalculatorServiceHelper {
+public class ScoreUtil {
 
-    private static final Logger LOGGER = (Logger) LoggerFactory.getLogger(CalculatorServiceHelper.class);
+    private static final Logger LOGGER = (Logger) LoggerFactory.getLogger(ScoreUtil.class);
 
     public void determineBaseScore(ScoreResponse response) {
 

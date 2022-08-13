@@ -6,7 +6,8 @@ import java.util.List;
 public class GameContext {
 
     private List<String> hand = new ArrayList<String>();
-    private List<Meld> melds = new ArrayList<Meld>();
+    private List<String> melds = new ArrayList<String>();
+    private List<String> doraTiles = new ArrayList<String>();
     private String winningTile;
     private String seatWind;
     private String prevalentWind;
@@ -18,10 +19,49 @@ public class GameContext {
     private boolean lastDiscard;
     private boolean tsumo;
     private boolean opened;
-    private int dora;
     private int honba;
+    private int ponCount;
+    private int chiCount;
+    private int kanCount;
+    private int doraCount = 0;
 
-    public List<Meld> getMelds() {
+    public int getPonCount() {
+        return ponCount;
+    }
+
+    public void setPonCount(int ponCount) {
+        this.ponCount = ponCount;
+    }
+
+    public int getChiCount() {
+        return chiCount;
+    }
+
+    public void setChiCount(int chiCount) {
+        this.chiCount = chiCount;
+    }
+
+    public int getKanCount() {
+        return kanCount;
+    }
+
+    public void setKanCount(int kanCount) {
+        this.kanCount = kanCount;
+    }
+
+    public int getDoraCount() {
+        return doraCount;
+    }
+
+    public void setDoraCount(int doraCount) {
+        this.doraCount = doraCount;
+    }
+
+    public List<String> getDoraTiles() {
+        return doraTiles;
+    }
+
+    public List<String> getMelds() {
         return melds;
     }
 
@@ -99,14 +139,6 @@ public class GameContext {
 
     public void setTsumo(boolean tsumo) {
         this.tsumo = tsumo;
-    }
-
-    public int getDora() {
-        return dora;
-    }
-
-    public void setDora(int dora) {
-        this.dora = dora;
     }
 
     public String getSeatWind() {
