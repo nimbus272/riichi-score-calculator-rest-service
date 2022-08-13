@@ -5,7 +5,6 @@ import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.Arrays;
-import java.util.List;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -263,27 +262,27 @@ public class ScoreUtilTest {
 
     @Test
     public void testCountDora_2dora() {
-        gameContext.getDoraTiles().addAll(Arrays.asList("0", "1"));
+        gameContext.getDoraTiles().addAll(Arrays.asList(0, 1));
         gameContext.getHand()
-                .addAll(Arrays.asList("0", "1", "2", "3", "4", "5", "6", "7", "8", "27", "27", "27", "33", "33"));
+                .addAll(Arrays.asList(0, 1, 2, 3, 4, 5, 6, 7, 8, 27, 27, 27, 33, 33));
         util.countDora(gameContext);
         assertEquals(2, gameContext.getDoraCount());
     }
 
     @Test
     public void testCountDora_NoDora() {
-        gameContext.getDoraTiles().addAll(Arrays.asList("0", "1"));
+        gameContext.getDoraTiles().addAll(Arrays.asList(0, 1));
         gameContext.getHand()
-                .addAll(Arrays.asList("3", "3", "2", "3", "4", "5", "6", "7", "8", "27", "27", "27", "33", "33"));
+                .addAll(Arrays.asList(3, 3, 2, 3, 4, 5, 6, 7, 8, 27, 27, 27, 33, 33));
         util.countDora(gameContext);
         assertEquals(0, gameContext.getDoraCount());
     }
 
     @Test
     public void testCountDora_MultipleTiles() {
-        gameContext.getDoraTiles().addAll(Arrays.asList("0", "1", "0"));
+        gameContext.getDoraTiles().addAll(Arrays.asList(0, 1, 0));
         gameContext.getHand()
-                .addAll(Arrays.asList("0", "0", "0", "3", "4", "5", "6", "7", "8", "27", "27", "27", "1", "1"));
+                .addAll(Arrays.asList(0, 0, 0, 3, 4, 5, 6, 7, 8, 27, 27, 27, 1, 1));
         util.countDora(gameContext);
         assertEquals(8, gameContext.getDoraCount());
     }

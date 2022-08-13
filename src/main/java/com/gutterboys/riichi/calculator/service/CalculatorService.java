@@ -37,10 +37,10 @@ public class CalculatorService {
         if (gameContext.getDoraTiles().size() > 0) {
             scoreUtil.countDora(gameContext);
         }
-        
+
         // Sort tiles by index
-        handSortUtil.sortTiles(gameContext);
-      
+        gameContext.getHand().sort((a, b) -> a - b);
+
         // Evaluate special hand types
         // scoreUtil.evaluateSpecialHandTypes(gameContext, response);
         // Sort Honors into melds

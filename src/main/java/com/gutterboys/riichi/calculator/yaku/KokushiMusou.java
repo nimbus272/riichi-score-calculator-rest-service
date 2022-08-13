@@ -9,9 +9,15 @@ import com.gutterboys.riichi.calculator.model.GameContext;
 import com.gutterboys.riichi.calculator.model.ScoreResponse;
 
 public class KokushiMusou implements SpecialYaku {
+
+    @Override
     public void execute(GameContext gameContext, ScoreResponse response) {
+        if (gameContext.isOpened()) {
+            return;
+        }
+
         boolean isKokushi = true;
-        for (String tile : gameContext.getHand()) {
+        for (Integer tile : gameContext.getHand()) {
 
             if (RiichiCalculatorConstants.SIMPLES.contains(tile)) {
                 isKokushi = false;
@@ -20,14 +26,14 @@ public class KokushiMusou implements SpecialYaku {
         }
 
         if (isKokushi) {
-            Set<String> hand = new HashSet<String>(gameContext.getHand());
+            Set<Integer> hand = new HashSet<Integer>(gameContext.getHand());
             if (hand.size() == 13) {
-                if (gameContext.getHand().stream().filter(tile -> gameContext.getWinningTile().equals(tile))
+                if (gameContext.getHand().stream().filter(tile -> gameContext.getWinningTile() == tile)
                         .count() == 2) {
                     response.setDoubleYakuman(true);
                 }
                 response.getQualifiedYaku().add("Kokushi Musou (Thirteen Orphans)");
-                response.setHan(13);
+                response.setHan(response.getHan() + 13);
             }
         }
     }

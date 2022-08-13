@@ -1,15 +1,10 @@
 package com.gutterboys.riichi.calculator.helper;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.stream.Collectors;
-
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
 import com.gutterboys.riichi.calculator.constants.SpecialScoringType;
 import com.gutterboys.riichi.calculator.model.GameContext;
-import com.gutterboys.riichi.calculator.model.Meld;
 import com.gutterboys.riichi.calculator.model.ScoreResponse;
 
 import ch.qos.logback.classic.Logger;
@@ -21,7 +16,7 @@ public class ScoreUtil {
 
     public void countDora(GameContext gameContext) {
         LOGGER.debug("Counting dora...");
-        for (String tile : gameContext.getDoraTiles()) {
+        for (Integer tile : gameContext.getDoraTiles()) {
             switch ((int) gameContext.getHand().stream().filter(x -> x.equals(tile)).count()) {
                 case 1:
                     gameContext.setDoraCount(gameContext.getDoraCount() + 1);

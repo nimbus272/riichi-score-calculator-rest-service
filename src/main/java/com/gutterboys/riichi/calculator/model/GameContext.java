@@ -5,12 +5,12 @@ import java.util.List;
 
 public class GameContext {
 
-    private List<String> hand = new ArrayList<String>();
-    private List<String> melds = new ArrayList<String>();
-    private List<String> doraTiles = new ArrayList<String>();
-    private String winningTile;
-    private String seatWind;
-    private String prevalentWind;
+    private List<Integer> hand = new ArrayList<Integer>();
+    private List<List<Integer>> melds = new ArrayList<List<Integer>>();
+    private List<Integer> doraTiles = new ArrayList<Integer>();
+    private int winningTile;
+    private int seatWind;
+    private int prevalentWind;
     private boolean riichi;
     private boolean doubleRiichi;
     private boolean ippatsu;
@@ -23,7 +23,16 @@ public class GameContext {
     private int ponCount;
     private int chiCount;
     private int kanCount;
+    private int pairCount;
     private int doraCount = 0;
+
+    public int getPairCount() {
+        return pairCount;
+    }
+
+    public void setPairCount(int pairCount) {
+        this.pairCount = pairCount;
+    }
 
     public int getPonCount() {
         return ponCount;
@@ -57,11 +66,11 @@ public class GameContext {
         this.doraCount = doraCount;
     }
 
-    public List<String> getDoraTiles() {
+    public List<Integer> getDoraTiles() {
         return doraTiles;
     }
 
-    public List<String> getMelds() {
+    public List<List<Integer>> getMelds() {
         return melds;
     }
 
@@ -113,15 +122,15 @@ public class GameContext {
         this.honba = honba;
     }
 
-    public String getWinningTile() {
+    public int getWinningTile() {
         return winningTile;
     }
 
-    public void setWinningTile(String winningTile) {
+    public void setWinningTile(int winningTile) {
         this.winningTile = winningTile;
     }
 
-    public List<String> getHand() {
+    public List<Integer> getHand() {
         return hand;
     }
 
@@ -141,19 +150,19 @@ public class GameContext {
         this.tsumo = tsumo;
     }
 
-    public String getSeatWind() {
+    public int getSeatWind() {
         return seatWind;
     }
 
-    public void setSeatWind(String seatWind) {
+    public void setSeatWind(int seatWind) {
         this.seatWind = seatWind;
     }
 
-    public String getPrevalentWind() {
+    public int getPrevalentWind() {
         return prevalentWind;
     }
 
-    public void setPrevalentWind(String prevalentWind) {
+    public void setPrevalentWind(int prevalentWind) {
         this.prevalentWind = prevalentWind;
     }
 
