@@ -37,7 +37,7 @@ public class ChiitoitsuOrRyanpeiko implements SpecialYaku {
                 continue;
             }
             if (tempHand.stream().filter(x -> x == tile).count() == 2L) {
-                CommonUtil.removeAndAddFromList(tempHand, tile, 2);
+                CommonUtil.removeAndAddPonFromList(tempHand, tile, 2);
                 pairCount++;
             }
         }

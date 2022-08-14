@@ -13,12 +13,23 @@ import com.gutterboys.riichi.calculator.helper.CommonUtil;
 public class CommonUtilTest {
 
     @Test
-    public void removeAndAddFromListTest() {
+    public void removeAndAddPonFromListTest() {
         List<Integer> hand = new ArrayList<>(Arrays.asList(0, 0, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 9, 9));
 
-        CommonUtil.removeAndAddFromList(hand, 0, 3);
+        CommonUtil.removeAndAddPonFromList(hand, 0, 3);
 
         List<Integer> expected = Arrays.asList(-1, -1, -1, 1, 2, 3, 4, 5, 6, 7, 8, 9, 9, 9);
+
+        assertEquals(expected, hand);
+    }
+
+    @Test
+    public void removeAndAddChiFromListTest() {
+        List<Integer> hand = new ArrayList<>(Arrays.asList(0, 0, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 9, 9));
+
+        CommonUtil.removeAndAddChiFromList(hand, 1);
+
+        List<Integer> expected = Arrays.asList(-1, -1, -1, 0, 0, 0, 4, 5, 6, 7, 8, 9, 9, 9);
 
         assertEquals(expected, hand);
     }

@@ -8,6 +8,7 @@ import com.gutterboys.riichi.calculator.exception.RiichiCalculatorException;
 import com.gutterboys.riichi.calculator.helper.HandSortUtil;
 import com.gutterboys.riichi.calculator.helper.ScoreUtil;
 import com.gutterboys.riichi.calculator.model.GameContext;
+import com.gutterboys.riichi.calculator.model.PossibleMelds;
 import com.gutterboys.riichi.calculator.model.ScoreResponse;
 import com.gutterboys.riichi.calculator.yaku.YakuEligibilityEngine;
 
@@ -42,14 +43,16 @@ public class CalculatorService {
         handSortUtil.checkHonors(gameContext);
 
         // Loop over remaining tiles in hand to see what melds can be made
+        PossibleMelds possibleMelds = handSortUtil.reduceHand(gameContext);
 
-        // isolate only possible melds
-
+        if (gameContext.getHand().stream().filter(x -> x != -1).count() == 0) {
+            // check all the other yaku
+            eligibilityEngine.execute(gameContext, response);
+            return;
+        }
         // iterate until all tiles are sorted or it's impossible to reduce
 
         // profit
-
-        LOGGER.debug("Successfully calculated score!");
 
     }
 }

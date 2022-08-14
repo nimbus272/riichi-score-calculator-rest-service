@@ -8,8 +8,10 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
 import com.gutterboys.riichi.calculator.constants.RiichiCalculatorConstants;
+import com.gutterboys.riichi.calculator.exception.InvalidHandException;
 import com.gutterboys.riichi.calculator.exception.RiichiCalculatorException;
 import com.gutterboys.riichi.calculator.model.GameContext;
+import com.gutterboys.riichi.calculator.model.PossibleMelds;
 
 import ch.qos.logback.classic.Logger;
 
@@ -44,8 +46,6 @@ public class HandSortUtil {
             }
         }
         gameContext.getHand().addAll(newTiles);
-
-        LOGGER.debug("Successfully swapped fives!");
     }
 
     public void checkChi(List<Integer> hand, int tile, List<List<Integer>> possibleChis) {
@@ -81,19 +81,19 @@ public class HandSortUtil {
                     case 2:
                         gameContext.getMelds().add(gameContext.getCurrentMeld(),
                                 new ArrayList<Integer>(Arrays.asList(tile, tile)));
-                        CommonUtil.removeAndAddFromList(gameContext.getHand(), tile, 2);
+                        CommonUtil.removeAndAddPonFromList(gameContext.getHand(), tile, 2);
                         gameContext.setPairCount(gameContext.getPairCount() + 1);
                         break;
                     case 3:
                         gameContext.getMelds().add(gameContext.getCurrentMeld(),
                                 new ArrayList<Integer>(Arrays.asList(tile, tile, tile)));
-                        CommonUtil.removeAndAddFromList(gameContext.getHand(), tile, 3);
+                        CommonUtil.removeAndAddPonFromList(gameContext.getHand(), tile, 3);
                         gameContext.setPonCount(gameContext.getPonCount() + 1);
                         break;
                     case 4:
                         gameContext.getMelds().add(gameContext.getCurrentMeld(),
                                 new ArrayList<Integer>(Arrays.asList(tile, tile, tile, tile)));
-                        CommonUtil.removeAndAddFromList(gameContext.getHand(), tile, 4);
+                        CommonUtil.removeAndAddPonFromList(gameContext.getHand(), tile, 4);
                         gameContext.setKanCount(gameContext.getKanCount() + 1);
                         break;
                     default:
@@ -102,6 +102,146 @@ public class HandSortUtil {
                 gameContext.setCurrentMeld(gameContext.getCurrentMeld() + 1);
             }
         }
+    }
+
+    public PossibleMelds reduceHand(GameContext gameContext) throws InvalidHandException {
+        PossibleMelds possibleMelds = new PossibleMelds();
+        int unsortedCount = (int) gameContext.getHand().stream().filter(x -> x != -1).count();
+
+        for (int i = 0; i < gameContext.getHand().size(); i++) {
+            int tile = gameContext.getHand().get(i);
+            List<List<Integer>> possibleChis = new ArrayList<List<Integer>>();
+
+            if (tile == -1) {
+                continue;
+            }
+
+            switch ((int) gameContext.getHand().stream().filter(x -> x == tile).count()) {
+                case 1:
+                    // we know this tile cannot be a pair/pon/kan, so it must be part of a chi
+                    checkChi(gameContext.getHand(), tile, possibleChis);
+                    if (possibleChis.size() == 0) {
+                        // if no chi can be made, the hand is invalid
+                        LOGGER.error("Invalid hand detected in reduceHand(): {}", gameContext.getHand());
+                        throw new InvalidHandException("Invalid hand");
+                    } else if (possibleChis.size() == 1) {
+                        // if the tile only fits into one meld, that meld must be part of the hand
+                        // add those tiles to the current meld, then remove the tiles from the hand and
+                        // increment currentMeld
+                        CommonUtil.removeAndAddChiFromList(gameContext.getHand(), possibleChis.get(0).get(0));
+                        gameContext.getHand().add(0, -1);
+                        gameContext.getHand().add(0, -1);
+                        gameContext.getHand().add(0, -1);
+                        gameContext.getMelds().get(gameContext.getCurrentMeld()).addAll(possibleChis.get(0));
+                        gameContext.setChiCount(gameContext.getChiCount() + 1);
+                        gameContext.setCurrentMeld(gameContext.getCurrentMeld() + 1);
+                        break;
+
+                    }
+                    // if a tile fits into more than one meld, don't do anything other than adding
+                    // those melds to possibleMelds obj. for now, we just want to identify all tiles
+                    // that only fit into one meld.
+                    else {
+                        for (int j = 0; j < possibleChis.size(); i++) {
+                            possibleMelds.getChis().add(possibleChis.get(i));
+                        }
+
+                        break;
+                    }
+
+                case 2:
+                    checkChi(gameContext.getHand(), tile, possibleChis);
+                    if (possibleChis.size() == 0) {
+                        // if we have two of a given tile, and that tile does not fit into a chi, it
+                        // must be a pair.
+                        if (gameContext.getPairCount() > 0) {
+                            // if we already have a pair the hand is invalid
+                            LOGGER.error("Invalid hand detected in reduceHand(): {}", gameContext.getHand());
+                            throw new InvalidHandException("Invalid Hand");
+                        }
+                        gameContext.getMelds().get(gameContext.getCurrentMeld()).add(tile);
+                        gameContext.getMelds().get(gameContext.getCurrentMeld()).add(tile);
+                        CommonUtil.removeAndAddPonFromList(gameContext.getHand(), tile, 2);
+                        gameContext.setPairCount(gameContext.getPairCount() + 1);
+                        break;
+
+                    } else if (possibleChis.size() == 1) {
+                        if (gameContext.getPairCount() == 1) {
+                            // if we already know the pair, and there's only one possible chi, then that chi
+                            // must be one of the melds
+                            CommonUtil.removeAndAddChiFromList(gameContext.getHand(), possibleChis.get(0).get(0));
+                            gameContext.getHand().add(0, -1);
+                            gameContext.getHand().add(0, -1);
+                            gameContext.getHand().add(0, -1);
+                            gameContext.getMelds().get(gameContext.getCurrentMeld()).addAll(possibleChis.get(0));
+                            gameContext.setChiCount(gameContext.getChiCount() + 1);
+                            gameContext.setCurrentMeld(gameContext.getCurrentMeld() + 1);
+
+                        }
+                        break;
+                    } else {
+                        // if we don't know the pair, add both melds to possibleMelds and continue
+                        for (int j = 0; j < possibleChis.size(); i++) {
+                            possibleMelds.getChis().add(possibleChis.get(i));
+                        }
+                        possibleMelds.getPairs().add(Arrays.asList(tile, tile));
+                        break;
+                    }
+
+                case 3:
+                    checkChi(gameContext.getHand(), tile, possibleChis);
+
+                    if (possibleChis.size() == 0) {
+                        // if we have three of a given tile, and that tile does not fit into a chi, it
+                        // must be a pon
+
+                        gameContext.getMelds().get(gameContext.getCurrentMeld())
+                                .addAll(Arrays.asList(tile, tile, tile));
+                        CommonUtil.removeAndAddPonFromList(gameContext.getHand(), tile, 3);
+                        gameContext.setPonCount(gameContext.getPonCount() + 1);
+                        gameContext.setCurrentMeld(gameContext.getCurrentMeld() + 1);
+
+                        break;
+
+                    } else {
+                        for (int j = 0; j < possibleChis.size(); i++) {
+                            possibleMelds.getChis().add(possibleChis.get(i));
+                        }
+                        possibleMelds.getPons().add(Arrays.asList(tile, tile, tile));
+                        break;
+                    }
+
+                case 4:
+                    checkChi(gameContext.getHand(), tile, possibleChis);
+
+                    if (possibleChis.size() == 0) {
+                        gameContext.getMelds().get(gameContext.getCurrentMeld())
+                                .addAll(new ArrayList<Integer>(Arrays.asList(tile, tile, tile, tile)));
+                        CommonUtil.removeAndAddPonFromList(gameContext.getHand(), tile, 4);
+                        gameContext.setKanCount(gameContext.getKanCount() + 1);
+                        gameContext.setCurrentMeld(gameContext.getCurrentMeld() + 1);
+                        break;
+
+                    } else {
+                        for (int j = 0; j < possibleChis.size(); i++) {
+                            possibleMelds.getChis().add(possibleChis.get(i));
+                        }
+                        possibleMelds.getKans().add(Arrays.asList(tile, tile, tile, tile));
+                        break;
+                    }
+
+                default:
+                    break;
+            }
+            if (unsortedCount > (int) gameContext.getHand().stream().filter(x -> x != -1).count()) {
+                reduceHand(gameContext);
+            }
+            if (unsortedCount == (int) gameContext.getHand().stream().filter(x -> x != -1).count()) {
+                return possibleMelds;
+            }
+
+        }
+        return possibleMelds;
     }
 
 }
