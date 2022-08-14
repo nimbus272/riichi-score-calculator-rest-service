@@ -3,22 +3,28 @@ package com.gutterboys.riichi.calculator.yaku;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import com.gutterboys.riichi.calculator.exception.InvalidHandException;
 import com.gutterboys.riichi.calculator.helper.CommonUtil;
 import com.gutterboys.riichi.calculator.helper.HandSortUtil;
 import com.gutterboys.riichi.calculator.model.GameContext;
 import com.gutterboys.riichi.calculator.model.ScoreResponse;
 
+import ch.qos.logback.classic.Logger;
+
 @Component
 public class ChiitoitsuOrRyanpeiko implements SpecialYaku {
+
+    private static final Logger LOGGER = (Logger) LoggerFactory.getLogger(ChiitoitsuOrRyanpeiko.class);
 
     @Autowired
     HandSortUtil sortUtil;
 
     @Override
-    public void execute(GameContext gameContext, ScoreResponse response) {
+    public void execute(GameContext gameContext, ScoreResponse response) throws InvalidHandException {
         if (gameContext.isOpened()) {
             return;
         }
@@ -51,6 +57,9 @@ public class ChiitoitsuOrRyanpeiko implements SpecialYaku {
 
             response.setHan(response.getHan() + 2);
             response.getQualifiedYaku().add("Chiitoitsu (Seven Pairs)");
+        } else if (pairCount > 1) {
+            LOGGER.error("Invalid hand found in ChiitoitsuOrRyanpeiko: {}", gameContext.getHand());
+            throw new InvalidHandException("Invalid Hand -- Too Many Pairs");
         }
 
     }

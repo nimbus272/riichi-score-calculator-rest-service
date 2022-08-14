@@ -5,12 +5,15 @@ import java.util.Arrays;
 import java.util.List;
 
 import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Component;
 
 import com.gutterboys.riichi.calculator.constants.RiichiCalculatorConstants;
+import com.gutterboys.riichi.calculator.exception.RiichiCalculatorException;
 import com.gutterboys.riichi.calculator.model.GameContext;
 
 import ch.qos.logback.classic.Logger;
 
+@Component
 public class HandSortUtil {
 
     private static final Logger LOGGER = (Logger) LoggerFactory.getLogger(HandSortUtil.class);
@@ -67,35 +70,36 @@ public class HandSortUtil {
         }
     }
 
-    // TODO UNIT TESTS
-    public void checkHonors(GameContext gameContext) {
+    public void checkHonors(GameContext gameContext) throws RiichiCalculatorException {
         for (int i = 0; i < gameContext.getHand().size(); i++) {
             int tile = gameContext.getHand().get(i);
             if (RiichiCalculatorConstants.HONORS.contains(tile)) {
                 switch ((int) gameContext.getHand().stream().filter(x -> x == tile).count()) {
                     case 1:
-                        continue;
+                        LOGGER.error("Invalid hand detected in checkHonors(): {}", gameContext.getHand());
+                        throw new RiichiCalculatorException("Invalid hand");
                     case 2:
-                        gameContext.getMelds().add(4, new ArrayList<Integer>(Arrays.asList(tile, tile)));
+                        gameContext.getMelds().add(gameContext.getCurrentMeld(),
+                                new ArrayList<Integer>(Arrays.asList(tile, tile)));
                         CommonUtil.removeAndAddFromList(gameContext.getHand(), tile, 2);
                         gameContext.setPairCount(gameContext.getPairCount() + 1);
-                        gameContext.setCurrentMeld(gameContext.getCurrentMeld() - 1);
-                        continue;
+                        break;
                     case 3:
                         gameContext.getMelds().add(gameContext.getCurrentMeld(),
                                 new ArrayList<Integer>(Arrays.asList(tile, tile, tile)));
                         CommonUtil.removeAndAddFromList(gameContext.getHand(), tile, 3);
                         gameContext.setPonCount(gameContext.getPonCount() + 1);
-                        continue;
+                        break;
                     case 4:
                         gameContext.getMelds().add(gameContext.getCurrentMeld(),
                                 new ArrayList<Integer>(Arrays.asList(tile, tile, tile, tile)));
                         CommonUtil.removeAndAddFromList(gameContext.getHand(), tile, 4);
                         gameContext.setKanCount(gameContext.getKanCount() + 1);
-                        continue;
+                        break;
                     default:
-                        continue;
+                        break;
                 }
+                gameContext.setCurrentMeld(gameContext.getCurrentMeld() + 1);
             }
         }
     }

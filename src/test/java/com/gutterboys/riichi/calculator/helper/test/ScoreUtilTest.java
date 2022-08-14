@@ -283,4 +283,26 @@ public class ScoreUtilTest {
         util.countDora(gameContext);
         assertEquals(8, gameContext.getDoraCount());
     }
+
+    @Test
+    public void handleSpecialScoring_DoubleYakumanTsumoTest() {
+        gameContext.setTsumo(true);
+        response.setSpecialScoreType(SpecialScoringType.DOUBLE_YAKUMAN);
+
+        util.handleSpecialScoring(gameContext, response);
+
+        assertEquals(32000, response.getTsumoFromDealer());
+        assertEquals(16000, response.getTsumoFromNonDealer());
+    }
+
+    @Test
+    public void handleSpecialScoring_DoubleYakumanRonTest() {
+        gameContext.setTsumo(false);
+        response.setSpecialScoreType(SpecialScoringType.DOUBLE_YAKUMAN);
+
+        util.handleSpecialScoring(gameContext, response);
+
+        assertEquals(96000, response.getRonToDealer());
+        assertEquals(64000, response.getRonToNonDealer());
+    }
 }

@@ -5,6 +5,7 @@ import java.util.Set;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import com.gutterboys.riichi.calculator.exception.RiichiCalculatorException;
 import com.gutterboys.riichi.calculator.model.GameContext;
 import com.gutterboys.riichi.calculator.model.ScoreResponse;
 
@@ -26,7 +27,7 @@ public class YakuEligibilityEngine {
 
     }
 
-    public void executeSpecial(GameContext gameContext, ScoreResponse response) {
+    public void executeSpecial(GameContext gameContext, ScoreResponse response) throws RiichiCalculatorException {
         for (SpecialYaku yaku : specialYaku) {
             yaku.execute(gameContext, response);
         }

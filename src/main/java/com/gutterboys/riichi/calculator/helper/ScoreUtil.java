@@ -90,6 +90,10 @@ public class ScoreUtil {
     private void determineSpecialScoring(ScoreResponse response) {
 
         if (response.getHan() > 12) {
+            if (response.isDoubleYakuman()) {
+                response.setSpecialScoreType(SpecialScoringType.DOUBLE_YAKUMAN);
+                return;
+            }
             response.setSpecialScoreType(SpecialScoringType.YAKUMAN);
             return;
         } else if (response.getHan() > 10) {
@@ -154,6 +158,18 @@ public class ScoreUtil {
                     response.setRonToNonDealer(32000);
                 }
                 break;
+            case SpecialScoringType.DOUBLE_YAKUMAN:
+                if (gameContext.isTsumo()) {
+                    response.setTsumoFromDealer(32000);
+                    response.setTsumoFromNonDealer(16000);
+                } else {
+                    response.setRonToDealer(96000);
+                    response.setRonToNonDealer(64000);
+                }
+                break;
+            default:
+                break;
+
         }
     }
 }

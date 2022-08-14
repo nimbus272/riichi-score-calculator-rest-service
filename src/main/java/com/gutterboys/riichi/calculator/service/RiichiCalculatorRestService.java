@@ -4,13 +4,13 @@ import java.util.Set;
 
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.gutterboys.riichi.calculator.exception.InvalidHandException;
+import com.gutterboys.riichi.calculator.exception.RiichiCalculatorException;
 import com.gutterboys.riichi.calculator.model.GameContext;
-import com.gutterboys.riichi.calculator.model.GenericResponse;
 import com.gutterboys.riichi.calculator.model.ScoreResponse;
 import com.gutterboys.riichi.calculator.yaku.Yaku;
 
@@ -27,20 +27,26 @@ public class RiichiCalculatorRestService {
     @Autowired
     Set<Yaku> allYaku;
 
-    @GetMapping(value = "/test")
-    public GenericResponse testEndpoint() {
-        LOGGER.info("suck my butt asshole");
-        GenericResponse response = new GenericResponse();
-
-        response.getYakuList().addAll(allYaku);
-
-        return response;
-    }
-
-    @PostMapping("/gutterboys/calculateScore")
-    public ScoreResponse calculateScore(@RequestBody GameContext gameContext) {
+    @PostMapping("/gutterboys/evaluateHand")
+    public ScoreResponse evaluateHand(@RequestBody GameContext gameContext) {
+        LOGGER.info("Request recieved: {}", gameContext);
         ScoreResponse response = new ScoreResponse();
-        // service.calculateScore(gameContext, response);
+        try {
+            service.evaluateHand(gameContext, response);
+        } catch (RiichiCalculatorException e) {
+            if (e instanceof InvalidHandException) {
+                LOGGER.error("Updating response code...");
+                response.setStatus("400");
+                response.setMessage(e.getMessage());
+                return response;
+
+            }
+        } catch (Exception e) {
+            response.setStatus("500");
+            response.setMessage("Server Error: " + e);
+            return response;
+        }
+
         return response;
     }
 }
