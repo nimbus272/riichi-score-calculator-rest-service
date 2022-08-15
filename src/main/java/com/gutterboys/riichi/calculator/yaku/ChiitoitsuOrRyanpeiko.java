@@ -24,7 +24,7 @@ public class ChiitoitsuOrRyanpeiko implements SpecialYaku {
     HandSortUtil sortUtil;
 
     @Override
-    public void execute(GameContext gameContext, ScoreResponse response) throws InvalidHandException {
+    public void execute(GameContext gameContext, ScoreResponse response) {
         if (gameContext.isOpened()) {
             return;
         }

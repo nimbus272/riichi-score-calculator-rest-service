@@ -46,7 +46,7 @@ public class ChiitoitsuOrRyanpeikoTest {
     }
 
     @Test
-    public void execute_IsChiitoitsuTest() throws RiichiCalculatorException {
+    public void execute_IsChiitoitsuTest() {
         gameContext.getHand()
                 .addAll(Arrays.asList(0, 0, 9, 9, 18, 18, 27, 27, 29, 29, 31, 31, 33, 33));
 
@@ -58,16 +58,20 @@ public class ChiitoitsuOrRyanpeikoTest {
         assertFalse(response.getQualifiedYaku().contains("Ryanpeiko (Two sets of identical sequences)"));
     }
 
-    @Test(expected = InvalidHandException.class)
-    public void execute_IsNotChiitoitsuTest() throws RiichiCalculatorException {
+    @Test()
+    public void execute_IsNotChiitoitsuTest() {
         gameContext.getHand()
                 .addAll(Arrays.asList(0, 0, 0, 18, 18, 18, 27, 27, 29, 29, 31, 31, 33, 33));
 
         yaku.execute(gameContext, response);
+
+        assertEquals(0, response.getHan());
+        assertFalse(response.getQualifiedYaku().contains("Chiitoitsu (Seven Pairs)"));
+        assertFalse(response.getQualifiedYaku().contains("Ryanpeiko (Two sets of identical sequences)"));
     }
 
     @Test
-    public void execute_IsOpenHandTest() throws RiichiCalculatorException {
+    public void execute_IsOpenHandTest() {
         gameContext.getHand()
                 .addAll(Arrays.asList(0, 0, 9, 9, 18, 18, 27, 27, 29, 29, 31, 31, 33, 33));
         gameContext.setOpened(true);
@@ -82,7 +86,7 @@ public class ChiitoitsuOrRyanpeikoTest {
 
     @Test
     @SuppressWarnings("unchecked")
-    public void execute_IsRyanpeikoTest() throws RiichiCalculatorException {
+    public void execute_IsRyanpeikoTest() {
         gameContext.getHand()
                 .addAll(Arrays.asList(1, 1, 2, 2, 3, 3, 9, 9, 10, 10, 11, 11, 33, 33));
 
@@ -102,12 +106,17 @@ public class ChiitoitsuOrRyanpeikoTest {
         assertTrue(response.getQualifiedYaku().contains("Ryanpeiko (Two sets of identical sequences)"));
     }
 
-    @Test(expected = InvalidHandException.class)
-    public void execute_IsInvalidHandTest() throws RiichiCalculatorException {
+    @Test()
+    public void execute_IsInvalidHandTest() {
         gameContext.getHand()
                 .addAll(Arrays.asList(0, 0, 9, 9, 18, 18, 27, 27, 29, 29, 29, 33, 33, 33));
 
         yaku.execute(gameContext, response);
+
+        Mockito.verify(sortUtil, times(0)).checkChi(anyList(), anyInt(), anyList());
+        assertEquals(0, response.getHan());
+        assertFalse(response.getQualifiedYaku().contains("Chiitoitsu (Seven Pairs)"));
+        assertFalse(response.getQualifiedYaku().contains("Ryanpeiko (Two sets of identical sequences)"));
     }
 
 }
