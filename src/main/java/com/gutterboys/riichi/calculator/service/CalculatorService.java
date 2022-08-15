@@ -47,8 +47,13 @@ public class CalculatorService {
         // Loop over remaining tiles in hand to see what melds can be made
         PossibleMelds possibleMelds = handSortUtil.reduceHand(gameContext);
         CommonUtil.checkMeldTypesAndRemoveDupes(possibleMelds, gameContext.getHand());
-        LOGGER.info("Tiles in hand: {}", gameContext.getHand());
-        LOGGER.info("Melds: {}", gameContext.getMelds());
+
+        if (gameContext.getHand().stream().filter(x -> x != -1).count() != 0) {
+            handSortUtil.reducePossibleMelds(possibleMelds, gameContext);
+        }
+
+        LOGGER.debug("Tiles in hand: {}", gameContext.getHand());
+        LOGGER.debug("Melds: {}", gameContext.getMelds());
         // if (gameContext.getHand().stream().filter(x -> x != -1).count() == 0) {
         // // check all the other yaku
         // eligibilityEngine.execute(gameContext, response);

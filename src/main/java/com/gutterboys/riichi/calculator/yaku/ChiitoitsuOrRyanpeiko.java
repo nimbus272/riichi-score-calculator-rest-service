@@ -47,7 +47,7 @@ public class ChiitoitsuOrRyanpeiko implements SpecialYaku {
 
             for (int i = 0; i < gameContext.getHand().size(); i++) {
                 int tile = gameContext.getHand().get(i);
-                sortUtil.checkChi(gameContext.getHand(), tile, possibleChis);
+                sortUtil.checkChi(gameContext.getHand(), tile, possibleChis, 2);
             }
             if (possibleChis.size() >= 12) {
                 response.setHan(response.getHan() + 3);

@@ -29,20 +29,20 @@ public class RiichiCalculatorRestService {
 
     @PostMapping("/gutterboys/evaluateHand")
     public ScoreResponse evaluateHand(@RequestBody GameContext gameContext) {
-        LOGGER.info("Request recieved: {}", gameContext);
+        LOGGER.info("Request recieved!");
         ScoreResponse response = new ScoreResponse();
         try {
             service.evaluateHand(gameContext, response);
         } catch (RiichiCalculatorException e) {
             if (e instanceof InvalidHandException) {
-                LOGGER.error("Updating response code...");
+                LOGGER.info("Updating response code...");
                 response.setStatus("400");
                 response.setMessage(e.getMessage());
                 return response;
 
             }
         } catch (Exception e) {
-            LOGGER.error(e.getStackTrace().toString());
+            LOGGER.error(e.getMessage());
             response.setStatus("500");
             response.setMessage("Server Error: " + e);
             return response;

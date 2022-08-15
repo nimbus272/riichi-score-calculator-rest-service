@@ -20,7 +20,7 @@ public class ScoreUtil {
     YakuEligibilityEngine engine;
 
     public void countDora(GameContext gameContext) {
-        LOGGER.debug("Counting dora...");
+        LOGGER.info("Counting dora...");
         for (Integer tile : gameContext.getDoraTiles()) {
             switch ((int) gameContext.getHand().stream().filter(x -> x.equals(tile)).count()) {
                 case 1:
@@ -54,7 +54,7 @@ public class ScoreUtil {
     }
 
     public void applyScoreMultipliers(GameContext context, ScoreResponse response) {
-
+        LOGGER.info("Applying score multipliers...");
         LOGGER.debug("Setting actual scores... Base score: {}", response.getBaseScore());
 
         int dealerPaymentTsumo = response.getBaseScore() * 2;
@@ -88,6 +88,7 @@ public class ScoreUtil {
     }
 
     private void determineSpecialScoring(ScoreResponse response) {
+        LOGGER.info("Determining special score type...");
 
         if (response.getHan() > 12) {
             if (response.isDoubleYakuman()) {
@@ -112,6 +113,7 @@ public class ScoreUtil {
     }
 
     private void setSpecialScoring(GameContext gameContext, ScoreResponse response) {
+        LOGGER.info("Setting score based on special score type...");
         switch (response.getSpecialScoreType()) {
             case SpecialScoringType.MANGAN:
                 if (gameContext.isTsumo()) {
