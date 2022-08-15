@@ -158,6 +158,54 @@ public class HandSortUtil {
         }
     }
 
+    public void reducePossibleMelds(PossibleMelds possibleMelds, GameContext gameContext) throws InvalidHandException {
+        LOGGER.info("Reducing possible melds...");
+        if (possibleMelds.getPairs().size() > 0) {
+            for (int i = 0; i < possibleMelds.getPairs().size(); i++) {
+                List<Integer> tempHand = new ArrayList<>(gameContext.getHand());
+                List<Integer> pair = possibleMelds.getPairs().get(i);
+                GameContext tempContext = new GameContext();
+                tempHand.remove(pair.get(0));
+                tempHand.remove(pair.get(1));
+                tempContext.getHand().addAll(tempHand);
+                // set temp pair count to one so we don't find a pair in reduceHand() and think
+                // that is this hand's pair, which would result in 2 pairs in the final
+                // evaluation
+                // ref [18, 18, 19, 19, 19, 19, 20, 20, 2, 3, 4, 13, 14, 15]
+                tempContext.setPairCount(1);
+                PossibleMelds tempPossibleMelds = null;
+                try {
+                    tempPossibleMelds = reduceHand(tempContext);
+                } catch (InvalidHandException e) {
+                    // this did not work, try another pair
+                    continue;
+                }
+
+                if (tempContext.getHand().stream().filter(x -> x != -1).count() == 0) {
+
+                    CommonUtil.checkMeldTypesAndRemoveDupes(tempPossibleMelds, tempContext.getHand());
+                    LOGGER.info("Hand determined!");
+                    CommonUtil.addTempMeldsToGameContext(tempContext, gameContext);
+                    gameContext.getMelds().add(pair);
+                    gameContext.getHand().remove(pair.get(0));
+                    gameContext.getHand().remove(pair.get(0));
+                    return;
+                }
+
+            }
+            // Probably wrong but we'll get there when we get there
+            LOGGER.error("Invalid hand detected in reducePossibleMelds() while checking pairs: {}",
+                    gameContext.getHand());
+            throw new InvalidHandException("Invalid hand -- too many pairs");
+
+        }
+        // probabaly wrong but we'll get there when we get there
+        LOGGER.error("Invalid hand detected in reducePossibleMelds(): {}",
+                gameContext.getHand());
+        throw new InvalidHandException("Invalid hand");
+
+    }
+
     private void tryGetMeld(GameContext gameContext, List<List<Integer>> possibleChis, PossibleMelds possibleMelds,
             int tile, int numberOfDuplicateTiles) throws InvalidHandException {
         LOGGER.info("Trying to find a meld...");
@@ -170,14 +218,8 @@ public class HandSortUtil {
                     LOGGER.error("Invalid hand detected in reduceHand(): {}", gameContext.getHand());
                     throw new InvalidHandException("Invalid hand -- tile " + tile + " does not fit into meld");
                 case 2:
-                    // if (gameContext.getPairCount() > 0) {
-                    // // if we already have a pair the hand is invalid
-                    // LOGGER.error("Invalid hand detected in reduceHand(): {}",
-                    // gameContext.getHand());
-                    // throw new InvalidHandException("Invalid Hand -- Too Many Pairs");
-                    // }
                     if (gameContext.getPairCount() == 0) {
-                        // TODO HEY WILL it turns out if we already have a pair and we find 2 of a tile
+                        // HEY WILL it turns out if we already have a pair and we find 2 of a tile
                         // we cant error out, it could still be valid
                         // ref [10, 10, 11, 11, 13, 13, 14, 14, 30, 30, 10, 22, 23, 24]
                         gameContext.getMelds().add(new ArrayList<Integer>(Arrays.asList(tile, tile)));
@@ -250,122 +292,42 @@ public class HandSortUtil {
                     gameContext.getMelds().add(possibleChis.get(0));
                     gameContext.getMelds().add(possibleChis.get(1));
                 } else {
-                    LOGGER.info("Couldn't determine a meld for this tile, adding to possible melds...");
-                    for (int i = 0; i < possibleChis.size(); i++) {
-                        possibleMelds.getChis().add(possibleChis.get(i));
-                    }
-                    switch (numberOfDuplicateTiles) {
-                        case 2:
-                            possibleMelds.getPairs().add(Arrays.asList(tile, tile));
-                            break;
-                        case 3:
-                            possibleMelds.getPairs().add(Arrays.asList(tile, tile));
-                            possibleMelds.getPons().add(Arrays.asList(tile, tile, tile));
-                            break;
-                        case 4:
-                            possibleMelds.getPairs().add(Arrays.asList(tile, tile));
-                            possibleMelds.getPons().add(Arrays.asList(tile, tile, tile));
-                            possibleMelds.getKans().add(Arrays.asList(tile, tile, tile, tile));
-                            break;
-                        default:
-                            break;
-                    }
+                    handleTooManyPossibilities(possibleChis, possibleMelds, numberOfDuplicateTiles, tile);
                 }
 
             } else {
-                LOGGER.info("Couldn't determine a meld for this tile, adding to possible melds...");
-                for (int i = 0; i < possibleChis.size(); i++) {
-                    possibleMelds.getChis().add(possibleChis.get(i));
-                }
-                switch (numberOfDuplicateTiles) {
-                    case 2:
-                        possibleMelds.getPairs().add(Arrays.asList(tile, tile));
-                        break;
-                    case 3:
-                        possibleMelds.getPairs().add(Arrays.asList(tile, tile));
-                        possibleMelds.getPons().add(Arrays.asList(tile, tile, tile));
-                        break;
-                    case 4:
-                        possibleMelds.getPairs().add(Arrays.asList(tile, tile));
-                        possibleMelds.getPons().add(Arrays.asList(tile, tile, tile));
-                        possibleMelds.getKans().add(Arrays.asList(tile, tile, tile, tile));
-                        break;
-                    default:
-                        break;
-                }
+                handleTooManyPossibilities(possibleChis, possibleMelds, numberOfDuplicateTiles, tile);
             }
 
         } else {
-            LOGGER.info("Couldn't determine a meld for this tile, adding to possible melds...");
-            for (int i = 0; i < possibleChis.size(); i++) {
-                possibleMelds.getChis().add(possibleChis.get(i));
-            }
-            switch (numberOfDuplicateTiles) {
-                case 2:
-                    possibleMelds.getPairs().add(Arrays.asList(tile, tile));
-                    break;
-                case 3:
-                    possibleMelds.getPairs().add(Arrays.asList(tile, tile));
-                    possibleMelds.getPons().add(Arrays.asList(tile, tile, tile));
-                    break;
-                case 4:
-                    possibleMelds.getPairs().add(Arrays.asList(tile, tile));
-                    possibleMelds.getPons().add(Arrays.asList(tile, tile, tile));
-                    possibleMelds.getKans().add(Arrays.asList(tile, tile, tile, tile));
-                    break;
-                default:
-                    break;
-            }
+
+            handleTooManyPossibilities(possibleChis, possibleMelds, numberOfDuplicateTiles, tile);
 
         }
     }
 
-    public void reducePossibleMelds(PossibleMelds possibleMelds, GameContext gameContext) throws InvalidHandException {
-        LOGGER.info("Reducing possible melds...");
-        if (possibleMelds.getPairs().size() > 0) {
-            for (int i = 0; i < possibleMelds.getPairs().size(); i++) {
-                List<Integer> tempHand = new ArrayList<>(gameContext.getHand());
-                List<Integer> pair = possibleMelds.getPairs().get(i);
-                GameContext tempContext = new GameContext();
-                tempHand.remove(pair.get(0));
-                tempHand.remove(pair.get(1));
-                tempContext.getHand().addAll(tempHand);
-                // set temp pair count to one so we don't find a pair in reduceHand() and think
-                // that is this hand's pair, which would result in 2 pairs in the final
-                // evaluation
-                // ref [18, 18, 19, 19, 19, 19, 20, 20, 2, 3, 4, 13, 14, 15]
-                tempContext.setPairCount(1);
-                PossibleMelds tempPossibleMelds = null;
-                try {
-                    tempPossibleMelds = reduceHand(tempContext);
-                } catch (InvalidHandException e) {
-                    // this did not work, try another pair
-                    continue;
-                }
-
-                if (tempContext.getHand().stream().filter(x -> x != -1).count() == 0) {
-
-                    CommonUtil.checkMeldTypesAndRemoveDupes(tempPossibleMelds, tempContext.getHand());
-                    LOGGER.info("Hand determined!");
-                    CommonUtil.addTempMeldsToGameContext(tempContext, gameContext);
-                    gameContext.getMelds().add(pair);
-                    gameContext.getHand().remove(pair.get(0));
-                    gameContext.getHand().remove(pair.get(0));
-                    return;
-                }
-
-            }
-            // Probably wrong but we'll get there when we get there
-            LOGGER.error("Invalid hand detected in reducePossibleMelds() while checking pairs: {}",
-                    gameContext.getHand());
-            throw new InvalidHandException("Invalid hand -- too many pairs");
-
+    private void handleTooManyPossibilities(List<List<Integer>> possibleChis, PossibleMelds possibleMelds,
+            int numberOfDuplicateTiles, int tile) {
+        LOGGER.info("Couldn't determine a meld for this tile, adding to possible melds...");
+        for (int i = 0; i < possibleChis.size(); i++) {
+            possibleMelds.getChis().add(possibleChis.get(i));
         }
-        // probabaly wrong but we'll get there when we get there
-        LOGGER.error("Invalid hand detected in reducePossibleMelds(): {}",
-                gameContext.getHand());
-        throw new InvalidHandException("Invalid hand");
-
+        switch (numberOfDuplicateTiles) {
+            case 2:
+                possibleMelds.getPairs().add(Arrays.asList(tile, tile));
+                break;
+            case 3:
+                possibleMelds.getPairs().add(Arrays.asList(tile, tile));
+                possibleMelds.getPons().add(Arrays.asList(tile, tile, tile));
+                break;
+            case 4:
+                possibleMelds.getPairs().add(Arrays.asList(tile, tile));
+                possibleMelds.getPons().add(Arrays.asList(tile, tile, tile));
+                possibleMelds.getKans().add(Arrays.asList(tile, tile, tile, tile));
+                break;
+            default:
+                break;
+        }
     }
 
 }

@@ -53,42 +53,53 @@ public class HandSortUtilTest {
                 assertEquals(expected, gameContext.getHand());
 
         }
-        // TODO FIX THESE
-        // @Test
-        // public void testCheckChi_MiddleTile() {
-        // hand.addAll(Arrays.asList(0, 1, 2, 3, 4, 5, 6, 7, 8, 27, 27, 27, 33,
-        // 33));
-        // List<List<Integer>> possibleChis = new ArrayList<List<Integer>>();
 
-        // sortUtil.checkChi(hand, 1, possibleChis);
+        @Test
+        public void testCheckChi_MiddleTile() {
+                hand.addAll(Arrays.asList(0, 1, 2, 3, 4, 5, 6, 7, 8, 27, 27, 27, 33,
+                                33));
+                List<List<Integer>> possibleChis = new ArrayList<List<Integer>>();
 
-        // assertTrue(possibleChis.size() == 2);
+                sortUtil.checkChi(hand, 1, possibleChis, 1);
 
-        // }
+                assertTrue(possibleChis.size() == 2);
 
-        // @Test
-        // public void testCheckChi_FirstTile() {
-        // hand.addAll(Arrays.asList(0, 1, 2, 3, 4, 5, 6, 7, 8, 27, 27, 27, 33,
-        // 33));
-        // List<List<Integer>> possibleChis = new ArrayList<List<Integer>>();
+        }
 
-        // sortUtil.checkChi(hand, 0, possibleChis);
+        @Test
+        public void testCheckChi_FirstTile() {
+                hand.addAll(Arrays.asList(0, 1, 2, 3, 4, 5, 6, 7, 8, 27, 27, 27, 33,
+                                33));
+                List<List<Integer>> possibleChis = new ArrayList<List<Integer>>();
 
-        // assertTrue(possibleChis.size() == 1);
+                sortUtil.checkChi(hand, 0, possibleChis, 1);
 
-        // }
+                assertTrue(possibleChis.size() == 1);
 
-        // @Test
-        // public void testCheckChi_3rdTile() {
-        // hand.addAll(Arrays.asList(0, 1, 2, 3, 4, 5, 6, 7, 8, 27, 27, 27, 33,
-        // 33));
-        // List<List<Integer>> possibleChis = new ArrayList<List<Integer>>();
+        }
 
-        // sortUtil.checkChi(hand, 2, possibleChis);
+        @Test
+        public void testCheckChi_3rdTile() {
+                hand.addAll(Arrays.asList(0, 1, 2, 3, 4, 5, 6, 7, 8, 27, 27, 27, 33,
+                                33));
+                List<List<Integer>> possibleChis = new ArrayList<List<Integer>>();
 
-        // assertTrue(possibleChis.size() == 3);
+                sortUtil.checkChi(hand, 2, possibleChis, 1);
 
-        // }
+                assertTrue(possibleChis.size() == 3);
+
+        }
+
+        @Test
+        public void testCheckChi_DuplicateTile() {
+                hand.addAll(Arrays.asList(18, 18, 19, 19, 19, 19, 20, 20, 2, 3, 4, 13, 14, 15));
+                List<List<Integer>> possibleChis = new ArrayList<List<Integer>>();
+
+                sortUtil.checkChi(hand, 19, possibleChis, 4);
+
+                assertTrue(possibleChis.size() == 2);
+
+        }
 
         @Test
         public void testCheckHonors_HakuPairTest() throws RiichiCalculatorException {

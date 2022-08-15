@@ -3,22 +3,16 @@ package com.gutterboys.riichi.calculator.yaku;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import com.gutterboys.riichi.calculator.exception.InvalidHandException;
 import com.gutterboys.riichi.calculator.helper.CommonUtil;
 import com.gutterboys.riichi.calculator.helper.HandSortUtil;
 import com.gutterboys.riichi.calculator.model.GameContext;
 import com.gutterboys.riichi.calculator.model.ScoreResponse;
 
-import ch.qos.logback.classic.Logger;
-
 @Component
 public class ChiitoitsuOrRyanpeiko implements SpecialYaku {
-
-    private static final Logger LOGGER = (Logger) LoggerFactory.getLogger(ChiitoitsuOrRyanpeiko.class);
 
     @Autowired
     HandSortUtil sortUtil;
