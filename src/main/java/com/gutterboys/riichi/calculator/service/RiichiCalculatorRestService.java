@@ -42,6 +42,7 @@ public class RiichiCalculatorRestService {
 
             }
         } catch (Exception e) {
+            LOGGER.error(e.getStackTrace().toString());
             response.setStatus("500");
             response.setMessage("Server Error: " + e);
             return response;

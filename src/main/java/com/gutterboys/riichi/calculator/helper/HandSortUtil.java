@@ -134,7 +134,7 @@ public class HandSortUtil {
                         gameContext.getHand().add(0, -1);
                         gameContext.getHand().add(0, -1);
                         gameContext.getHand().add(0, -1);
-                        gameContext.getMelds().get(gameContext.getCurrentMeld()).addAll(possibleChis.get(0));
+                        gameContext.getMelds().add(possibleChis.get(0));
                         gameContext.setChiCount(gameContext.getChiCount() + 1);
                         gameContext.setCurrentMeld(gameContext.getCurrentMeld() + 1);
                         break;
@@ -161,8 +161,8 @@ public class HandSortUtil {
                             LOGGER.error("Invalid hand detected in reduceHand(): {}", gameContext.getHand());
                             throw new InvalidHandException("Invalid Hand");
                         }
-                        gameContext.getMelds().get(gameContext.getCurrentMeld()).add(tile);
-                        gameContext.getMelds().get(gameContext.getCurrentMeld()).add(tile);
+                        gameContext.getMelds().add(new ArrayList<Integer>(Arrays.asList(tile, tile)));
+
                         CommonUtil.removeAndAddPonFromList(gameContext.getHand(), tile, 2);
                         gameContext.setPairCount(gameContext.getPairCount() + 1);
                         break;
@@ -175,12 +175,19 @@ public class HandSortUtil {
                             gameContext.getHand().add(0, -1);
                             gameContext.getHand().add(0, -1);
                             gameContext.getHand().add(0, -1);
-                            gameContext.getMelds().get(gameContext.getCurrentMeld()).addAll(possibleChis.get(0));
+                            gameContext.getMelds().add(possibleChis.get(0));
                             gameContext.setChiCount(gameContext.getChiCount() + 1);
                             gameContext.setCurrentMeld(gameContext.getCurrentMeld() + 1);
-
+                            break;
+                        } else {
+                            // if we don't know the pair, add both melds to possibleMelds and continue
+                            for (int j = 0; j < possibleChis.size(); j++) {
+                                possibleMelds.getChis().add(possibleChis.get(j));
+                            }
+                            possibleMelds.getPairs().add(Arrays.asList(tile, tile));
+                            break;
                         }
-                        break;
+
                     } else {
                         // if we don't know the pair, add both melds to possibleMelds and continue
                         for (int j = 0; j < possibleChis.size(); j++) {
@@ -197,8 +204,7 @@ public class HandSortUtil {
                         // if we have three of a given tile, and that tile does not fit into a chi, it
                         // must be a pon
 
-                        gameContext.getMelds().get(gameContext.getCurrentMeld())
-                                .addAll(Arrays.asList(tile, tile, tile));
+                        gameContext.getMelds().add(Arrays.asList(tile, tile, tile));
                         CommonUtil.removeAndAddPonFromList(gameContext.getHand(), tile, 3);
                         gameContext.setPonCount(gameContext.getPonCount() + 1);
                         gameContext.setCurrentMeld(gameContext.getCurrentMeld() + 1);
@@ -217,8 +223,7 @@ public class HandSortUtil {
                     checkChi(gameContext.getHand(), tile, possibleChis);
 
                     if (possibleChis.size() == 0) {
-                        gameContext.getMelds().get(gameContext.getCurrentMeld())
-                                .addAll(new ArrayList<Integer>(Arrays.asList(tile, tile, tile, tile)));
+                        gameContext.getMelds().add(new ArrayList<Integer>(Arrays.asList(tile, tile, tile, tile)));
                         CommonUtil.removeAndAddPonFromList(gameContext.getHand(), tile, 4);
                         gameContext.setKanCount(gameContext.getKanCount() + 1);
                         gameContext.setCurrentMeld(gameContext.getCurrentMeld() + 1);

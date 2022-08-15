@@ -29,7 +29,7 @@ public class CalculatorService {
     HandSortUtil handSortUtil;
 
     public void evaluateHand(GameContext gameContext, ScoreResponse response) throws RiichiCalculatorException {
-        LOGGER.debug("Calculating score...");
+        LOGGER.info("Calculating score...");
 
         handSortUtil.swapFives(gameContext);
         if (gameContext.getDoraTiles().size() > 0) {
@@ -46,6 +46,7 @@ public class CalculatorService {
 
         // Loop over remaining tiles in hand to see what melds can be made
         PossibleMelds possibleMelds = handSortUtil.reduceHand(gameContext);
+        CommonUtil.checkMeldTypesAndRemoveDupes(possibleMelds, gameContext.getHand());
         LOGGER.info("Tiles in hand: {}", gameContext.getHand());
         LOGGER.info("Melds: {}", gameContext.getMelds());
         // if (gameContext.getHand().stream().filter(x -> x != -1).count() == 0) {
