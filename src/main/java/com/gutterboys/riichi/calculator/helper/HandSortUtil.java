@@ -71,6 +71,7 @@ public class HandSortUtil {
     }
 
     public void checkHonors(GameContext gameContext) throws RiichiCalculatorException {
+        LOGGER.debug("Checking honors...");
         for (int i = 0; i < gameContext.getHand().size(); i++) {
             int tile = gameContext.getHand().get(i);
             if (RiichiCalculatorConstants.HONORS.contains(tile)) {
@@ -105,6 +106,7 @@ public class HandSortUtil {
     }
 
     public PossibleMelds reduceHand(GameContext gameContext) throws InvalidHandException {
+        LOGGER.debug("Reducing hand...");
         PossibleMelds possibleMelds = new PossibleMelds();
         int unsortedCount = (int) gameContext.getHand().stream().filter(x -> x != -1).count();
 
@@ -142,8 +144,8 @@ public class HandSortUtil {
                     // those melds to possibleMelds obj. for now, we just want to identify all tiles
                     // that only fit into one meld.
                     else {
-                        for (int j = 0; j < possibleChis.size(); i++) {
-                            possibleMelds.getChis().add(possibleChis.get(i));
+                        for (int j = 0; j < possibleChis.size(); j++) {
+                            possibleMelds.getChis().add(possibleChis.get(j));
                         }
 
                         break;
@@ -181,8 +183,8 @@ public class HandSortUtil {
                         break;
                     } else {
                         // if we don't know the pair, add both melds to possibleMelds and continue
-                        for (int j = 0; j < possibleChis.size(); i++) {
-                            possibleMelds.getChis().add(possibleChis.get(i));
+                        for (int j = 0; j < possibleChis.size(); j++) {
+                            possibleMelds.getChis().add(possibleChis.get(j));
                         }
                         possibleMelds.getPairs().add(Arrays.asList(tile, tile));
                         break;
@@ -204,8 +206,8 @@ public class HandSortUtil {
                         break;
 
                     } else {
-                        for (int j = 0; j < possibleChis.size(); i++) {
-                            possibleMelds.getChis().add(possibleChis.get(i));
+                        for (int j = 0; j < possibleChis.size(); j++) {
+                            possibleMelds.getChis().add(possibleChis.get(j));
                         }
                         possibleMelds.getPons().add(Arrays.asList(tile, tile, tile));
                         break;
@@ -223,8 +225,8 @@ public class HandSortUtil {
                         break;
 
                     } else {
-                        for (int j = 0; j < possibleChis.size(); i++) {
-                            possibleMelds.getChis().add(possibleChis.get(i));
+                        for (int j = 0; j < possibleChis.size(); j++) {
+                            possibleMelds.getChis().add(possibleChis.get(j));
                         }
                         possibleMelds.getKans().add(Arrays.asList(tile, tile, tile, tile));
                         break;
@@ -233,15 +235,33 @@ public class HandSortUtil {
                 default:
                     break;
             }
-            if (unsortedCount > (int) gameContext.getHand().stream().filter(x -> x != -1).count()) {
-                reduceHand(gameContext);
-            }
-            if (unsortedCount == (int) gameContext.getHand().stream().filter(x -> x != -1).count()) {
-                return possibleMelds;
-            }
 
         }
-        return possibleMelds;
+        if (unsortedCount > (int) gameContext.getHand().stream().filter(x -> x != -1).count()) {
+            reduceHand(gameContext);
+        }
+        if (unsortedCount == (int) gameContext.getHand().stream().filter(x -> x != -1).count()) {
+            return possibleMelds;
+        } else {
+            return possibleMelds;
+        }
     }
 
+    public void reducePossibleMelds(PossibleMelds possibleMelds, GameContext gameContext)
+            throws RiichiCalculatorException {
+        if (possibleMelds.getChis().size() > 0) {
+            for (int i = 0; i < possibleMelds.getChis().size(); i++) {
+                List<Integer> tempHand = new ArrayList<>(gameContext.getHand());
+                List<Integer> chi = possibleMelds.getChis().get(i);
+                GameContext tempContext = new GameContext();
+                tempContext.getHand().addAll(tempHand);
+                tempHand.remove(chi.get(0));
+                tempHand.remove(chi.get(1));
+                tempHand.remove(chi.get(2));
+                reduceHand(tempContext);
+
+            }
+            // outcome 1: reduceHand
+        }
+    }
 }

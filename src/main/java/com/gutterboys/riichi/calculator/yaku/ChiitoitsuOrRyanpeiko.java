@@ -57,9 +57,6 @@ public class ChiitoitsuOrRyanpeiko implements SpecialYaku {
 
             response.setHan(response.getHan() + 2);
             response.getQualifiedYaku().add("Chiitoitsu (Seven Pairs)");
-        } else if (pairCount > 1) {
-            LOGGER.error("Invalid hand found in ChiitoitsuOrRyanpeiko: {}", gameContext.getHand());
-            throw new InvalidHandException("Invalid Hand -- Too Many Pairs");
         }
 
     }

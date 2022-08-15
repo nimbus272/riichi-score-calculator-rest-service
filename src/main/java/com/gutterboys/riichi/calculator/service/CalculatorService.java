@@ -1,10 +1,12 @@
 package com.gutterboys.riichi.calculator.service;
 
+import org.apache.commons.logging.Log;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.gutterboys.riichi.calculator.exception.RiichiCalculatorException;
+import com.gutterboys.riichi.calculator.helper.CommonUtil;
 import com.gutterboys.riichi.calculator.helper.HandSortUtil;
 import com.gutterboys.riichi.calculator.helper.ScoreUtil;
 import com.gutterboys.riichi.calculator.model.GameContext;
@@ -44,12 +46,14 @@ public class CalculatorService {
 
         // Loop over remaining tiles in hand to see what melds can be made
         PossibleMelds possibleMelds = handSortUtil.reduceHand(gameContext);
-
-        if (gameContext.getHand().stream().filter(x -> x != -1).count() == 0) {
-            // check all the other yaku
-            eligibilityEngine.execute(gameContext, response);
-            return;
-        }
+        LOGGER.info("Tiles in hand: {}", gameContext.getHand());
+        LOGGER.info("Melds: {}", gameContext.getMelds());
+        // if (gameContext.getHand().stream().filter(x -> x != -1).count() == 0) {
+        // // check all the other yaku
+        // eligibilityEngine.execute(gameContext, response);
+        // return;
+        // }
+        // CommonUtil.checkMeldTypesAndRemoveDupes(possibleMelds);
         // iterate until all tiles are sorted or it's impossible to reduce
 
         // profit
