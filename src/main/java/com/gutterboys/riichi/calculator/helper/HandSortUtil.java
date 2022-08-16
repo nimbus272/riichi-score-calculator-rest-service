@@ -170,13 +170,18 @@ public class HandSortUtil {
     public void reducePossibleMelds(PossibleMelds possibleMelds, GameContext gameContext, ScoreResponse response)
             throws InvalidHandException {
         LOGGER.info("Reducing possible melds...");
+        List<Integer> reducedHand = new ArrayList<>(gameContext.getTiles());
+        List<List<Integer>> lockedMelds = new ArrayList<List<Integer>>(gameContext.getMelds());
         if (possibleMelds.getPairs().size() > 0) {
             for (int i = 0; i < possibleMelds.getPairs().size(); i++) {
-                List<Integer> tempHand = new ArrayList<>(gameContext.getTiles());
-                List<Integer> pair = possibleMelds.getPairs().get(i);
                 GameContext tempContext = new GameContext();
+                List<Integer> tempHand = new ArrayList<>(reducedHand);
+                List<Integer> pair = possibleMelds.getPairs().get(i);
                 tempHand.remove(pair.get(0));
                 tempHand.remove(pair.get(1));
+                if (tempContext.getTiles().size() > 0) {
+                    tempContext.getTiles().clear();
+                }
                 tempContext.getTiles().addAll(tempHand);
                 // set temp pair count to one so we don't find a pair in reduceHand() and think
                 // that is this hand's pair, which would result in 2 pairs in the final
@@ -207,8 +212,9 @@ public class HandSortUtil {
                     possibleHand.getMelds().addAll(gameContext.getMelds());
                     possibleHand.getTiles().addAll(response.getTiles());
                     response.getPossibleHands().add(possibleHand);
+                    gameContext.getMelds().clear();
+                    gameContext.getMelds().addAll(lockedMelds);
 
-                    return;
                 }
 
             }
@@ -224,9 +230,9 @@ public class HandSortUtil {
 
         if (possibleMelds.getPons().size() > 0) {
             for (int i = 0; i < possibleMelds.getPons().size(); i++) {
-                List<Integer> tempHand = new ArrayList<>(gameContext.getTiles());
-                List<Integer> pon = possibleMelds.getPons().get(i);
                 GameContext tempContext = new GameContext();
+                List<Integer> tempHand = new ArrayList<Integer>(reducedHand);
+                List<Integer> pon = possibleMelds.getPons().get(i);
                 tempHand.remove(pon.get(0));
                 tempHand.remove(pon.get(1));
                 tempHand.remove(pon.get(2));
@@ -259,16 +265,20 @@ public class HandSortUtil {
                     possibleHand.getMelds().addAll(gameContext.getMelds());
                     possibleHand.getTiles().addAll(response.getTiles());
                     response.getPossibleHands().add(possibleHand);
+                    gameContext.getMelds().clear();
+                    gameContext.getMelds().addAll(lockedMelds);
 
                     return;
                 }
 
             }
         }
-        // probabaly wrong but we'll get there when we get there
-        LOGGER.error("Invalid hand detected in reducePossibleMelds(): {}",
-                gameContext.getTiles());
-        throw new InvalidHandException("Invalid hand");
+        // probably wrong but we'll get there when we get there
+        if (response.getPossibleHands().size() == 0) {
+            LOGGER.error("Invalid hand detected in reducePossibleMelds(): {}",
+                    gameContext.getTiles());
+            throw new InvalidHandException("Invalid hand");
+        }
 
     }
 
@@ -351,7 +361,7 @@ public class HandSortUtil {
                     break;
             }
         } else if (possibleChis.size() == 2) {
-            if (possibleChis.get(0).containsAll(possibleChis.get(1))) {
+            if (possibleChis.get(0).containsAll(possibleChis.get(1)) && gameContext.getPairCount() == 1) {
                 // if there are only 2 possible chis and they are the same, we assume they are
                 // an identical sequence?
                 if (gameContext.getTiles().stream().filter(x -> x == possibleChis.get(0).get(0)).count() == 2L
