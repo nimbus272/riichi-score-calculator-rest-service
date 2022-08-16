@@ -8,7 +8,6 @@ public class GameContext {
     private List<Integer> tiles = new ArrayList<Integer>();
     private List<List<Integer>> melds = new ArrayList<List<Integer>>();
     private List<Integer> doraTiles = new ArrayList<Integer>();
-    private List<List<Integer>> requiredMelds = new ArrayList<List<Integer>>();
     private int currentMeld = 0;
     private int winningTile;
     private int seatWind;

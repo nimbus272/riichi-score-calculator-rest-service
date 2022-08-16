@@ -8,39 +8,39 @@ import org.junit.Before;
 import org.junit.Test;
 
 import com.gutterboys.riichi.calculator.model.GameContext;
-import com.gutterboys.riichi.calculator.model.ScoreResponse;
+import com.gutterboys.riichi.calculator.model.PossibleHand;
 import com.gutterboys.riichi.calculator.yaku.DeadWallDraw;
 
 public class DeadWallDrawTest {
 
     GameContext gameContext;
 
-    ScoreResponse response;
+    PossibleHand possibleHand;
 
     DeadWallDraw yaku = new DeadWallDraw();
 
     @Before
     public void setUp() {
         gameContext = new GameContext();
-        response = new ScoreResponse();
+        possibleHand = new PossibleHand();
     }
 
-//     @Test
-//     public void execute_IsDeadWallDrawTest() {
-//         gameContext.setDeadWallDraw(true);
+    @Test
+    public void execute_IsDeadWallDrawTest() {
+        gameContext.setDeadWallDraw(true);
 
-//         yaku.execute(gameContext, response);
+        yaku.execute(gameContext, possibleHand);
 
-//         assertEquals(1, response.getHan());
-//         assertTrue(response.getQualifiedYaku().contains("Rinshan Kaihou (Dead Wall Draw)"));
-//     }
+        assertEquals(1, possibleHand.getHan());
+        assertTrue(possibleHand.getQualifiedYaku().contains("Rinshan Kaihou (Dead Wall Draw)"));
+    }
 
-//     @Test
-//     public void execute_IsNotDeadWallDrawTest() {
+    @Test
+    public void execute_IsNotDeadWallDrawTest() {
 
-//         yaku.execute(gameContext, response);
+        yaku.execute(gameContext, possibleHand);
 
-//         assertEquals(0, response.getHan());
-//         assertFalse(response.getQualifiedYaku().contains("Rinshan Kaihou (Dead Wall Draw)"));
-//     }
+        assertEquals(0, possibleHand.getHan());
+        assertFalse(possibleHand.getQualifiedYaku().contains("Rinshan Kaihou (Dead Wall Draw)"));
+    }
 }

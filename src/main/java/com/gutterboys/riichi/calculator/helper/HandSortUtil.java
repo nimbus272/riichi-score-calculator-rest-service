@@ -212,6 +212,7 @@ public class HandSortUtil {
                 }
 
             }
+
             // Probably wrong but we'll get there when we get there
             if (!CollectionUtils.isEmpty(response.getPossibleHands())) {
                 gameContext.getTiles()
@@ -219,6 +220,50 @@ public class HandSortUtil {
                 return;
             }
 
+        }
+
+        if (possibleMelds.getPons().size() > 0) {
+            for (int i = 0; i < possibleMelds.getPons().size(); i++) {
+                List<Integer> tempHand = new ArrayList<>(gameContext.getTiles());
+                List<Integer> pon = possibleMelds.getPons().get(i);
+                GameContext tempContext = new GameContext();
+                tempHand.remove(pon.get(0));
+                tempHand.remove(pon.get(1));
+                tempHand.remove(pon.get(2));
+                tempContext.getTiles().addAll(tempHand);
+                // set temp pair count to one so we don't find a pair in reduceHand() and think
+                // that is this hand's pair, which would result in 2 pairs in the final
+                // evaluation
+                // ref [18, 18, 19, 19, 19, 19, 20, 20, 2, 3, 4, 13, 14, 15]
+                PossibleMelds tempPossibleMelds = new PossibleMelds();
+                try {
+                    reduceHand(tempContext, response, tempPossibleMelds);
+                } catch (InvalidHandException e) {
+                    // this did not work, try another pair
+                    continue;
+                }
+
+                if (tempContext.getTiles().stream().filter(x -> x != -1).count() == 0) {
+
+                    CommonUtil.checkMeldTypesAndRemoveDupes(tempPossibleMelds, tempContext.getTiles());
+                    LOGGER.info("Hand determined!");
+                    CommonUtil.addTempMeldsToGameContext(tempContext, gameContext);
+                    gameContext.getMelds().add(pon);
+
+                    for (int j = 0; j < response.getPossibleHands().size(); j++) {
+                        if (response.getPossibleHands().get(j).getMelds().size() < 5) {
+                            response.getPossibleHands().remove(j);
+                        }
+                    }
+                    PossibleHand possibleHand = new PossibleHand();
+                    possibleHand.getMelds().addAll(gameContext.getMelds());
+                    possibleHand.getTiles().addAll(response.getTiles());
+                    response.getPossibleHands().add(possibleHand);
+
+                    return;
+                }
+
+            }
         }
         // probabaly wrong but we'll get there when we get there
         LOGGER.error("Invalid hand detected in reducePossibleMelds(): {}",

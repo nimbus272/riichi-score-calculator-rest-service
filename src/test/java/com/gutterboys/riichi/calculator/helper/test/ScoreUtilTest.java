@@ -11,251 +11,251 @@ import org.junit.Test;
 import com.gutterboys.riichi.calculator.constants.SpecialScoringType;
 import com.gutterboys.riichi.calculator.helper.ScoreUtil;
 import com.gutterboys.riichi.calculator.model.GameContext;
-import com.gutterboys.riichi.calculator.model.ScoreResponse;
+import com.gutterboys.riichi.calculator.model.PossibleHand;
 
 public class ScoreUtilTest {
 
     GameContext gameContext;
 
-    ScoreResponse response;
+    PossibleHand possibleHand;
 
     ScoreUtil util = new ScoreUtil();
 
     @Before
     public void setUp() {
         gameContext = new GameContext();
-        response = new ScoreResponse();
+        possibleHand = new PossibleHand();
     }
 
-    // @Test
-    // public void determineBaseScoreTest() {
-    // response.setHan(2);
-    // response.setFu(40);
+    @Test
+    public void determineBaseScoreTest() {
+        possibleHand.setHan(2);
+        possibleHand.setFu(40);
 
-    // util.determineBaseScore(response);
+        util.determineBaseScore(possibleHand);
 
-    // assertTrue(response.getBaseScore() > 0);
-    // assertEquals(640, response.getBaseScore());
-    // }
+        assertTrue(possibleHand.getBaseScore() > 0);
+        assertEquals(640, possibleHand.getBaseScore());
+    }
 
-    // @Test
-    // public void applyScoreMultipliers_IsTsumoTest() {
-    // gameContext.setTsumo(true);
-    // response.setBaseScore(640);
+    @Test
+    public void applyScoreMultipliers_IsTsumoTest() {
+        gameContext.setTsumo(true);
+        possibleHand.setBaseScore(640);
 
-    // util.applyScoreMultipliers(gameContext, response);
+        util.applyScoreMultipliers(gameContext, possibleHand);
 
-    // assertEquals(1300, response.getTsumoFromNonDealer());
-    // assertEquals(700, response.getTsumoFromDealer());
-    // }
+        assertEquals(1300, possibleHand.getTsumoFromNonDealer());
+        assertEquals(700, possibleHand.getTsumoFromDealer());
+    }
 
-    // @Test
-    // public void applyScoreMultipliers_IsNotTsumoTest() {
-    // gameContext.setTsumo(false);
-    // response.setBaseScore(640);
+    @Test
+    public void applyScoreMultipliers_IsNotTsumoTest() {
+        gameContext.setTsumo(false);
+        possibleHand.setBaseScore(640);
 
-    // util.applyScoreMultipliers(gameContext, response);
+        util.applyScoreMultipliers(gameContext, possibleHand);
 
-    // assertEquals(3900, response.getRonToDealer());
-    // assertEquals(2600, response.getRonToNonDealer());
-    // }
+        assertEquals(3900, possibleHand.getRonToDealer());
+        assertEquals(2600, possibleHand.getRonToNonDealer());
+    }
 
-    // @Test
-    // public void handleSpecialScoring_ManganTest() {
-    // response.setHan(5);
+    @Test
+    public void handleSpecialScoring_ManganTest() {
+        possibleHand.setHan(5);
 
-    // util.handleSpecialScoring(gameContext, response);
+        util.handleSpecialScoring(gameContext, possibleHand);
 
-    // assertEquals(SpecialScoringType.MANGAN, response.getSpecialScoreType());
-    // }
+        assertEquals(SpecialScoringType.MANGAN, possibleHand.getSpecialScoreType());
+    }
 
-    // @Test
-    // public void handleSpecialScoring_HanemanTest() {
-    // response.setHan(6);
+    @Test
+    public void handleSpecialScoring_HanemanTest() {
+        possibleHand.setHan(6);
 
-    // util.handleSpecialScoring(gameContext, response);
+        util.handleSpecialScoring(gameContext, possibleHand);
 
-    // assertEquals(SpecialScoringType.HANEMAN, response.getSpecialScoreType());
+        assertEquals(SpecialScoringType.HANEMAN, possibleHand.getSpecialScoreType());
 
-    // response.setSpecialScoreType("");
-    // response.setHan(7);
+        possibleHand.setSpecialScoreType("");
+        possibleHand.setHan(7);
 
-    // util.handleSpecialScoring(gameContext, response);
+        util.handleSpecialScoring(gameContext, possibleHand);
 
-    // assertEquals(SpecialScoringType.HANEMAN, response.getSpecialScoreType());
-    // }
+        assertEquals(SpecialScoringType.HANEMAN, possibleHand.getSpecialScoreType());
+    }
 
-    // @Test
-    // public void handleSpecialScoring_BaimanTest() {
-    // response.setHan(8);
+    @Test
+    public void handleSpecialScoring_BaimanTest() {
+        possibleHand.setHan(8);
 
-    // util.handleSpecialScoring(gameContext, response);
+        util.handleSpecialScoring(gameContext, possibleHand);
 
-    // assertEquals(SpecialScoringType.BAIMAN, response.getSpecialScoreType());
+        assertEquals(SpecialScoringType.BAIMAN, possibleHand.getSpecialScoreType());
 
-    // response.setSpecialScoreType("");
-    // response.setHan(9);
+        possibleHand.setSpecialScoreType("");
+        possibleHand.setHan(9);
 
-    // util.handleSpecialScoring(gameContext, response);
+        util.handleSpecialScoring(gameContext, possibleHand);
 
-    // assertEquals(SpecialScoringType.BAIMAN, response.getSpecialScoreType());
+        assertEquals(SpecialScoringType.BAIMAN, possibleHand.getSpecialScoreType());
 
-    // response.setSpecialScoreType("");
-    // response.setHan(10);
+        possibleHand.setSpecialScoreType("");
+        possibleHand.setHan(10);
 
-    // util.handleSpecialScoring(gameContext, response);
+        util.handleSpecialScoring(gameContext, possibleHand);
 
-    // assertEquals(SpecialScoringType.BAIMAN, response.getSpecialScoreType());
-    // }
+        assertEquals(SpecialScoringType.BAIMAN, possibleHand.getSpecialScoreType());
+    }
 
-    // @Test
-    // public void handleSpecialScoring_SanbaimanTest() {
-    // response.setHan(11);
+    @Test
+    public void handleSpecialScoring_SanbaimanTest() {
+        possibleHand.setHan(11);
 
-    // util.handleSpecialScoring(gameContext, response);
+        util.handleSpecialScoring(gameContext, possibleHand);
 
-    // assertEquals(SpecialScoringType.SANBAIMAN, response.getSpecialScoreType());
+        assertEquals(SpecialScoringType.SANBAIMAN, possibleHand.getSpecialScoreType());
 
-    // response.setSpecialScoreType("");
-    // response.setHan(12);
+        possibleHand.setSpecialScoreType("");
+        possibleHand.setHan(12);
 
-    // util.handleSpecialScoring(gameContext, response);
+        util.handleSpecialScoring(gameContext, possibleHand);
 
-    // assertEquals(SpecialScoringType.SANBAIMAN, response.getSpecialScoreType());
-    // }
+        assertEquals(SpecialScoringType.SANBAIMAN, possibleHand.getSpecialScoreType());
+    }
 
-    // @Test
-    // public void handleSpecialScoring_YakumanTest() {
-    // response.setHan(13);
+    @Test
+    public void handleSpecialScoring_YakumanTest() {
+        possibleHand.setHan(13);
 
-    // util.handleSpecialScoring(gameContext, response);
+        util.handleSpecialScoring(gameContext, possibleHand);
 
-    // assertEquals(SpecialScoringType.YAKUMAN, response.getSpecialScoreType());
+        assertEquals(SpecialScoringType.YAKUMAN, possibleHand.getSpecialScoreType());
 
-    // response.setSpecialScoreType("");
-    // response.setHan(14);
+        possibleHand.setSpecialScoreType("");
+        possibleHand.setHan(14);
 
-    // util.handleSpecialScoring(gameContext, response);
+        util.handleSpecialScoring(gameContext, possibleHand);
 
-    // assertEquals(SpecialScoringType.YAKUMAN, response.getSpecialScoreType());
-    // }
+        assertEquals(SpecialScoringType.YAKUMAN, possibleHand.getSpecialScoreType());
+    }
 
-    // @Test(expected = NullPointerException.class)
-    // public void handleSpecialScoring_FourHanTest() {
-    // response.setHan(4);
+    @Test(expected = NullPointerException.class)
+    public void handleSpecialScoring_FourHanTest() {
+        possibleHand.setHan(4);
 
-    // util.handleSpecialScoring(gameContext, response);
-    // }
+        util.handleSpecialScoring(gameContext, possibleHand);
+    }
 
-    // @Test
-    // public void handleSpecialScoring_ManganTsumoTest() {
-    // gameContext.setTsumo(true);
-    // response.setSpecialScoreType(SpecialScoringType.MANGAN);
+    @Test
+    public void handleSpecialScoring_ManganTsumoTest() {
+        gameContext.setTsumo(true);
+        possibleHand.setSpecialScoreType(SpecialScoringType.MANGAN);
 
-    // util.handleSpecialScoring(gameContext, response);
+        util.handleSpecialScoring(gameContext, possibleHand);
 
-    // assertEquals(4000, response.getTsumoFromDealer());
-    // assertEquals(2000, response.getTsumoFromNonDealer());
-    // }
+        assertEquals(4000, possibleHand.getTsumoFromDealer());
+        assertEquals(2000, possibleHand.getTsumoFromNonDealer());
+    }
 
-    // @Test
-    // public void handleSpecialScoring_ManganRonTest() {
-    // gameContext.setTsumo(false);
-    // response.setSpecialScoreType(SpecialScoringType.MANGAN);
+    @Test
+    public void handleSpecialScoring_ManganRonTest() {
+        gameContext.setTsumo(false);
+        possibleHand.setSpecialScoreType(SpecialScoringType.MANGAN);
 
-    // util.handleSpecialScoring(gameContext, response);
+        util.handleSpecialScoring(gameContext, possibleHand);
 
-    // assertEquals(12000, response.getRonToDealer());
-    // assertEquals(8000, response.getRonToNonDealer());
-    // }
+        assertEquals(12000, possibleHand.getRonToDealer());
+        assertEquals(8000, possibleHand.getRonToNonDealer());
+    }
 
-    // @Test
-    // public void handleSpecialScoring_HanemanTsumoTest() {
-    // gameContext.setTsumo(true);
-    // response.setSpecialScoreType(SpecialScoringType.HANEMAN);
+    @Test
+    public void handleSpecialScoring_HanemanTsumoTest() {
+        gameContext.setTsumo(true);
+        possibleHand.setSpecialScoreType(SpecialScoringType.HANEMAN);
 
-    // util.handleSpecialScoring(gameContext, response);
+        util.handleSpecialScoring(gameContext, possibleHand);
 
-    // assertEquals(6000, response.getTsumoFromDealer());
-    // assertEquals(3000, response.getTsumoFromNonDealer());
-    // }
+        assertEquals(6000, possibleHand.getTsumoFromDealer());
+        assertEquals(3000, possibleHand.getTsumoFromNonDealer());
+    }
 
-    // @Test
-    // public void handleSpecialScoring_HanemanRonTest() {
-    // gameContext.setTsumo(false);
-    // response.setSpecialScoreType(SpecialScoringType.HANEMAN);
+    @Test
+    public void handleSpecialScoring_HanemanRonTest() {
+        gameContext.setTsumo(false);
+        possibleHand.setSpecialScoreType(SpecialScoringType.HANEMAN);
 
-    // util.handleSpecialScoring(gameContext, response);
+        util.handleSpecialScoring(gameContext, possibleHand);
 
-    // assertEquals(18000, response.getRonToDealer());
-    // assertEquals(12000, response.getRonToNonDealer());
-    // }
+        assertEquals(18000, possibleHand.getRonToDealer());
+        assertEquals(12000, possibleHand.getRonToNonDealer());
+    }
 
-    // @Test
-    // public void handleSpecialScoring_BaimanTsumoTest() {
-    // gameContext.setTsumo(true);
-    // response.setSpecialScoreType(SpecialScoringType.BAIMAN);
+    @Test
+    public void handleSpecialScoring_BaimanTsumoTest() {
+        gameContext.setTsumo(true);
+        possibleHand.setSpecialScoreType(SpecialScoringType.BAIMAN);
 
-    // util.handleSpecialScoring(gameContext, response);
+        util.handleSpecialScoring(gameContext, possibleHand);
 
-    // assertEquals(8000, response.getTsumoFromDealer());
-    // assertEquals(4000, response.getTsumoFromNonDealer());
-    // }
+        assertEquals(8000, possibleHand.getTsumoFromDealer());
+        assertEquals(4000, possibleHand.getTsumoFromNonDealer());
+    }
 
-    // @Test
-    // public void handleSpecialScoring_BaimanRonTest() {
-    // gameContext.setTsumo(false);
-    // response.setSpecialScoreType(SpecialScoringType.BAIMAN);
+    @Test
+    public void handleSpecialScoring_BaimanRonTest() {
+        gameContext.setTsumo(false);
+        possibleHand.setSpecialScoreType(SpecialScoringType.BAIMAN);
 
-    // util.handleSpecialScoring(gameContext, response);
+        util.handleSpecialScoring(gameContext, possibleHand);
 
-    // assertEquals(24000, response.getRonToDealer());
-    // assertEquals(16000, response.getRonToNonDealer());
-    // }
+        assertEquals(24000, possibleHand.getRonToDealer());
+        assertEquals(16000, possibleHand.getRonToNonDealer());
+    }
 
-    // @Test
-    // public void handleSpecialScoring_SanbaimanTsumoTest() {
-    // gameContext.setTsumo(true);
-    // response.setSpecialScoreType(SpecialScoringType.SANBAIMAN);
+    @Test
+    public void handleSpecialScoring_SanbaimanTsumoTest() {
+        gameContext.setTsumo(true);
+        possibleHand.setSpecialScoreType(SpecialScoringType.SANBAIMAN);
 
-    // util.handleSpecialScoring(gameContext, response);
+        util.handleSpecialScoring(gameContext, possibleHand);
 
-    // assertEquals(12000, response.getTsumoFromDealer());
-    // assertEquals(6000, response.getTsumoFromNonDealer());
-    // }
+        assertEquals(12000, possibleHand.getTsumoFromDealer());
+        assertEquals(6000, possibleHand.getTsumoFromNonDealer());
+    }
 
-    // @Test
-    // public void handleSpecialScoring_SanbaimanRonTest() {
-    // gameContext.setTsumo(false);
-    // response.setSpecialScoreType(SpecialScoringType.SANBAIMAN);
+    @Test
+    public void handleSpecialScoring_SanbaimanRonTest() {
+        gameContext.setTsumo(false);
+        possibleHand.setSpecialScoreType(SpecialScoringType.SANBAIMAN);
 
-    // util.handleSpecialScoring(gameContext, response);
+        util.handleSpecialScoring(gameContext, possibleHand);
 
-    // assertEquals(36000, response.getRonToDealer());
-    // assertEquals(24000, response.getRonToNonDealer());
-    // }
+        assertEquals(36000, possibleHand.getRonToDealer());
+        assertEquals(24000, possibleHand.getRonToNonDealer());
+    }
 
-    // @Test
-    // public void handleSpecialScoring_YakumanTsumoTest() {
-    // gameContext.setTsumo(true);
-    // response.setSpecialScoreType(SpecialScoringType.YAKUMAN);
+    @Test
+    public void handleSpecialScoring_YakumanTsumoTest() {
+        gameContext.setTsumo(true);
+        possibleHand.setSpecialScoreType(SpecialScoringType.YAKUMAN);
 
-    // util.handleSpecialScoring(gameContext, response);
+        util.handleSpecialScoring(gameContext, possibleHand);
 
-    // assertEquals(16000, response.getTsumoFromDealer());
-    // assertEquals(8000, response.getTsumoFromNonDealer());
-    // }
+        assertEquals(16000, possibleHand.getTsumoFromDealer());
+        assertEquals(8000, possibleHand.getTsumoFromNonDealer());
+    }
 
-    // @Test
-    // public void handleSpecialScoring_YakumanRonTest() {
-    // gameContext.setTsumo(false);
-    // response.setSpecialScoreType(SpecialScoringType.YAKUMAN);
+    @Test
+    public void handleSpecialScoring_YakumanRonTest() {
+        gameContext.setTsumo(false);
+        possibleHand.setSpecialScoreType(SpecialScoringType.YAKUMAN);
 
-    // util.handleSpecialScoring(gameContext, response);
+        util.handleSpecialScoring(gameContext, possibleHand);
 
-    // assertEquals(48000, response.getRonToDealer());
-    // assertEquals(32000, response.getRonToNonDealer());
-    // }
+        assertEquals(48000, possibleHand.getRonToDealer());
+        assertEquals(32000, possibleHand.getRonToNonDealer());
+    }
 
     @Test
     public void testCountDora_2dora() {
@@ -284,25 +284,25 @@ public class ScoreUtilTest {
         assertEquals(8, gameContext.getDoraCount());
     }
 
-    // @Test
-    // public void handleSpecialScoring_DoubleYakumanTsumoTest() {
-    // gameContext.setTsumo(true);
-    // response.setSpecialScoreType(SpecialScoringType.DOUBLE_YAKUMAN);
+    @Test
+    public void handleSpecialScoring_DoubleYakumanTsumoTest() {
+        gameContext.setTsumo(true);
+        possibleHand.setSpecialScoreType(SpecialScoringType.DOUBLE_YAKUMAN);
 
-    // util.handleSpecialScoring(gameContext, response);
+        util.handleSpecialScoring(gameContext, possibleHand);
 
-    // assertEquals(32000, response.getTsumoFromDealer());
-    // assertEquals(16000, response.getTsumoFromNonDealer());
-    // }
+        assertEquals(32000, possibleHand.getTsumoFromDealer());
+        assertEquals(16000, possibleHand.getTsumoFromNonDealer());
+    }
 
-    // @Test
-    // public void handleSpecialScoring_DoubleYakumanRonTest() {
-    // gameContext.setTsumo(false);
-    // response.setSpecialScoreType(SpecialScoringType.DOUBLE_YAKUMAN);
+    @Test
+    public void handleSpecialScoring_DoubleYakumanRonTest() {
+        gameContext.setTsumo(false);
+        possibleHand.setSpecialScoreType(SpecialScoringType.DOUBLE_YAKUMAN);
 
-    // util.handleSpecialScoring(gameContext, response);
+        util.handleSpecialScoring(gameContext, possibleHand);
 
-    // assertEquals(96000, response.getRonToDealer());
-    // assertEquals(64000, response.getRonToNonDealer());
-    // }
+        assertEquals(96000, possibleHand.getRonToDealer());
+        assertEquals(64000, possibleHand.getRonToNonDealer());
+    }
 }

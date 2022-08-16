@@ -1,7 +1,5 @@
 package com.gutterboys.riichi.calculator.service;
 
-import java.util.Collection;
-
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -49,8 +47,10 @@ public class CalculatorService {
 
         // Loop over remaining tiles in hand to see what melds can be made
         PossibleMelds possibleMelds = new PossibleMelds();
-        handSortUtil.reduceHand(gameContext, response, possibleMelds);
-        CommonUtil.checkMeldTypesAndRemoveDupes(possibleMelds, gameContext.getTiles());
+        if (response.getPossibleHands().isEmpty()) {
+            handSortUtil.reduceHand(gameContext, response, possibleMelds);
+            CommonUtil.checkMeldTypesAndRemoveDupes(possibleMelds, gameContext.getTiles());
+        }
 
         if (response.getPossibleHands().isEmpty()) {
             handSortUtil.reducePossibleMelds(possibleMelds, gameContext, response);
