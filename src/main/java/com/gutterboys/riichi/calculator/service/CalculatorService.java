@@ -51,8 +51,9 @@ public class CalculatorService {
             handSortUtil.reduceHand(gameContext, response, possibleMelds);
             CommonUtil.checkMeldTypesAndRemoveDupes(possibleMelds, gameContext.getTiles());
         }
-
-        handSortUtil.reducePossibleMelds(possibleMelds, gameContext, response);
+        if (response.getPossibleHands().isEmpty()) {
+            handSortUtil.reducePossibleMelds(possibleMelds, gameContext, response);
+        }
 
         LOGGER.debug("Tiles in hand: {}", gameContext.getTiles());
         LOGGER.debug("Melds: {}", gameContext.getMelds());
