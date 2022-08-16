@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import com.gutterboys.riichi.calculator.model.GameContext;
+import com.gutterboys.riichi.calculator.model.PossibleHand;
 import com.gutterboys.riichi.calculator.model.PossibleMelds;
 
 public class CommonUtil {
@@ -71,6 +72,19 @@ public class CommonUtil {
                 gameContext.getTiles().remove(tempContext.getMelds().get(i).get(j));
                 gameContext.getTiles().add(0, -1);
             }
+        }
+    }
+
+    public static void checkAndRemoveDuplicatePossibleHands(List<PossibleHand> possibleHands) {
+        for (int i = 0; i < possibleHands.size(); i++) {
+            PossibleHand possibleHand1 = possibleHands.get(i);
+            for (int j = i + 1; j < possibleHands.size(); j++) {
+                PossibleHand possibleHand2 = possibleHands.get(j);
+                if (possibleHand1.getMelds().containsAll(possibleHand2.getMelds())) {
+                    possibleHands.remove(possibleHands.indexOf(possibleHands.get(j)));
+                }
+            }
+
         }
     }
 }

@@ -172,7 +172,7 @@ public class HandSortUtil {
         LOGGER.info("Reducing possible melds...");
         List<Integer> reducedHand = new ArrayList<>(gameContext.getTiles());
         List<List<Integer>> lockedMelds = new ArrayList<List<Integer>>(gameContext.getMelds());
-        if (possibleMelds.getPairs().size() > 0) {
+        if (possibleMelds.getPairs().size() > 0 && gameContext.getPairCount() == 0) {
             for (int i = 0; i < possibleMelds.getPairs().size(); i++) {
                 GameContext tempContext = new GameContext();
                 List<Integer> tempHand = new ArrayList<>(reducedHand);
@@ -268,17 +268,19 @@ public class HandSortUtil {
                     gameContext.getMelds().clear();
                     gameContext.getMelds().addAll(lockedMelds);
 
-                    return;
                 }
 
             }
         }
+
         // probably wrong but we'll get there when we get there
         if (response.getPossibleHands().size() == 0) {
             LOGGER.error("Invalid hand detected in reducePossibleMelds(): {}",
                     gameContext.getTiles());
             throw new InvalidHandException("Invalid hand");
         }
+
+        CommonUtil.checkAndRemoveDuplicatePossibleHands(response.getPossibleHands());
 
     }
 
@@ -362,8 +364,9 @@ public class HandSortUtil {
             }
         } else if (possibleChis.size() == 2) {
             if (possibleChis.get(0).containsAll(possibleChis.get(1)) && gameContext.getPairCount() == 1) {
-                // if there are only 2 possible chis and they are the same, we assume they are
-                // an identical sequence?
+                // if there are only 2 possible chis and they are the same, and we've found a
+                // pair, we assume they are
+                // an identical sequence
                 if (gameContext.getTiles().stream().filter(x -> x == possibleChis.get(0).get(0)).count() == 2L
                         && gameContext.getTiles().stream().filter(x -> x == possibleChis.get(0).get(1)).count() == 2L
                         && gameContext.getTiles().stream().filter(x -> x == possibleChis.get(0).get(2)).count() == 2L) {
@@ -379,6 +382,21 @@ public class HandSortUtil {
                 handleTooManyPossibilities(possibleChis, possibleMelds, numberOfDuplicateTiles, tile);
             }
 
+        } else if (possibleChis.size() == 3 && gameContext.getTiles().size() < 14) {
+            if (possibleChis.get(0).containsAll(possibleChis.get(1))
+                    && possibleChis.get(1).containsAll(possibleChis.get(2))) {
+                if (gameContext.getTiles().stream().filter(x -> x == possibleChis.get(0).get(0)).count() == 3L
+                        && gameContext.getTiles().stream().filter(x -> x == possibleChis.get(0).get(1)).count() == 3L
+                        && gameContext.getTiles().stream().filter(x -> x == possibleChis.get(0).get(2)).count() == 3L) {
+                    CommonUtil.removeAndAddChiFromList(gameContext.getTiles(), possibleChis.get(0).get(0));
+                    CommonUtil.removeAndAddChiFromList(gameContext.getTiles(), possibleChis.get(1).get(0));
+                    CommonUtil.removeAndAddChiFromList(gameContext.getTiles(), possibleChis.get(2).get(0));
+                    gameContext.getMelds().add(possibleChis.get(0));
+                    gameContext.getMelds().add(possibleChis.get(1));
+                    gameContext.getMelds().add(possibleChis.get(2));
+                }
+
+            }
         } else {
 
             handleTooManyPossibilities(possibleChis, possibleMelds, numberOfDuplicateTiles, tile);

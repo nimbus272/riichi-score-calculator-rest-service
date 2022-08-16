@@ -11,6 +11,6 @@
   "invalid_hands": [[0, 0, 12, 12, 22, 22, 3, 3, 16, 16, 24, 24, 24, 16]],
   "broken": [],
   "multiple_possible_ways_to_interpret": [
-    [0, 0, 0, 1, 1, 1, 2, 2, 2, 3, 3, 3, 27, 27]
+
   ]
 }
