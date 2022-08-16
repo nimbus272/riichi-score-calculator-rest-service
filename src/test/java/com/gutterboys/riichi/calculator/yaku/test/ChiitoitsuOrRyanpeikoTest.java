@@ -43,78 +43,78 @@ public class ChiitoitsuOrRyanpeikoTest {
         response = new ScoreResponse();
     }
 
-    @Test
-    public void execute_IsChiitoitsuTest() {
-        gameContext.getHand()
-                .addAll(Arrays.asList(0, 0, 9, 9, 18, 18, 27, 27, 29, 29, 31, 31, 33, 33));
+    // @Test
+    // public void execute_IsChiitoitsuTest() {
+    //     gameContext.getHand()
+    //             .addAll(Arrays.asList(0, 0, 9, 9, 18, 18, 27, 27, 29, 29, 31, 31, 33, 33));
 
-        yaku.execute(gameContext, response);
+    //     yaku.execute(gameContext, response);
 
-        Mockito.verify(sortUtil, times(14)).checkChi(anyList(), anyInt(), anyList(), anyInt());
-        assertEquals(2, response.getHan());
-        assertTrue(response.getQualifiedYaku().contains("Chiitoitsu (Seven Pairs)"));
-        assertFalse(response.getQualifiedYaku().contains("Ryanpeiko (Two sets of identical sequences)"));
-    }
+    //     Mockito.verify(sortUtil, times(14)).checkChi(anyList(), anyInt(), anyList(), anyInt());
+    //     assertEquals(2, response.getHan());
+    //     assertTrue(response.getQualifiedYaku().contains("Chiitoitsu (Seven Pairs)"));
+    //     assertFalse(response.getQualifiedYaku().contains("Ryanpeiko (Two sets of identical sequences)"));
+    // }
 
-    @Test()
-    public void execute_IsNotChiitoitsuTest() {
-        gameContext.getHand()
-                .addAll(Arrays.asList(0, 0, 0, 18, 18, 18, 27, 27, 29, 29, 31, 31, 33, 33));
+    // @Test()
+    // public void execute_IsNotChiitoitsuTest() {
+    //     gameContext.getHand()
+    //             .addAll(Arrays.asList(0, 0, 0, 18, 18, 18, 27, 27, 29, 29, 31, 31, 33, 33));
 
-        yaku.execute(gameContext, response);
+    //     yaku.execute(gameContext, response);
 
-        assertEquals(0, response.getHan());
-        assertFalse(response.getQualifiedYaku().contains("Chiitoitsu (Seven Pairs)"));
-        assertFalse(response.getQualifiedYaku().contains("Ryanpeiko (Two sets of identical sequences)"));
-    }
+    //     assertEquals(0, response.getHan());
+    //     assertFalse(response.getQualifiedYaku().contains("Chiitoitsu (Seven Pairs)"));
+    //     assertFalse(response.getQualifiedYaku().contains("Ryanpeiko (Two sets of identical sequences)"));
+    // }
 
-    @Test
-    public void execute_IsOpenHandTest() {
-        gameContext.getHand()
-                .addAll(Arrays.asList(0, 0, 9, 9, 18, 18, 27, 27, 29, 29, 31, 31, 33, 33));
-        gameContext.setOpened(true);
+    // @Test
+    // public void execute_IsOpenHandTest() {
+    //     gameContext.getHand()
+    //             .addAll(Arrays.asList(0, 0, 9, 9, 18, 18, 27, 27, 29, 29, 31, 31, 33, 33));
+    //     gameContext.setOpened(true);
 
-        yaku.execute(gameContext, response);
+    //     yaku.execute(gameContext, response);
 
-        Mockito.verify(sortUtil, times(0)).checkChi(anyList(), anyInt(), anyList(), anyInt());
-        assertEquals(0, response.getHan());
-        assertFalse(response.getQualifiedYaku().contains("Chiitoitsu (Seven Pairs)"));
-        assertFalse(response.getQualifiedYaku().contains("Ryanpeiko (Two sets of identical sequences)"));
-    }
+    //     Mockito.verify(sortUtil, times(0)).checkChi(anyList(), anyInt(), anyList(), anyInt());
+    //     assertEquals(0, response.getHan());
+    //     assertFalse(response.getQualifiedYaku().contains("Chiitoitsu (Seven Pairs)"));
+    //     assertFalse(response.getQualifiedYaku().contains("Ryanpeiko (Two sets of identical sequences)"));
+    // }
 
-    @Test
-    @SuppressWarnings("unchecked")
-    public void execute_IsRyanpeikoTest() {
-        gameContext.getHand()
-                .addAll(Arrays.asList(1, 1, 2, 2, 3, 3, 9, 9, 10, 10, 11, 11, 33, 33));
+    // @Test
+    // @SuppressWarnings("unchecked")
+    // public void execute_IsRyanpeikoTest() {
+    //     gameContext.getHand()
+    //             .addAll(Arrays.asList(1, 1, 2, 2, 3, 3, 9, 9, 10, 10, 11, 11, 33, 33));
 
-        Mockito.doAnswer(invocation -> {
-            Object[] args = invocation.getArguments();
-            if (args[2] instanceof ArrayList<?>) {
-                ArrayList<List<Integer>> possibleChis = (ArrayList<List<Integer>>) args[2];
-                possibleChis.add(new ArrayList<Integer>());
-            }
-            return null;
-        }).when(sortUtil).checkChi(anyList(), anyInt(), anyList(), anyInt());
+    //     Mockito.doAnswer(invocation -> {
+    //         Object[] args = invocation.getArguments();
+    //         if (args[2] instanceof ArrayList<?>) {
+    //             ArrayList<List<Integer>> possibleChis = (ArrayList<List<Integer>>) args[2];
+    //             possibleChis.add(new ArrayList<Integer>());
+    //         }
+    //         return null;
+    //     }).when(sortUtil).checkChi(anyList(), anyInt(), anyList(), anyInt());
 
-        yaku.execute(gameContext, response);
+    //     yaku.execute(gameContext, response);
 
-        Mockito.verify(sortUtil, times(14)).checkChi(anyList(), anyInt(), anyList(), anyInt());
-        assertEquals(3, response.getHan());
-        assertTrue(response.getQualifiedYaku().contains("Ryanpeiko (Two sets of identical sequences)"));
-    }
+    //     Mockito.verify(sortUtil, times(14)).checkChi(anyList(), anyInt(), anyList(), anyInt());
+    //     assertEquals(3, response.getHan());
+    //     assertTrue(response.getQualifiedYaku().contains("Ryanpeiko (Two sets of identical sequences)"));
+    // }
 
-    @Test
-    public void execute_IsInvalidHandTest() {
-        gameContext.getHand()
-                .addAll(Arrays.asList(0, 0, 9, 9, 18, 18, 27, 27, 29, 29, 29, 33, 33, 33));
+    // @Test
+    // public void execute_IsInvalidHandTest() {
+    //     gameContext.getHand()
+    //             .addAll(Arrays.asList(0, 0, 9, 9, 18, 18, 27, 27, 29, 29, 29, 33, 33, 33));
 
-        yaku.execute(gameContext, response);
+    //     yaku.execute(gameContext, response);
 
-        Mockito.verify(sortUtil, times(0)).checkChi(anyList(), anyInt(), anyList(), anyInt());
-        assertEquals(0, response.getHan());
-        assertFalse(response.getQualifiedYaku().contains("Chiitoitsu (Seven Pairs)"));
-        assertFalse(response.getQualifiedYaku().contains("Ryanpeiko (Two sets of identical sequences)"));
-    }
+    //     Mockito.verify(sortUtil, times(0)).checkChi(anyList(), anyInt(), anyList(), anyInt());
+    //     assertEquals(0, response.getHan());
+    //     assertFalse(response.getQualifiedYaku().contains("Chiitoitsu (Seven Pairs)"));
+    //     assertFalse(response.getQualifiedYaku().contains("Ryanpeiko (Two sets of identical sequences)"));
+    // }
 
 }

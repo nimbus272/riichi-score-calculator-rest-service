@@ -1,8 +1,11 @@
 package com.gutterboys.riichi.calculator.service;
 
+import java.util.Collection;
+
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.springframework.util.CollectionUtils;
 
 import com.gutterboys.riichi.calculator.exception.RiichiCalculatorException;
 import com.gutterboys.riichi.calculator.helper.CommonUtil;
@@ -29,31 +32,33 @@ public class CalculatorService {
 
     public void evaluateHand(GameContext gameContext, ScoreResponse response) throws RiichiCalculatorException {
         LOGGER.info("Calculating score...");
-
+        response.getTiles().addAll(gameContext.getTiles());
         handSortUtil.swapFives(gameContext);
         if (gameContext.getDoraTiles().size() > 0) {
             scoreUtil.countDora(gameContext);
         }
-        gameContext.getHand().sort((a, b) -> a - b);
+        gameContext.getTiles().sort((a, b) -> a - b);
         eligibilityEngine.executeSpecial(gameContext, response);
 
-        if (response.getQualifiedYaku().contains("Kokushi Musou (Thirteen Orphans)")) {
-            scoreUtil.handleSpecialScoring(gameContext, response);
+        if (!CollectionUtils.isEmpty(response.getPossibleHands())
+                && response.getPossibleHands().get(0).getQualifiedYaku().contains("Kokushi Musou (Thirteen Orphans)")) {
+            scoreUtil.handleSpecialScoring(gameContext, response.getPossibleHands().get(0));
             return;
         }
         handSortUtil.checkHonors(gameContext);
 
         // Loop over remaining tiles in hand to see what melds can be made
-        PossibleMelds possibleMelds = handSortUtil.reduceHand(gameContext);
-        CommonUtil.checkMeldTypesAndRemoveDupes(possibleMelds, gameContext.getHand());
+        PossibleMelds possibleMelds = new PossibleMelds();
+        handSortUtil.reduceHand(gameContext, response, possibleMelds);
+        CommonUtil.checkMeldTypesAndRemoveDupes(possibleMelds, gameContext.getTiles());
 
-        if (gameContext.getHand().stream().filter(x -> x != -1).count() != 0) {
-            handSortUtil.reducePossibleMelds(possibleMelds, gameContext);
+        if (response.getPossibleHands().isEmpty()) {
+            handSortUtil.reducePossibleMelds(possibleMelds, gameContext, response);
         }
 
-        LOGGER.debug("Tiles in hand: {}", gameContext.getHand());
+        LOGGER.debug("Tiles in hand: {}", gameContext.getTiles());
         LOGGER.debug("Melds: {}", gameContext.getMelds());
-        // if (gameContext.getHand().stream().filter(x -> x != -1).count() == 0) {
+        // if (gameContext.getTiles().stream().filter(x -> x != -1).count() == 0) {
         // // check all the other yaku
         // eligibilityEngine.execute(gameContext, response);
         // return;

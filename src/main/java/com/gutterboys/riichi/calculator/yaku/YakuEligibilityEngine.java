@@ -7,6 +7,7 @@ import org.springframework.stereotype.Component;
 
 import com.gutterboys.riichi.calculator.exception.RiichiCalculatorException;
 import com.gutterboys.riichi.calculator.model.GameContext;
+import com.gutterboys.riichi.calculator.model.PossibleHand;
 import com.gutterboys.riichi.calculator.model.ScoreResponse;
 
 @Component
@@ -20,9 +21,9 @@ public class YakuEligibilityEngine {
     @Autowired
     Set<SpecialYaku> specialYaku;
 
-    public void execute(GameContext gameContext, ScoreResponse response) {
+    public void execute(GameContext gameContext, PossibleHand possibleHand) {
         for (Yaku yaku : allYaku) {
-            yaku.execute(gameContext, response);
+            yaku.execute(gameContext, possibleHand);
         }
 
     }

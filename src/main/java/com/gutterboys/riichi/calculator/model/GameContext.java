@@ -5,9 +5,10 @@ import java.util.List;
 
 public class GameContext {
 
-    private List<Integer> hand = new ArrayList<Integer>();
+    private List<Integer> tiles = new ArrayList<Integer>();
     private List<List<Integer>> melds = new ArrayList<List<Integer>>();
     private List<Integer> doraTiles = new ArrayList<Integer>();
+    private List<List<Integer>> requiredMelds = new ArrayList<List<Integer>>();
     private int currentMeld = 0;
     private int winningTile;
     private int seatWind;
@@ -139,8 +140,8 @@ public class GameContext {
         this.winningTile = winningTile;
     }
 
-    public List<Integer> getHand() {
-        return hand;
+    public List<Integer> getTiles() {
+        return tiles;
     }
 
     public boolean isRiichi() {

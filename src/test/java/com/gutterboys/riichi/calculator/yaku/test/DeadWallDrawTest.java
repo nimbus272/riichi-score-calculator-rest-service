@@ -25,22 +25,22 @@ public class DeadWallDrawTest {
         response = new ScoreResponse();
     }
 
-    @Test
-    public void execute_IsDeadWallDrawTest() {
-        gameContext.setDeadWallDraw(true);
+//     @Test
+//     public void execute_IsDeadWallDrawTest() {
+//         gameContext.setDeadWallDraw(true);
 
-        yaku.execute(gameContext, response);
+//         yaku.execute(gameContext, response);
 
-        assertEquals(1, response.getHan());
-        assertTrue(response.getQualifiedYaku().contains("Rinshan Kaihou (Dead Wall Draw)"));
-    }
+//         assertEquals(1, response.getHan());
+//         assertTrue(response.getQualifiedYaku().contains("Rinshan Kaihou (Dead Wall Draw)"));
+//     }
 
-    @Test
-    public void execute_IsNotDeadWallDrawTest() {
+//     @Test
+//     public void execute_IsNotDeadWallDrawTest() {
 
-        yaku.execute(gameContext, response);
+//         yaku.execute(gameContext, response);
 
-        assertEquals(0, response.getHan());
-        assertFalse(response.getQualifiedYaku().contains("Rinshan Kaihou (Dead Wall Draw)"));
-    }
+//         assertEquals(0, response.getHan());
+//         assertFalse(response.getQualifiedYaku().contains("Rinshan Kaihou (Dead Wall Draw)"));
+//     }
 }

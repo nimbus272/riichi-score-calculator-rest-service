@@ -9,6 +9,7 @@ import org.springframework.stereotype.Component;
 import com.gutterboys.riichi.calculator.helper.CommonUtil;
 import com.gutterboys.riichi.calculator.helper.HandSortUtil;
 import com.gutterboys.riichi.calculator.model.GameContext;
+import com.gutterboys.riichi.calculator.model.PossibleHand;
 import com.gutterboys.riichi.calculator.model.ScoreResponse;
 
 @Component
@@ -22,8 +23,9 @@ public class ChiitoitsuOrRyanpeiko implements SpecialYaku {
         if (gameContext.isOpened()) {
             return;
         }
+        PossibleHand possibleHand = new PossibleHand();
 
-        List<Integer> tempHand = new ArrayList<Integer>(gameContext.getHand());
+        List<Integer> tempHand = new ArrayList<Integer>(gameContext.getTiles());
         int pairCount = 0;
         for (int i = 0; i < tempHand.size(); i++) {
             Integer tile = tempHand.get(i);
@@ -34,23 +36,27 @@ public class ChiitoitsuOrRyanpeiko implements SpecialYaku {
                 CommonUtil.removeAndAddPonFromList(tempHand, tile, 2);
                 pairCount++;
             }
+            // TODO: write a private function to generate melds for 7 pairs / Ryanpeiko
+            // hands
         }
 
         if (pairCount == 7) {
             List<List<Integer>> possibleChis = new ArrayList<List<Integer>>();
 
-            for (int i = 0; i < gameContext.getHand().size(); i++) {
-                int tile = gameContext.getHand().get(i);
-                sortUtil.checkChi(gameContext.getHand(), tile, possibleChis, 2);
+            for (int i = 0; i < gameContext.getTiles().size(); i++) {
+                int tile = gameContext.getTiles().get(i);
+                sortUtil.checkChi(gameContext.getTiles(), tile, possibleChis, 2);
             }
             if (possibleChis.size() >= 12) {
-                response.setHan(response.getHan() + 3);
-                response.getQualifiedYaku().add("Ryanpeiko (Two sets of identical sequences)");
+                possibleHand.setHan(possibleHand.getHan() + 3);
+                possibleHand.getQualifiedYaku().add("Ryanpeiko (Two sets of identical sequences)");
+                response.getPossibleHands().add(possibleHand);
                 return;
             }
 
-            response.setHan(response.getHan() + 2);
-            response.getQualifiedYaku().add("Chiitoitsu (Seven Pairs)");
+            possibleHand.setHan(possibleHand.getHan() + 2);
+            possibleHand.getQualifiedYaku().add("Chiitoitsu (Seven Pairs)");
+            response.getPossibleHands().add(possibleHand);
         }
 
     }

@@ -8,6 +8,7 @@ import org.springframework.stereotype.Component;
 import com.gutterboys.riichi.calculator.constants.RiichiCalculatorConstants;
 
 import com.gutterboys.riichi.calculator.model.GameContext;
+import com.gutterboys.riichi.calculator.model.PossibleHand;
 import com.gutterboys.riichi.calculator.model.ScoreResponse;
 
 @Component
@@ -20,7 +21,7 @@ public class KokushiMusou implements SpecialYaku {
         }
 
         boolean isKokushi = true;
-        for (Integer tile : gameContext.getHand()) {
+        for (Integer tile : gameContext.getTiles()) {
 
             if (RiichiCalculatorConstants.SIMPLES.contains(tile)) {
                 isKokushi = false;
@@ -29,14 +30,18 @@ public class KokushiMusou implements SpecialYaku {
         }
 
         if (isKokushi) {
-            Set<Integer> hand = new HashSet<Integer>(gameContext.getHand());
+            Set<Integer> hand = new HashSet<Integer>(gameContext.getTiles());
             if (hand.size() == 13) {
-                if (gameContext.getHand().stream().filter(tile -> gameContext.getWinningTile() == tile)
+                PossibleHand possibleHand = new PossibleHand();
+
+                if (gameContext.getTiles().stream().filter(tile -> gameContext.getWinningTile() == tile)
                         .count() == 2) {
-                    response.setDoubleYakuman(true);
+                    possibleHand.setDoubleYakuman(true);
                 }
-                response.getQualifiedYaku().add("Kokushi Musou (Thirteen Orphans)");
-                response.setHan(response.getHan() + 13);
+                possibleHand.getQualifiedYaku().add("Kokushi Musou (Thirteen Orphans)");
+                possibleHand.setHan(possibleHand.getHan() + 13);
+                possibleHand.getTiles().addAll(gameContext.getTiles());
+                response.getPossibleHands().add(possibleHand);
             }
         }
     }

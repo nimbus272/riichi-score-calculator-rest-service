@@ -68,8 +68,8 @@ public class CommonUtil {
         for (int i = 0; i < tempContext.getMelds().size(); i++) {
             gameContext.getMelds().add(tempContext.getMelds().get(i));
             for (int j = 0; j < tempContext.getMelds().get(i).size(); j++) {
-                gameContext.getHand().remove(tempContext.getMelds().get(i).get(j));
-                gameContext.getHand().add(0, -1);
+                gameContext.getTiles().remove(tempContext.getMelds().get(i).get(j));
+                gameContext.getTiles().add(0, -1);
             }
         }
     }
