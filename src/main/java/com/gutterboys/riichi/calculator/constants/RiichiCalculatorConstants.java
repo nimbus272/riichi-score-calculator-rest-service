@@ -27,4 +27,6 @@ public class RiichiCalculatorConstants {
     public static final List<Integer> EIGHTS = Arrays.asList(7, 16, 25);
 
     public static final List<Integer> RED_FIVES = Arrays.asList(34, 35, 36);
+
+    public static final List<Integer> GREEN = Arrays.asList(19, 20, 21, 23, 25, 28);
 }
