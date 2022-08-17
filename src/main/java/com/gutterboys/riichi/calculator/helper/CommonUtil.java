@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import com.google.gson.Gson;
 import com.gutterboys.riichi.calculator.model.GameContext;
 import com.gutterboys.riichi.calculator.model.PossibleHand;
 import com.gutterboys.riichi.calculator.model.PossibleMelds;
@@ -75,13 +76,18 @@ public class CommonUtil {
         }
     }
 
+
     public static void checkAndRemoveDuplicatePossibleHands(List<PossibleHand> possibleHands) {
+        Gson gson = new Gson();
         for (int i = 0; i < possibleHands.size(); i++) {
             PossibleHand possibleHand1 = possibleHands.get(i);
             for (int j = i + 1; j < possibleHands.size(); j++) {
                 PossibleHand possibleHand2 = possibleHands.get(j);
-                if (possibleHand1.getMelds().containsAll(possibleHand2.getMelds())) {
-                    possibleHands.remove(possibleHands.indexOf(possibleHands.get(j)));
+                String hand1 = gson.toJson(possibleHand1.getMelds());
+                String hand2 = gson.toJson(possibleHand2.getMelds());
+                if (hand1.equals(hand2)) {
+                    possibleHands.remove(j);
+                    j--;
                 }
             }
 

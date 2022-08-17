@@ -51,6 +51,7 @@ public class ChiitoitsuOrRyanpeiko implements SpecialYaku {
                 possibleHand.setHan(possibleHand.getHan() + 3);
                 possibleHand.getQualifiedYaku().add("Ryanpeiko (Two sets of identical sequences)");
                 possibleHand.getTiles().addAll(response.getTiles());
+                possibleHand.getMelds().sort((a, b) -> a.get(0) - b.get(0));
                 response.getPossibleHands().add(possibleHand);
                 return;
             }
@@ -59,6 +60,7 @@ public class ChiitoitsuOrRyanpeiko implements SpecialYaku {
             possibleHand.getQualifiedYaku().add("Chiitoitsu (Seven Pairs)");
             possibleHand.getTiles().addAll(response.getTiles());
             generateMeldsForChiitoitsu(possibleHand, gameContext);
+            possibleHand.getMelds().sort((a, b) -> a.get(0) - b.get(0));
             response.getPossibleHands().add(possibleHand);
         }
 

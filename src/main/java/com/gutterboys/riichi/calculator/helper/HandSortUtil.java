@@ -161,6 +161,7 @@ public class HandSortUtil {
             PossibleHand possibleHand = new PossibleHand();
             possibleHand.getTiles().addAll(response.getTiles());
             possibleHand.getMelds().addAll(gameContext.getMelds());
+            possibleHand.getMelds().sort((a, b) -> a.get(0) - b.get(0));
             response.getPossibleHands().add(possibleHand);
             return;
         }
@@ -211,6 +212,7 @@ public class HandSortUtil {
                     PossibleHand possibleHand = new PossibleHand();
                     possibleHand.getMelds().addAll(gameContext.getMelds());
                     possibleHand.getTiles().addAll(response.getTiles());
+                    possibleHand.getMelds().sort((a, b) -> a.get(0) - b.get(0));
                     response.getPossibleHands().add(possibleHand);
                     gameContext.getMelds().clear();
                     gameContext.getMelds().addAll(lockedMelds);
@@ -259,6 +261,7 @@ public class HandSortUtil {
                     PossibleHand possibleHand = new PossibleHand();
                     possibleHand.getMelds().addAll(gameContext.getMelds());
                     possibleHand.getTiles().addAll(response.getTiles());
+                    possibleHand.getMelds().sort((a, b) -> a.get(0) - b.get(0));
                     response.getPossibleHands().add(possibleHand);
                     gameContext.getMelds().clear();
                     gameContext.getMelds().addAll(lockedMelds);
@@ -303,6 +306,7 @@ public class HandSortUtil {
                     PossibleHand possibleHand = new PossibleHand();
                     possibleHand.getMelds().addAll(gameContext.getMelds());
                     possibleHand.getTiles().addAll(response.getTiles());
+                    possibleHand.getMelds().sort((a, b) -> a.get(0) - b.get(0));
                     response.getPossibleHands().add(possibleHand);
                     gameContext.getMelds().clear();
                     gameContext.getMelds().addAll(lockedMelds);
