@@ -1,0 +1,37 @@
+COMPATIBLE FOR ALL
+------------------
+--RIICHI - 1 han
+- TSUMO -tsumo check and hand not open - 1 han
+- IPPATSU - riichi, ippatsu checkbox, not open, no kan - 1 han
+- HAITEI RAYUE - tsumo, checkbox - 1 han
+- HOTEI RAOYUI - ron, checkbox - 1 han
+- DEAD WALL DRAW - checkbox, tsumo checkbox, have to have kan - 1 han
+- CHANKAN - robbed kan checkbox, ron - 1 han
+- DOUBLE RIICHI - double riichi checkbox, not open - 2 han
+
+WORKS FOR MOST (NOT CHIITOITSU OR KOKUSHI OR RYANPEIKO)
+-------------------------------------------
+- IIPEIKO - 2 identical sequence, not open - 1 han
+- SANSHOKU DOUJUN - same sequence all suits,  - 1 han open/2 closed
+- IKKITSUUKAN - straight same suit,  - 1 han open/ 2 closed
+- TOITOI - all triplets, no sequences, (if tsumo, not open -> yakuman, if all terminals + honors -> honro - 4 han) - 2 han
+- SANANKO - a bunch of dumb stuff - 2 han
+- SANSHOKU DOUKU -  same pon all suit, - 2 han
+- SANKANTSU - 3 kans, - 2 han
+- TANYAO - no terminals, no honors - 1 han
+- YAKUHAI - any pon or kan of dragon, player wind, prevalent wind - 1 han each
+- CHANTA - terminal or honor in each meld, at least one instance of 123 or 789 - 1 open/ 2 closed
+- JUNCHAN - terminal no honors in each meld, chanta - 2 open / 3 closed
+- SHOSANGEN - 2 pons or kans of dragon and pair of 3rd - 2 han
+- HONITSU - all same suit and honors, 3 closed /2 open
+- CHINITSU - all same suit - 6 closed / 5 open
+
+LAST
+------------------------
+- PINFU - not open, 1 hand
+
+- 7 pairs list
+---------------
+- ryanpeiko (covered)
+- honitsu
+- honro 
