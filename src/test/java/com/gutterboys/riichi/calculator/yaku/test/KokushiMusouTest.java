@@ -5,8 +5,8 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.Arrays;
 
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import com.gutterboys.riichi.calculator.model.GameContext;
 import com.gutterboys.riichi.calculator.model.ScoreResponse;
@@ -20,7 +20,7 @@ public class KokushiMusouTest {
 
     KokushiMusou yaku = new KokushiMusou();
 
-    @Before
+    @BeforeEach
     public void setUp() {
         gameContext = new GameContext();
         response = new ScoreResponse();

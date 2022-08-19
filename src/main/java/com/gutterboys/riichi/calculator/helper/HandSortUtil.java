@@ -167,40 +167,6 @@ public class HandSortUtil {
         return;
     }
 
-    private void reduceAndAddHand(GameContext gameContext, GameContext tempContext, ScoreResponse response,
-            List<List<Integer>> lockedMelds, List<Integer> meld) throws InvalidHandException {
-        PossibleMelds tempPossibleMelds = new PossibleMelds();
-        try {
-            reduceHand(tempContext, response, tempPossibleMelds);
-        } catch (InvalidHandException e) {
-            // this did not work, try another pair
-            throw new InvalidHandException("Invalid hand detected.");
-
-        }
-
-        if (tempContext.getTiles().stream().filter(x -> x != -1).count() == 0) {
-
-            CommonUtil.checkMeldTypesAndRemoveDupes(tempPossibleMelds, tempContext.getTiles());
-            LOGGER.info("Hand determined!");
-            CommonUtil.addTempMeldsToGameContext(tempContext, gameContext);
-            gameContext.getMelds().add(meld);
-
-            for (int j = 0; j < response.getPossibleHands().size(); j++) {
-                if (response.getPossibleHands().get(j).getMelds().size() < 5) {
-                    response.getPossibleHands().remove(j);
-                }
-            }
-            PossibleHand possibleHand = new PossibleHand();
-            possibleHand.getMelds().addAll(gameContext.getMelds());
-            possibleHand.getTiles().addAll(response.getTiles());
-            possibleHand.getMelds().sort((a, b) -> a.get(0) - b.get(0));
-            response.getPossibleHands().add(possibleHand);
-            gameContext.getMelds().clear();
-            gameContext.getMelds().addAll(lockedMelds);
-
-        }
-    }
-
     public void reducePossibleMelds(PossibleMelds possibleMelds, GameContext gameContext, ScoreResponse response)
             throws InvalidHandException {
         LOGGER.info("Reducing possible melds...");
@@ -290,6 +256,40 @@ public class HandSortUtil {
             return;
         }
 
+    }
+
+    private void reduceAndAddHand(GameContext gameContext, GameContext tempContext, ScoreResponse response,
+            List<List<Integer>> lockedMelds, List<Integer> meld) throws InvalidHandException {
+        PossibleMelds tempPossibleMelds = new PossibleMelds();
+        try {
+            reduceHand(tempContext, response, tempPossibleMelds);
+        } catch (InvalidHandException e) {
+            // this did not work, try another pair
+            throw new InvalidHandException("Invalid hand detected.");
+
+        }
+
+        if (tempContext.getTiles().stream().filter(x -> x != -1).count() == 0) {
+
+            CommonUtil.checkMeldTypesAndRemoveDupes(tempPossibleMelds, tempContext.getTiles());
+            LOGGER.info("Hand determined!");
+            CommonUtil.addTempMeldsToGameContext(tempContext, gameContext);
+            gameContext.getMelds().add(meld);
+
+            for (int j = 0; j < response.getPossibleHands().size(); j++) {
+                if (response.getPossibleHands().get(j).getMelds().size() < 5) {
+                    response.getPossibleHands().remove(j);
+                }
+            }
+            PossibleHand possibleHand = new PossibleHand();
+            possibleHand.getMelds().addAll(gameContext.getMelds());
+            possibleHand.getTiles().addAll(response.getTiles());
+            possibleHand.getMelds().sort((a, b) -> a.get(0) - b.get(0));
+            response.getPossibleHands().add(possibleHand);
+            gameContext.getMelds().clear();
+            gameContext.getMelds().addAll(lockedMelds);
+
+        }
     }
 
     private void tryGetMeld(GameContext gameContext, List<List<Integer>> possibleChis, PossibleMelds possibleMelds,

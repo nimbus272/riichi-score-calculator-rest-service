@@ -4,8 +4,8 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import com.gutterboys.riichi.calculator.model.GameContext;
 import com.gutterboys.riichi.calculator.model.PossibleHand;
@@ -19,7 +19,7 @@ public class DeadWallDrawTest {
 
     DeadWallDraw yaku = new DeadWallDraw();
 
-    @Before
+    @BeforeEach
     public void setUp() {
         gameContext = new GameContext();
         possibleHand = new PossibleHand();
