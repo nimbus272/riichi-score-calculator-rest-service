@@ -152,11 +152,12 @@ public class CommonUtilTest {
     public void checkAndRemoveDuplicatePossibleHandsTest() {
         List<PossibleHand> possibleHands = new ArrayList<PossibleHand>();
         PossibleHand possibleHand1 = new PossibleHand();
-        List<Integer> meld1 = new ArrayList<Integer>(Arrays.asList(27, 27));
-        List<Integer> meld2 = new ArrayList<Integer>(Arrays.asList(0, 0, 0));
+
+        List<Integer> meld1 = new ArrayList<Integer>(Arrays.asList(0, 0, 0));
+        List<Integer> meld2 = new ArrayList<Integer>(Arrays.asList(1, 1, 1));
         List<Integer> meld3 = new ArrayList<Integer>(Arrays.asList(2, 2, 2));
         List<Integer> meld4 = new ArrayList<Integer>(Arrays.asList(3, 3, 3));
-        List<Integer> meld5 = new ArrayList<Integer>(Arrays.asList(1, 1, 1));
+        List<Integer> meld5 = new ArrayList<Integer>(Arrays.asList(27, 27));
         possibleHand1.getMelds().add(meld1);
         possibleHand1.getMelds().add(meld2);
         possibleHand1.getMelds().add(meld3);
@@ -164,28 +165,29 @@ public class CommonUtilTest {
         possibleHand1.getMelds().add(meld5);
 
         PossibleHand possibleHand2 = new PossibleHand();
-        List<Integer> meld6 = new ArrayList<Integer>(Arrays.asList(27, 27));
-        List<Integer> meld7 = new ArrayList<Integer>(Arrays.asList(0, 0, 0));
-        List<Integer> meld8 = new ArrayList<Integer>(Arrays.asList(1, 1, 1));
+
+        List<Integer> meld6 = new ArrayList<Integer>(Arrays.asList(0, 0, 0));
+        List<Integer> meld7 = new ArrayList<Integer>(Arrays.asList(1, 1, 1));
+        List<Integer> meld8 = new ArrayList<Integer>(Arrays.asList(2, 2, 2));
         List<Integer> meld9 = new ArrayList<Integer>(Arrays.asList(3, 3, 3));
-        List<Integer> meld10 = new ArrayList<Integer>(Arrays.asList(2, 2, 2));
-        possibleHand1.getMelds().add(meld6);
-        possibleHand1.getMelds().add(meld7);
-        possibleHand1.getMelds().add(meld8);
-        possibleHand1.getMelds().add(meld9);
-        possibleHand1.getMelds().add(meld10);
+        List<Integer> meld10 = new ArrayList<Integer>(Arrays.asList(27, 27));
+        possibleHand2.getMelds().add(meld6);
+        possibleHand2.getMelds().add(meld7);
+        possibleHand2.getMelds().add(meld8);
+        possibleHand2.getMelds().add(meld9);
+        possibleHand2.getMelds().add(meld10);
 
         PossibleHand possibleHand3 = new PossibleHand();
-        List<Integer> meld11 = new ArrayList<Integer>(Arrays.asList(27, 27));
-        List<Integer> meld12 = new ArrayList<Integer>(Arrays.asList(0, 0, 0));
+        List<Integer> meld11 = new ArrayList<Integer>(Arrays.asList(0, 0, 0));
+        List<Integer> meld12 = new ArrayList<Integer>(Arrays.asList(1, 2, 3));
         List<Integer> meld13 = new ArrayList<Integer>(Arrays.asList(1, 2, 3));
         List<Integer> meld14 = new ArrayList<Integer>(Arrays.asList(1, 2, 3));
-        List<Integer> meld15 = new ArrayList<Integer>(Arrays.asList(1, 2, 3));
-        possibleHand1.getMelds().add(meld11);
-        possibleHand1.getMelds().add(meld12);
-        possibleHand1.getMelds().add(meld13);
-        possibleHand1.getMelds().add(meld14);
-        possibleHand1.getMelds().add(meld15);
+        List<Integer> meld15 = new ArrayList<Integer>(Arrays.asList(27, 27));
+        possibleHand3.getMelds().add(meld11);
+        possibleHand3.getMelds().add(meld12);
+        possibleHand3.getMelds().add(meld13);
+        possibleHand3.getMelds().add(meld14);
+        possibleHand3.getMelds().add(meld15);
 
         possibleHands.add(possibleHand1);
         possibleHands.add(possibleHand2);
@@ -199,5 +201,4 @@ public class CommonUtilTest {
 
     }
 
-   
 }
