@@ -22,7 +22,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import com.gutterboys.riichi.calculator.helper.HandSortUtil;
 import com.gutterboys.riichi.calculator.model.GameContext;
 import com.gutterboys.riichi.calculator.model.ScoreResponse;
-import com.gutterboys.riichi.calculator.yaku.ChiitoitsuOrRyanpeiko;
+import com.gutterboys.riichi.calculator.yaku.special.ChiitoitsuOrRyanpeiko;
 
 @ExtendWith(MockitoExtension.class)
 public class ChiitoitsuOrRyanpeikoTest {

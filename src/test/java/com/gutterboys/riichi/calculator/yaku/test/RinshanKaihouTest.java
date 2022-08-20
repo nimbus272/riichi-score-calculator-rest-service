@@ -9,7 +9,7 @@ import org.junit.jupiter.api.Test;
 
 import com.gutterboys.riichi.calculator.model.GameContext;
 import com.gutterboys.riichi.calculator.model.PossibleHand;
-import com.gutterboys.riichi.calculator.yaku.RinshanKaihou;
+import com.gutterboys.riichi.calculator.yaku.common.RinshanKaihou;
 
 public class RinshanKaihouTest {
 

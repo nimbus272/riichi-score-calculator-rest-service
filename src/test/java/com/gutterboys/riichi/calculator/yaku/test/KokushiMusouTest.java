@@ -10,7 +10,7 @@ import org.junit.jupiter.api.Test;
 
 import com.gutterboys.riichi.calculator.model.GameContext;
 import com.gutterboys.riichi.calculator.model.ScoreResponse;
-import com.gutterboys.riichi.calculator.yaku.KokushiMusou;
+import com.gutterboys.riichi.calculator.yaku.special.KokushiMusou;
 
 public class KokushiMusouTest {
 

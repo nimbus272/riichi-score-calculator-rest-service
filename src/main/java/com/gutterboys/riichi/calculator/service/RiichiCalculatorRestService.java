@@ -12,7 +12,7 @@ import com.gutterboys.riichi.calculator.exception.InvalidHandException;
 import com.gutterboys.riichi.calculator.exception.RiichiCalculatorException;
 import com.gutterboys.riichi.calculator.model.GameContext;
 import com.gutterboys.riichi.calculator.model.ScoreResponse;
-import com.gutterboys.riichi.calculator.yaku.CommonYaku;
+import com.gutterboys.riichi.calculator.yaku.common.CommonYaku;
 
 import ch.qos.logback.classic.Logger;
 

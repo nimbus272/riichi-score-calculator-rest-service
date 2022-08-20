@@ -1,4 +1,4 @@
-package com.gutterboys.riichi.calculator.yaku;
+package com.gutterboys.riichi.calculator.yaku.common;
 
 import org.springframework.stereotype.Component;
 
@@ -6,13 +6,13 @@ import com.gutterboys.riichi.calculator.model.GameContext;
 import com.gutterboys.riichi.calculator.model.PossibleHand;
 
 @Component
-public class Tsumo implements CommonYaku {
+public class HaiteiRaoyue implements CommonYaku {
 
     @Override
     public void execute(GameContext gameContext, PossibleHand possibleHand) {
-        if (gameContext.isTsumo() && !gameContext.isOpened()) {
+        if (gameContext.isTsumo() && gameContext.isLastTileDraw()) {
             possibleHand.setHan(possibleHand.getHan() + 1);
-            possibleHand.getQualifiedYaku().add("Tsumo");
+            possibleHand.getQualifiedYaku().add("Haitei Raoyue (Last Tile Drawn From Wall)");
         }
 
     }

@@ -9,6 +9,8 @@ import com.gutterboys.riichi.calculator.exception.RiichiCalculatorException;
 import com.gutterboys.riichi.calculator.model.GameContext;
 import com.gutterboys.riichi.calculator.model.PossibleHand;
 import com.gutterboys.riichi.calculator.model.ScoreResponse;
+import com.gutterboys.riichi.calculator.yaku.common.CommonYaku;
+import com.gutterboys.riichi.calculator.yaku.special.SpecialYaku;
 
 @Component
 public class YakuEligibilityEngine {

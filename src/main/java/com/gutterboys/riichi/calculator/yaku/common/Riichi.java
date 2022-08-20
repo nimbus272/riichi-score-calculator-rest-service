@@ -1,4 +1,4 @@
-package com.gutterboys.riichi.calculator.yaku;
+package com.gutterboys.riichi.calculator.yaku.common;
 
 import org.springframework.stereotype.Component;
 

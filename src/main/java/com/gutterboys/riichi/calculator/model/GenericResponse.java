@@ -3,7 +3,7 @@ package com.gutterboys.riichi.calculator.model;
 import java.util.HashSet;
 import java.util.Set;
 
-import com.gutterboys.riichi.calculator.yaku.CommonYaku;
+import com.gutterboys.riichi.calculator.yaku.common.CommonYaku;
 
 public class GenericResponse {
     private String status = "200";

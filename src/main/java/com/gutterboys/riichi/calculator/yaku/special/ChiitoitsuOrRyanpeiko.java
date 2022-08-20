@@ -1,4 +1,4 @@
-package com.gutterboys.riichi.calculator.yaku;
+package com.gutterboys.riichi.calculator.yaku.special;
 
 import java.util.ArrayList;
 import java.util.List;
