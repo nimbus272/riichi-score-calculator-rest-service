@@ -18,6 +18,7 @@ public class GameContext {
     private boolean robbedKan;
     private boolean deadWallDraw;
     private boolean lastDiscard;
+    private boolean lastTileDraw;
     private boolean tsumo;
     private boolean opened;
     private int honba;
@@ -181,6 +182,14 @@ public class GameContext {
 
     public void setOpened(boolean opened) {
         this.opened = opened;
+    }
+
+    public boolean isLastTileDraw() {
+        return lastTileDraw;
+    }
+
+    public void setLastTileDraw(boolean lastTileDraw) {
+        this.lastTileDraw = lastTileDraw;
     }
 
 }

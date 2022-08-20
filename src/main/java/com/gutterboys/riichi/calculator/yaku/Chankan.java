@@ -6,13 +6,15 @@ import com.gutterboys.riichi.calculator.model.GameContext;
 import com.gutterboys.riichi.calculator.model.PossibleHand;
 
 @Component
-public class Ippatsu implements CommonYaku {
+public class Chankan implements CommonYaku {
 
     @Override
     public void execute(GameContext gameContext, PossibleHand possibleHand) {
-        if (gameContext.isIppatsu() && !gameContext.isOpened() && gameContext.getKanCount() == 0) {
+        if (gameContext.isRobbedKan() && !gameContext.isTsumo()) {
             possibleHand.setHan(possibleHand.getHan() + 1);
-            possibleHand.getQualifiedYaku().add("Ippatsu");
+            possibleHand.getQualifiedYaku().add("Chankan (Robbed Kan)");
         }
+
     }
+
 }

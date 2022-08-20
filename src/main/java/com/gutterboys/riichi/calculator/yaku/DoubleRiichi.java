@@ -6,7 +6,7 @@ import com.gutterboys.riichi.calculator.model.GameContext;
 import com.gutterboys.riichi.calculator.model.PossibleHand;
 
 @Component
-public class DoubleRiichi implements Yaku {
+public class DoubleRiichi implements CommonYaku {
 
     @Override
     public void execute(GameContext gameContext, PossibleHand possibleHand) {

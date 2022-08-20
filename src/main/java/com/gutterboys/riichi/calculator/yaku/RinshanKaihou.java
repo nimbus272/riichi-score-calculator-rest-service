@@ -6,13 +6,13 @@ import com.gutterboys.riichi.calculator.model.GameContext;
 import com.gutterboys.riichi.calculator.model.PossibleHand;
 
 @Component
-public class LastDiscard implements Yaku {
+public class RinshanKaihou implements CommonYaku {
 
     @Override
     public void execute(GameContext gameContext, PossibleHand possibleHand) {
-        if (gameContext.isLastDiscard()) {
+        if (gameContext.isDeadWallDraw() && gameContext.isTsumo() && gameContext.getKanCount() > 0) {
             possibleHand.setHan(possibleHand.getHan() + 1);
-            possibleHand.getQualifiedYaku().add("Houtei Raoyui (Last Discarded Tile)");
+            possibleHand.getQualifiedYaku().add("Rinshan Kaihou (Dead Wall Draw)");
         }
 
     }

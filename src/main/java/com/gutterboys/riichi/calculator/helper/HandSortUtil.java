@@ -136,7 +136,6 @@ public class HandSortUtil {
 
     public void reduceHand(GameContext gameContext, ScoreResponse response, PossibleMelds possibleMelds)
             throws InvalidHandException {
-        LOGGER.info("Reducing hand...");
         int unsortedCount = (int) gameContext.getTiles().stream().filter(x -> x != -1).count();
 
         for (int i = 0; i < gameContext.getTiles().size(); i++) {
@@ -294,7 +293,6 @@ public class HandSortUtil {
 
     private void tryGetMeld(GameContext gameContext, List<List<Integer>> possibleChis, PossibleMelds possibleMelds,
             int tile, int numberOfDuplicateTiles) throws InvalidHandException {
-        LOGGER.info("Trying to find a meld...");
 
         checkChi(gameContext.getTiles(), tile, possibleChis, numberOfDuplicateTiles);
 
@@ -414,7 +412,6 @@ public class HandSortUtil {
 
     private void handleTooManyPossibilities(List<List<Integer>> possibleChis, PossibleMelds possibleMelds,
             int numberOfDuplicateTiles, int tile) {
-        LOGGER.info("Couldn't determine a meld for this tile, adding to possible melds...");
         if (possibleChis.size() > 0) {
             for (int i = 0; i < possibleChis.size(); i++) {
                 possibleMelds.getChis().add(possibleChis.get(i));

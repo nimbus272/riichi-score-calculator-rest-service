@@ -6,13 +6,13 @@ import com.gutterboys.riichi.calculator.model.GameContext;
 import com.gutterboys.riichi.calculator.model.PossibleHand;
 
 @Component
-public class RobbedKan implements Yaku {
+public class HaiteiRaoyue implements CommonYaku {
 
     @Override
     public void execute(GameContext gameContext, PossibleHand possibleHand) {
-        if (gameContext.isRobbedKan()) {
+        if (gameContext.isTsumo() && gameContext.isLastTileDraw()) {
             possibleHand.setHan(possibleHand.getHan() + 1);
-            possibleHand.getQualifiedYaku().add("Chankan (Robbed Kan)");
+            possibleHand.getQualifiedYaku().add("Haitei Raoyue (Last Tile Drawn From Wall)");
         }
 
     }

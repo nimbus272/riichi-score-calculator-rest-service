@@ -16,13 +16,13 @@ public class YakuEligibilityEngine {
     // autowiring a set of an interface will get every implementation of that
     // interface and place it in the set
     @Autowired
-    Set<Yaku> allYaku;
+    Set<CommonYaku> yakuAllCompatible;
 
     @Autowired
     Set<SpecialYaku> specialYaku;
 
-    public void execute(GameContext gameContext, PossibleHand possibleHand) {
-        for (Yaku yaku : allYaku) {
+    public void executeAllCompatible(GameContext gameContext, PossibleHand possibleHand) {
+        for (CommonYaku yaku : yakuAllCompatible) {
             yaku.execute(gameContext, possibleHand);
         }
 

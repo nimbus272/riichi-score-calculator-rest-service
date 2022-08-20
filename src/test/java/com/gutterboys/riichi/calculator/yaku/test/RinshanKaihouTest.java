@@ -9,15 +9,15 @@ import org.junit.jupiter.api.Test;
 
 import com.gutterboys.riichi.calculator.model.GameContext;
 import com.gutterboys.riichi.calculator.model.PossibleHand;
-import com.gutterboys.riichi.calculator.yaku.DeadWallDraw;
+import com.gutterboys.riichi.calculator.yaku.RinshanKaihou;
 
-public class DeadWallDrawTest {
+public class RinshanKaihouTest {
 
     GameContext gameContext;
 
     PossibleHand possibleHand;
 
-    DeadWallDraw yaku = new DeadWallDraw();
+    RinshanKaihou yaku = new RinshanKaihou();
 
     @BeforeEach
     public void setUp() {
