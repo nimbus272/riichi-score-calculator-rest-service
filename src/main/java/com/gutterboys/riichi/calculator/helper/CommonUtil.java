@@ -1,6 +1,7 @@
 package com.gutterboys.riichi.calculator.helper;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -10,6 +11,14 @@ import com.gutterboys.riichi.calculator.model.PossibleHand;
 import com.gutterboys.riichi.calculator.model.PossibleMelds;
 
 public class CommonUtil {
+
+    public static boolean isChi(List<Integer> meld) {
+        int tile = meld.get(0);
+        return (meld.containsAll((Arrays.asList(tile, tile + 1, tile + 2)))
+                || meld.containsAll(Arrays.asList(tile - 1, tile, tile + 1))
+                || meld.containsAll(Arrays.asList(tile - 2, tile - 1, tile)));
+
+    }
 
     public static void removeAndAddPonFromList(List<Integer> hand, int tile, int numberOfTiles) {
         for (int i = 0; i < numberOfTiles; i++) {
@@ -75,7 +84,6 @@ public class CommonUtil {
             }
         }
     }
-
 
     public static void checkAndRemoveDuplicatePossibleHands(List<PossibleHand> possibleHands) {
         Gson gson = new Gson();

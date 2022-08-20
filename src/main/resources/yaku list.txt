@@ -11,7 +11,7 @@ COMPATIBLE FOR ALL
 
 WORKS FOR MOST (NOT CHIITOITSU OR KOKUSHI OR RYANPEIKO)
 -------------------------------------------
-- IPPEIKO - 2 identical sequence, not open - 1 han
+- IPPEIKO - 2 identical sequence, not open - 1 han -- DONE
 - SANSHOKU DOUJUN - same sequence all suits,  - 1 han open/2 closed
 - ITTSUU - straight same suit,  - 1 han open/ 2 closed
 - TOITOI - all triplets, no sequences, (if tsumo, not open -> yakuman, if all terminals + honors -> honro - 4 han) - 2 han

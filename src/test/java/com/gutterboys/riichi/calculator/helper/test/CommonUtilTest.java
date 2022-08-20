@@ -201,4 +201,11 @@ public class CommonUtilTest {
 
     }
 
+    @Test
+    public void isChiTest() {
+        List<Integer> meld = Arrays.asList(0, 1, 2);
+
+        assertTrue(CommonUtil.isChi(meld));
+    }
+
 }

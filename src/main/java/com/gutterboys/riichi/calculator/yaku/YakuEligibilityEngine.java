@@ -11,6 +11,7 @@ import com.gutterboys.riichi.calculator.model.PossibleHand;
 import com.gutterboys.riichi.calculator.model.ScoreResponse;
 import com.gutterboys.riichi.calculator.yaku.common.CommonYaku;
 import com.gutterboys.riichi.calculator.yaku.special.SpecialYaku;
+import com.gutterboys.riichi.calculator.yaku.standard.StandardStructureYaku;
 
 @Component
 public class YakuEligibilityEngine {
@@ -23,6 +24,9 @@ public class YakuEligibilityEngine {
     @Autowired
     Set<SpecialYaku> specialYaku;
 
+    @Autowired
+    Set<StandardStructureYaku> standardYaku;
+
     public void executeAllCompatible(GameContext gameContext, PossibleHand possibleHand) {
         for (CommonYaku yaku : yakuAllCompatible) {
             yaku.execute(gameContext, possibleHand);
@@ -33,6 +37,12 @@ public class YakuEligibilityEngine {
     public void executeSpecial(GameContext gameContext, ScoreResponse response) throws RiichiCalculatorException {
         for (SpecialYaku yaku : specialYaku) {
             yaku.execute(gameContext, response);
+        }
+    }
+
+    public void executeStandard(GameContext gameContext, PossibleHand possibleHand) {
+        for (StandardStructureYaku yaku : standardYaku) {
+            yaku.execute(gameContext, possibleHand);
         }
     }
 

@@ -1,5 +1,6 @@
 package com.gutterboys.riichi.calculator.service;
 
+import org.assertj.core.util.Arrays;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -10,6 +11,7 @@ import com.gutterboys.riichi.calculator.helper.CommonUtil;
 import com.gutterboys.riichi.calculator.helper.HandSortUtil;
 import com.gutterboys.riichi.calculator.helper.ScoreUtil;
 import com.gutterboys.riichi.calculator.model.GameContext;
+import com.gutterboys.riichi.calculator.model.PossibleHand;
 import com.gutterboys.riichi.calculator.model.PossibleMelds;
 import com.gutterboys.riichi.calculator.model.ScoreResponse;
 import com.gutterboys.riichi.calculator.yaku.YakuEligibilityEngine;
@@ -57,11 +59,18 @@ public class CalculatorService {
         }
 
         if (response.getPossibleHands().size() > 0) {
-            LOGGER.info("Determining compatible general yaku...");
+            LOGGER.info("Determining compatible yaku...");
             for (int i = 0; i < response.getPossibleHands().size(); i++) {
-                eligibilityEngine.executeAllCompatible(gameContext, response.getPossibleHands().get(i));
+                PossibleHand hand = response.getPossibleHands().get(i);
+                eligibilityEngine.executeAllCompatible(gameContext, hand);
+                if (!(hand.getQualifiedYaku().contains("Kokushi Musou (Thirteen Orphans)")
+                        || hand.getQualifiedYaku().contains("Ryanpeiko (Two sets of identical sequences)")
+                        || hand.getQualifiedYaku().contains("Chiitoitsu (Seven Pairs)"))) {
+                    eligibilityEngine.executeStandard(gameContext, hand);
+                }
             }
         }
+
         // if (gameContext.getTiles().stream().filter(x -> x != -1).count() == 0) {
         // // check all the other yaku
         // eligibilityEngine.execute(gameContext, response);
