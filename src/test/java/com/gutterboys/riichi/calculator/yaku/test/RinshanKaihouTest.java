@@ -28,6 +28,8 @@ public class RinshanKaihouTest {
     @Test
     public void execute_IsDeadWallDrawTest() {
         gameContext.setDeadWallDraw(true);
+        gameContext.setTsumo(true);
+        gameContext.setKanCount(1);
 
         yaku.execute(gameContext, possibleHand);
 
