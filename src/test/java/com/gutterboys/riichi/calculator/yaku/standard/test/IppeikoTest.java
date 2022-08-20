@@ -1,4 +1,4 @@
-package com.gutterboys.riichi.calculator.yaku.test;
+package com.gutterboys.riichi.calculator.yaku.standard.test;
 
 import static org.junit.jupiter.api.Assertions.assertTrue;
 

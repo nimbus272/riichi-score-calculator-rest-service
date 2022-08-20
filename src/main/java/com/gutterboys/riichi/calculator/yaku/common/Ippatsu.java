@@ -12,7 +12,7 @@ public class Ippatsu implements CommonYaku {
     public void execute(GameContext gameContext, PossibleHand possibleHand) {
         if (gameContext.isIppatsu() && !gameContext.isOpened() && gameContext.getKanCount() == 0) {
             possibleHand.setHan(possibleHand.getHan() + 1);
-            possibleHand.getQualifiedYaku().add("Ippatsu");
+            possibleHand.getQualifiedYaku().add("Ippatsu (One-shot)");
         }
     }
 }

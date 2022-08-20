@@ -1,4 +1,4 @@
-package com.gutterboys.riichi.calculator.yaku.test;
+package com.gutterboys.riichi.calculator.yaku.common.test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
@@ -9,15 +9,15 @@ import org.junit.jupiter.api.Test;
 
 import com.gutterboys.riichi.calculator.model.GameContext;
 import com.gutterboys.riichi.calculator.model.PossibleHand;
-import com.gutterboys.riichi.calculator.yaku.common.RinshanKaihou;
+import com.gutterboys.riichi.calculator.yaku.common.Chankan;
 
-public class RinshanKaihouTest {
+public class ChankanTest {
 
     GameContext gameContext;
 
     PossibleHand possibleHand;
 
-    RinshanKaihou yaku = new RinshanKaihou();
+    Chankan yaku = new Chankan();
 
     @BeforeEach
     public void setUp() {
@@ -26,23 +26,32 @@ public class RinshanKaihouTest {
     }
 
     @Test
-    public void execute_IsDeadWallDrawTest() {
-        gameContext.setDeadWallDraw(true);
-        gameContext.setTsumo(true);
-        gameContext.setKanCount(1);
+    public void execute_IsChankanTest() {
+        gameContext.setRobbedKan(true);
 
         yaku.execute(gameContext, possibleHand);
 
         assertEquals(1, possibleHand.getHan());
-        assertTrue(possibleHand.getQualifiedYaku().contains("Rinshan Kaihou (Dead Wall Draw)"));
+        assertTrue(possibleHand.getQualifiedYaku().contains("Chankan (Robbed Kan)"));
     }
 
     @Test
-    public void execute_IsNotDeadWallDrawTest() {
+    public void execute_IsNotChankanTest1() {
+        gameContext.setRobbedKan(true);
+        gameContext.setTsumo(true);
 
         yaku.execute(gameContext, possibleHand);
 
         assertEquals(0, possibleHand.getHan());
-        assertFalse(possibleHand.getQualifiedYaku().contains("Rinshan Kaihou (Dead Wall Draw)"));
+        assertFalse(possibleHand.getQualifiedYaku().contains("Chankan (Robbed Kan)"));
+    }
+
+    @Test
+    public void execute_IsNotChankanTest2() {
+
+        yaku.execute(gameContext, possibleHand);
+
+        assertEquals(0, possibleHand.getHan());
+        assertFalse(possibleHand.getQualifiedYaku().contains("Chankan (Robbed Kan)"));
     }
 }
