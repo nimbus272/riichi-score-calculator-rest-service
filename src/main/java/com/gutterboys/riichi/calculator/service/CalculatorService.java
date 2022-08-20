@@ -1,6 +1,5 @@
 package com.gutterboys.riichi.calculator.service;
 
-import org.assertj.core.util.Arrays;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
