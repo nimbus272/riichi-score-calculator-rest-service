@@ -13,7 +13,7 @@
 
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-    <spring.boot.version>2.6.6</spring.boot.version>
+    <spring.boot.version>2.6.8</spring.boot.version>
     <main.class>com.gutterboys.riichi.calculator.RiichiCalculatorApp</main.class>
   </properties>
 
