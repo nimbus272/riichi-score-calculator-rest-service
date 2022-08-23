@@ -6,9 +6,11 @@ import java.util.List;
 public class PossibleHand {
     private List<List<Integer>> melds = new ArrayList<List<Integer>>();
     private List<String> qualifiedYaku = new ArrayList<String>();
+    private List<String> optQualifiedYaku = new ArrayList<String>();
     private List<Integer> tiles = new ArrayList<Integer>();
 
     private int han = 0;
+    private int optHan = 0;
     private int fu = 0;
     private int baseScore;
     private int tsumoFromNonDealer;
@@ -17,6 +19,26 @@ public class PossibleHand {
     private int ronToDealer;
     private boolean doubleYakuman;
     private String specialScoreType;
+
+    public PossibleHand() {
+    };
+
+    public PossibleHand(PossibleHand possibleHand) {
+        this.melds = new ArrayList<List<Integer>>(possibleHand.getMelds());
+        this.qualifiedYaku = new ArrayList<String>(possibleHand.getQualifiedYaku());
+        this.qualifiedYaku.addAll(possibleHand.getOptQualifiedYaku());
+        this.tiles = new ArrayList<Integer>(possibleHand.getTiles());
+        this.han = possibleHand.getHan();
+        this.han = this.han + possibleHand.getOptHan();
+        this.fu = possibleHand.getFu();
+        this.baseScore = possibleHand.getBaseScore();
+        this.tsumoFromNonDealer = possibleHand.getTsumoFromNonDealer();
+        this.tsumoFromDealer = possibleHand.getTsumoFromDealer();
+        this.ronToNonDealer = possibleHand.getRonToNonDealer();
+        this.ronToDealer = possibleHand.getRonToDealer();
+        this.doubleYakuman = possibleHand.isDoubleYakuman();
+        this.specialScoreType = possibleHand.getSpecialScoreType();
+    }
 
     public List<Integer> getTiles() {
         return tiles;
@@ -100,6 +122,18 @@ public class PossibleHand {
 
     public void setDoubleYakuman(boolean doubleYakuman) {
         this.doubleYakuman = doubleYakuman;
+    }
+
+    public List<String> getOptQualifiedYaku() {
+        return optQualifiedYaku;
+    }
+
+    public int getOptHan() {
+        return optHan;
+    }
+
+    public void setOptHan(int optHan) {
+        this.optHan = optHan;
     }
 
 }

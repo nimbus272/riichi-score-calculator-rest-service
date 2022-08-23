@@ -70,15 +70,9 @@ public class CalculatorService {
             }
         }
 
-        // if (gameContext.getTiles().stream().filter(x -> x != -1).count() == 0) {
-        // // check all the other yaku
-        // eligibilityEngine.execute(gameContext, response);
-        // return;
-        // }
-        // CommonUtil.checkMeldTypesAndRemoveDupes(possibleMelds);
-        // iterate until all tiles are sorted or it's impossible to reduce
-
-        // profit
+        for (int i = 0; i < response.getPossibleHands().size(); i++) {
+            scoreUtil.determineScore(response, gameContext, response.getPossibleHands().get(i));
+        }
 
     }
 }

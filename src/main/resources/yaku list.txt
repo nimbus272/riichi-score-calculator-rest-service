@@ -10,29 +10,35 @@ COMPATIBLE FOR ALL
 - DOUBLE RIICHI - double riichi checkbox, not open - 2 han -- DONE 
 
 WORKS FOR MOST (NOT CHIITOITSU OR KOKUSHI OR RYANPEIKO)
--------------------------------------------
+-------------------------------------------   
 - IPPEIKO - 2 identical sequence, not open - 1 han -- DONE
 - SANSHOKU DOUJUN - same sequence all suits,  - 1 han open/2 closed -- DONE
 - ITTSUU - straight same suit,  - 1 han open/ 2 closed -- DONE
-- TOITOI - all triplets, no sequences, (if tsumo, not open -> yakuman) - 2 han
-- SANANKO - three concealed triplets or kans - 2 han 
 - SANSHOKU DOUKU -  same pon all suit, - 2 han -- DONE
 - SANKANTSU - 3 kans, - 2 han -- DONE
 - TANYAO - no terminals, no honors - 1 han -- DONE
-- YAKUHAI - any pon or kan of dragon, player wind, prevalent wind - 1 han each
-- SHOUSANGEN - 2 pons or kans of dragon and pair of 3rd - 2 han
-- HONITSU - all same suit and honors, 3 closed /2 open
-- CHINITSU - all same suit - 6 closed / 5 open
+- YAKUHAI - any pon or kan of dragon, player wind, prevalent wind - 1 han each - DONE
+- SHOUSANGEN - 2 pons or kans of dragon and pair of 3rd - 2 han - DONE
+- HONITSU - all same suit and honors, 3 closed /2 open - DONE
+- CHINITSU - all same suit - 6 closed / 5 open - DONE
+- TOITOI - all triplets, no sequences, (if tsumo, not open -> yakuman) - 2 han - DONE
+- SANANKO - three concealed triplets or kans - 2 han  - DONE
 
 
 LAST
 ------------------------
 - PINFU - not open, 1 han
-- HONRO - all terminals and honors (only applicable for Toitoi and Chiitoitsu)
+- HONROUTO - all terminals and honors (only applicable for Toitoi and Chiitoitsu)
 - CHANTA - terminal or honor in each meld, at least one instance of 123 or 789 - 1 open/ 2 closed
 - JUNCHAN - terminal no honors in each meld, chanta - 2 open / 3 closed
+
 - 7 pairs list
 ---------------
 - ryanpeiko (covered)
 - honitsu
-- honro 
+- chinitsu
+- honrouto 
+
+YAKUMAN 
+--------
+- SUUANKO - DONE (via toitoi)

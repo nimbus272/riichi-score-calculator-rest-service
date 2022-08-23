@@ -7,6 +7,7 @@ import org.springframework.stereotype.Component;
 import com.gutterboys.riichi.calculator.constants.SpecialScoringType;
 import com.gutterboys.riichi.calculator.model.GameContext;
 import com.gutterboys.riichi.calculator.model.PossibleHand;
+import com.gutterboys.riichi.calculator.model.ScoreResponse;
 import com.gutterboys.riichi.calculator.yaku.YakuEligibilityEngine;
 
 import ch.qos.logback.classic.Logger;
@@ -39,6 +40,26 @@ public class ScoreUtil {
                     continue;
             }
         }
+    }
+
+    public void determineScore(ScoreResponse response, GameContext gameContext, PossibleHand possibleHand) {
+        LOGGER.info("Determining score...");
+        if (possibleHand.getOptHan() > 0) {
+            PossibleHand newHand = new PossibleHand(possibleHand);
+            response.getPossibleHands().add(newHand);
+
+            possibleHand.getOptQualifiedYaku().clear();
+            possibleHand.setOptHan(0);
+        }
+        if (possibleHand.getHan() > 4) {
+            handleSpecialScoring(gameContext, possibleHand);
+            return;
+        } else {
+            determineBaseScore(possibleHand);
+            applyScoreMultipliers(gameContext, possibleHand);
+            return;
+        }
+
     }
 
     public void determineBaseScore(PossibleHand possibleHand) {
