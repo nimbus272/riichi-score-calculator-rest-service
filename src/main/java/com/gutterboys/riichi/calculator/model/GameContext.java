@@ -3,8 +3,18 @@ package com.gutterboys.riichi.calculator.model;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
+
+import com.gutterboys.riichi.calculator.validation.HandContentConstraint;
+import com.gutterboys.riichi.calculator.validation.HandSizeConstraint;
+
 public class GameContext {
 
+    @NotNull(message = "Hand cannot be empty.")
+    @NotEmpty(message = "Hand cannot be empty.")
+    @HandSizeConstraint
+    @HandContentConstraint
     private List<Integer> tiles = new ArrayList<Integer>();
     private List<List<Integer>> melds = new ArrayList<List<Integer>>();
     private List<Integer> doraTiles = new ArrayList<Integer>();
