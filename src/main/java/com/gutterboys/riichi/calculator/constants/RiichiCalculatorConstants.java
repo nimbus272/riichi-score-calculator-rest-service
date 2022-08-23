@@ -29,4 +29,6 @@ public class RiichiCalculatorConstants {
     public static final List<Integer> RED_FIVES = Arrays.asList(34, 35, 36);
 
     public static final List<Integer> GREEN = Arrays.asList(19, 20, 21, 23, 25, 28);
+
+    public static final List<Integer> TERMINAL_AND_HONOR = Arrays.asList(0, 8, 9, 17, 18, 26, 27, 28, 29, 30, 31, 32, 33);
 }

@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import com.google.gson.Gson;
+import com.gutterboys.riichi.calculator.constants.RiichiCalculatorConstants;
 import com.gutterboys.riichi.calculator.model.GameContext;
 import com.gutterboys.riichi.calculator.model.PossibleHand;
 import com.gutterboys.riichi.calculator.model.PossibleMelds;
@@ -99,6 +100,31 @@ public class CommonUtil {
                 }
             }
 
+        }
+    }
+
+    public static String getSuit(List<Integer> meld) {
+        if (RiichiCalculatorConstants.MAN.contains(meld.get(0))) {
+            return "MAN";
+        } else if (RiichiCalculatorConstants.PIN.contains(meld.get(0))) {
+            return "PIN";
+        } else if (RiichiCalculatorConstants.SOU.contains(meld.get(0))) {
+            return "SOU";
+        } else if (RiichiCalculatorConstants.HONORS.contains(meld.get(0))) {
+            return "HONOR";
+        }
+        return null;
+    }
+
+    public static int getIndexFromTile(int tile) {
+        if (tile < 9) {
+            return tile;
+        } else if (tile > 8 && tile < 18) {
+            return tile - 9;
+        } else if (tile > 17 && tile < 27) {
+            return tile - 18;
+        } else {
+            return -1;
         }
     }
 }
