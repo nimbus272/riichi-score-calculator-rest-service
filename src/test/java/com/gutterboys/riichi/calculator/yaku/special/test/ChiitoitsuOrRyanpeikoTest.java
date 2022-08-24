@@ -19,6 +19,7 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import com.gutterboys.riichi.calculator.exception.RiichiCalculatorException;
 import com.gutterboys.riichi.calculator.helper.HandSortUtil;
 import com.gutterboys.riichi.calculator.model.GameContext;
 import com.gutterboys.riichi.calculator.model.ScoreResponse;
@@ -44,7 +45,7 @@ public class ChiitoitsuOrRyanpeikoTest {
     }
 
     @Test
-    public void execute_IsChiitoitsuTest() {
+    public void execute_IsChiitoitsuTest() throws RiichiCalculatorException {
         gameContext.getTiles()
                 .addAll(Arrays.asList(0, 0, 9, 9, 18, 18, 27, 27, 29, 29, 31, 31, 33, 33));
 
@@ -59,7 +60,7 @@ public class ChiitoitsuOrRyanpeikoTest {
     }
 
     @Test()
-    public void execute_IsNotChiitoitsuTest() {
+    public void execute_IsNotChiitoitsuTest() throws RiichiCalculatorException {
         gameContext.getTiles()
                 .addAll(Arrays.asList(0, 0, 0, 18, 18, 18, 27, 27, 29, 29, 31, 31, 33, 33));
 
@@ -69,7 +70,7 @@ public class ChiitoitsuOrRyanpeikoTest {
     }
 
     @Test
-    public void execute_IsOpenHandTest() {
+    public void execute_IsOpenHandTest() throws RiichiCalculatorException {
         gameContext.getTiles()
                 .addAll(Arrays.asList(0, 0, 9, 9, 18, 18, 27, 27, 29, 29, 31, 31, 33, 33));
         gameContext.setOpened(true);
@@ -82,7 +83,7 @@ public class ChiitoitsuOrRyanpeikoTest {
 
     @Test
     @SuppressWarnings("unchecked")
-    public void execute_IsRyanpeikoTest() {
+    public void execute_IsRyanpeikoTest() throws RiichiCalculatorException {
         gameContext.getTiles()
                 .addAll(Arrays.asList(1, 1, 2, 2, 3, 3, 9, 9, 10, 10, 11, 11, 33, 33));
 
@@ -106,7 +107,7 @@ public class ChiitoitsuOrRyanpeikoTest {
     }
 
     @Test
-    public void execute_IsInvalidHandTest() {
+    public void execute_IsInvalidHandTest() throws RiichiCalculatorException {
         gameContext.getTiles()
                 .addAll(Arrays.asList(0, 0, 9, 9, 18, 18, 27, 27, 29, 29, 29, 33, 33, 33));
 

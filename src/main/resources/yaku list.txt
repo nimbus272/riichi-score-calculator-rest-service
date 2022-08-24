@@ -23,12 +23,14 @@ WORKS FOR MOST (NOT CHIITOITSU OR KOKUSHI OR RYANPEIKO)
 - CHINITSU - all same suit - 6 closed / 5 open - DONE
 - TOITOI - all triplets, no sequences, (if tsumo, not open -> yakuman) - 2 han - DONE
 - SANANKO - three concealed triplets or kans - 2 han  - DONE
+- PINFU - not open, 1 han
 
 
 LAST
 ------------------------
-- PINFU - not open, 1 han
+
 - HONROUTO - all terminals and honors (only applicable for Toitoi and Chiitoitsu)
+
 - CHANTA - terminal or honor in each meld, at least one instance of 123 or 789 - 1 open/ 2 closed
 - JUNCHAN - terminal no honors in each meld, chanta - 2 open / 3 closed
 

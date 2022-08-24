@@ -7,10 +7,12 @@ import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import com.gutterboys.riichi.calculator.exception.RiichiCalculatorException;
 import com.gutterboys.riichi.calculator.helper.CommonUtil;
 import com.gutterboys.riichi.calculator.helper.HandSortUtil;
 import com.gutterboys.riichi.calculator.model.GameContext;
 import com.gutterboys.riichi.calculator.model.PossibleHand;
+import com.gutterboys.riichi.calculator.model.PossibleMelds;
 import com.gutterboys.riichi.calculator.model.ScoreResponse;
 
 @Component
@@ -20,7 +22,7 @@ public class ChiitoitsuOrRyanpeiko implements SpecialYaku {
     HandSortUtil sortUtil;
 
     @Override
-    public void execute(GameContext gameContext, ScoreResponse response) {
+    public void execute(GameContext gameContext, ScoreResponse response) throws RiichiCalculatorException {
         if (gameContext.isOpened()) {
             return;
         }
@@ -48,11 +50,14 @@ public class ChiitoitsuOrRyanpeiko implements SpecialYaku {
                 sortUtil.checkChi(gameContext.getTiles(), tile, possibleChis, 2);
             }
             if (possibleChis.size() >= 12) {
-                possibleHand.setHan(possibleHand.getHan() + 3);
-                possibleHand.getQualifiedYaku().add("Ryanpeiko (Two sets of identical sequences)");
-                possibleHand.getTiles().addAll(response.getTiles());
-                possibleHand.getMelds().sort((a, b) -> a.get(0) - b.get(0));
-                response.getPossibleHands().add(possibleHand);
+                generateMeldsForRyanpeiko(possibleHand, gameContext, response);
+                for (int i = 0; i < response.getPossibleHands().size(); i++) {
+                    PossibleHand ryanpeiko = response.getPossibleHands().get(i);
+                    ryanpeiko.setHan(ryanpeiko.getHan() + 3);
+                    ryanpeiko.getQualifiedYaku().add("Ryanpeiko (Two sets of identical sequences)");
+                    ryanpeiko.getTiles().addAll(response.getTiles());
+                    ryanpeiko.getMelds().sort((a, b) -> a.get(0) - b.get(0));
+                }
                 return;
             }
 
@@ -86,5 +91,18 @@ public class ChiitoitsuOrRyanpeiko implements SpecialYaku {
     }
 
     // TODO get melds for ryanpeiko
+
+    private void generateMeldsForRyanpeiko(PossibleHand possibleHand, GameContext gameContext, ScoreResponse response)
+            throws RiichiCalculatorException {
+
+        PossibleMelds possibleMelds = new PossibleMelds();
+
+        sortUtil.reduceHand(gameContext, response, possibleMelds);
+
+        if (response.getPossibleHands().size() == 0) {
+            sortUtil.reducePossibleMelds(possibleMelds, gameContext, response);
+        }
+
+    }
 
 }

@@ -63,8 +63,8 @@ public class CalculatorService {
                 PossibleHand hand = response.getPossibleHands().get(i);
                 eligibilityEngine.executeAllCompatible(gameContext, hand);
                 if (!(hand.getQualifiedYaku().contains("Kokushi Musou (Thirteen Orphans)")
-                        || hand.getQualifiedYaku().contains("Ryanpeiko (Two sets of identical sequences)")
                         || hand.getQualifiedYaku().contains("Chiitoitsu (Seven Pairs)"))) {
+
                     eligibilityEngine.executeStandard(gameContext, hand);
                 }
             }

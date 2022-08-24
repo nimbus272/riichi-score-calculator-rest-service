@@ -14,9 +14,11 @@ public class Honitsu implements StandardStructureYaku {
         boolean man = true;
         boolean pin = true;
         boolean sou = true;
+        boolean honor = false;
         for (int i = 0; i < possibleHand.getTiles().size(); i++) {
             int tile = possibleHand.getTiles().get(i);
             if (tile > 26) {
+                honor = true;
                 continue;
             } else if (RiichiCalculatorConstants.MAN.contains(tile)) {
                 pin = false;
@@ -29,7 +31,7 @@ public class Honitsu implements StandardStructureYaku {
                 pin = false;
             }
         }
-        if (man || pin || sou) {
+        if ((man || pin || sou) && honor) {
             possibleHand.setHan(gameContext.isOpened() ? possibleHand.getHan() + 2 : possibleHand.getHan() + 3);
             possibleHand.getQualifiedYaku().add("Honitsu (Half flush)");
         }

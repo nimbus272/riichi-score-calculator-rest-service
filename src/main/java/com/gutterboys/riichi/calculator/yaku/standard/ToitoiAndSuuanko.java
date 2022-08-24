@@ -1,8 +1,5 @@
 package com.gutterboys.riichi.calculator.yaku.standard;
 
-import java.util.List;
-import java.util.stream.Collectors;
-
 import org.springframework.stereotype.Component;
 
 import com.gutterboys.riichi.calculator.helper.CommonUtil;

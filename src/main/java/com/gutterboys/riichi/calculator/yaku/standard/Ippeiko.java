@@ -13,7 +13,8 @@ public class Ippeiko implements StandardStructureYaku {
 
     @Override
     public void execute(GameContext gameContext, PossibleHand possibleHand) {
-        if (gameContext.isOpened()) {
+        if (gameContext.isOpened()
+                || possibleHand.getQualifiedYaku().contains("Ryanpeiko (Two sets of identical sequences)")) {
             return;
         }
         for (int i = 0; i < possibleHand.getMelds().size(); i++) {
