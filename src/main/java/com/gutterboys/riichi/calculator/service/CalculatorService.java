@@ -5,6 +5,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.util.CollectionUtils;
 
+import com.gutterboys.riichi.calculator.exception.InvalidHandException;
 import com.gutterboys.riichi.calculator.exception.RiichiCalculatorException;
 import com.gutterboys.riichi.calculator.helper.CommonUtil;
 import com.gutterboys.riichi.calculator.helper.HandSortUtil;
@@ -62,16 +63,21 @@ public class CalculatorService {
             handSortUtil.reducePossibleMelds(possibleMelds, gameContext, response);
         }
 
-        if (response.getPossibleHands().size() > 0) {
-            LOGGER.info("Determining compatible yaku...");
-            for (int i = 0; i < response.getPossibleHands().size(); i++) {
-                PossibleHand hand = response.getPossibleHands().get(i);
-                eligibilityEngine.executeAllCompatible(gameContext, hand);
-                if (!(hand.getQualifiedYaku().contains("Kokushi Musou (Thirteen Orphans)")
-                        || hand.getQualifiedYaku().contains("Chiitoitsu (Seven Pairs)"))) {
+        if (response.getPossibleHands().isEmpty()) {
+            LOGGER.info("No possible hands found");
+            throw new InvalidHandException("No possible hands found");
+        }
 
-                    eligibilityEngine.executeStandard(gameContext, hand);
-                }
+        LOGGER.info("Determining compatible yaku...");
+        for (int i = 0; i < response.getPossibleHands().size(); i++) {
+
+            PossibleHand hand = response.getPossibleHands().get(i);
+            scoreUtil.countFu(gameContext, hand);
+            eligibilityEngine.executeAllCompatible(gameContext, hand);
+            if (!(hand.getQualifiedYaku().contains("Kokushi Musou (Thirteen Orphans)")
+                    || hand.getQualifiedYaku().contains("Chiitoitsu (Seven Pairs)"))) {
+
+                eligibilityEngine.executeStandard(gameContext, hand);
             }
         }
 

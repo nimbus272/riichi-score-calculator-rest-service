@@ -237,17 +237,36 @@ public class ScoreUtil {
                     possibleHand.setFu(possibleHand.getFu() + 2);
                 }
             }
+            // waits that matter:
+            // wait is a pair that is not a part of a meld
+            // wait that is the middle of a chi
+            // wait is end of a terminal chi (3 or 7)
 
-            if (meld.contains(gameContext.getWinningTile())) {
-                if (meld.size() == 3 && meld.indexOf(gameContext.getWinningTile()) == 1) {
-                    possibleHand.setFu(possibleHand.getFu() + 2);
-                } else if ((RiichiCalculatorConstants.TERMINALS.contains(meld.get(0))
-                        && meld.indexOf(gameContext.getWinningTile()) == 2)
-                        || (RiichiCalculatorConstants.TERMINALS.contains(meld.get(2))
-                                && meld.indexOf(gameContext.getWinningTile()) == 0)) {
-                    possibleHand.setFu(possibleHand.getFu() + 2);
-
+            if (possibleHand.getMelds().stream().filter((checkmeld) -> {
+                if (checkmeld.contains(gameContext.getWinningTile())) {
+                    return true;
                 }
+                return false;
+            }).count() == 1L) {
+                if (meld.contains(gameContext.getWinningTile())) {
+                    if (meld.size() == 3 && meld.indexOf(gameContext.getWinningTile()) == 1) {
+                        possibleHand.setFu(possibleHand.getFu() + 2);
+                    } else if ((RiichiCalculatorConstants.TERMINALS.contains(meld.get(0))
+                            && meld.indexOf(gameContext.getWinningTile()) == 2)
+                            || (RiichiCalculatorConstants.TERMINALS.contains(meld.get(2))
+                                    && meld.indexOf(gameContext.getWinningTile()) == 0)) {
+                        possibleHand.setFu(possibleHand.getFu() + 2);
+
+                    } else if (meld.size() == 2) {
+                        possibleHand.setFu(possibleHand.getFu() + 2);
+                    }
+                }
+            }
+            if (gameContext.isTsumo()) {
+                possibleHand.setFu(possibleHand.getFu() + 2);
+            }
+            if (possibleHand.getQualifiedYaku().contains("Chiitoitsu (Seven Pairs)")) {
+                possibleHand.setFu(25);
             }
         }
 
