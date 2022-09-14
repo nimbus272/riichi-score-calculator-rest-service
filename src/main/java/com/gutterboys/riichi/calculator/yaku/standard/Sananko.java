@@ -18,9 +18,14 @@ public class Sananko implements StandardStructureYaku {
                 .collect(Collectors.toList());
 
         if (ponsOrKans.size() > 2) {
-            possibleHand.setOptHan(possibleHand.getHan() + 2);
-            possibleHand.getOptQualifiedYaku()
-                    .add("Sananko (3 Concealed Triplets -- Does Not Qualify if 3 Triplets Are Not Closed)");
+            for (int i = 0; i < ponsOrKans.size(); i++) {
+                if (gameContext.getOpenMelds().contains(ponsOrKans.get(i))) {
+                    return;
+                }
+            }
+            possibleHand.setHan(possibleHand.getHan() + 2);
+            possibleHand.getQualifiedYaku()
+                    .add("Sananko (3 Concealed Triplets)");
         }
 
     }

@@ -1,9 +1,12 @@
 package com.gutterboys.riichi.calculator.helper;
 
+import java.util.List;
+
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import com.gutterboys.riichi.calculator.constants.RiichiCalculatorConstants;
 import com.gutterboys.riichi.calculator.constants.SpecialScoringType;
 import com.gutterboys.riichi.calculator.model.GameContext;
 import com.gutterboys.riichi.calculator.model.PossibleHand;
@@ -44,13 +47,6 @@ public class ScoreUtil {
 
     public void determineScore(ScoreResponse response, GameContext gameContext, PossibleHand possibleHand) {
         LOGGER.info("Determining score...");
-        if (possibleHand.getOptHan() > 0) {
-            PossibleHand newHand = new PossibleHand(possibleHand);
-            response.getPossibleHands().add(newHand);
-
-            possibleHand.getOptQualifiedYaku().clear();
-            possibleHand.setOptHan(0);
-        }
         if (possibleHand.getHan() > 4) {
             handleSpecialScoring(gameContext, possibleHand);
             return;
@@ -194,5 +190,66 @@ public class ScoreUtil {
                 break;
 
         }
+    }
+
+    public void countFu(GameContext gameContext, PossibleHand possibleHand) {
+        // any winning hand is automatically awarded 20 fu
+        possibleHand.setFu(possibleHand.getFu() + 20);
+
+        // 10 fu for ron with closed hand
+        if (!gameContext.isTsumo() && !gameContext.isOpened()) {
+            possibleHand.setFu(possibleHand.getFu() + 10);
+        }
+
+        for (int i = 0; i < possibleHand.getMelds().size(); i++) {
+            List<Integer> meld = possibleHand.getMelds().get(i);
+
+            if (!CommonUtil.isChi(meld) && meld.size() == 3 && gameContext.getOpenMelds().contains(meld)) {
+                if (RiichiCalculatorConstants.SIMPLES.contains(meld.get(0))) {
+                    possibleHand.setFu(possibleHand.getFu() + 2);
+                } else {
+                    possibleHand.setFu(possibleHand.getFu() + 4);
+                }
+            } else if (!CommonUtil.isChi(meld) && meld.size() == 3 && !gameContext.getOpenMelds().contains(meld)) {
+                if (RiichiCalculatorConstants.SIMPLES.contains(meld.get(0))) {
+                    possibleHand.setFu(possibleHand.getFu() + 4);
+                } else {
+                    possibleHand.setFu(possibleHand.getFu() + 8);
+                }
+            } else if (!CommonUtil.isChi(meld) && meld.size() == 4 && gameContext.getOpenMelds().contains(meld)) {
+                if (RiichiCalculatorConstants.SIMPLES.contains(meld.get(0))) {
+                    possibleHand.setFu(possibleHand.getFu() + 8);
+                } else {
+                    possibleHand.setFu(possibleHand.getFu() + 16);
+                }
+            } else if (!CommonUtil.isChi(meld) && meld.size() == 4 && !gameContext.getOpenMelds().contains(meld)) {
+                if (RiichiCalculatorConstants.SIMPLES.contains(meld.get(0))) {
+                    possibleHand.setFu(possibleHand.getFu() + 16);
+                } else {
+                    possibleHand.setFu(possibleHand.getFu() + 32);
+                }
+            } else if (!CommonUtil.isChi(meld) && meld.size() == 2) {
+                if (gameContext.getSeatWind() == gameContext.getPrevalentWind()
+                        && gameContext.getSeatWind() == meld.get(0)) {
+                    possibleHand.setFu(possibleHand.getFu() + 4);
+                } else if (gameContext.getSeatWind() == meld.get(0) || gameContext.getPrevalentWind() == meld.get(0)
+                        || RiichiCalculatorConstants.DRAGONS.contains(meld.get(0))) {
+                    possibleHand.setFu(possibleHand.getFu() + 2);
+                }
+            }
+
+            if (meld.contains(gameContext.getWinningTile())) {
+                if (meld.size() == 3 && meld.indexOf(gameContext.getWinningTile()) == 1) {
+                    possibleHand.setFu(possibleHand.getFu() + 2);
+                } else if ((RiichiCalculatorConstants.TERMINALS.contains(meld.get(0))
+                        && meld.indexOf(gameContext.getWinningTile()) == 2)
+                        || (RiichiCalculatorConstants.TERMINALS.contains(meld.get(2))
+                                && meld.indexOf(gameContext.getWinningTile()) == 0)) {
+                    possibleHand.setFu(possibleHand.getFu() + 2);
+
+                }
+            }
+        }
+
     }
 }

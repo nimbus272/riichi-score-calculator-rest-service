@@ -30,6 +30,11 @@ public class CalculatorService {
     HandSortUtil handSortUtil;
 
     public void evaluateHand(GameContext gameContext, ScoreResponse response) throws RiichiCalculatorException {
+        if (gameContext.getOpenMelds().size() > 0) {
+            for (int i = 0; i < gameContext.getOpenMelds().size(); i++) {
+                gameContext.getTiles().addAll(gameContext.getOpenMelds().get(i));
+            }
+        }
         LOGGER.info("Calculating score...");
         response.getTiles().addAll(gameContext.getTiles());
         handSortUtil.swapFives(gameContext);

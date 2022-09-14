@@ -33,10 +33,10 @@ public class SanankoTest {
 
         yaku.execute(gameContext, possibleHand);
 
-        assertTrue(possibleHand.getOptQualifiedYaku().size() > 0);
+        assertTrue(possibleHand.getQualifiedYaku().size() > 0);
         assertTrue(
-                possibleHand.getOptQualifiedYaku()
-                        .contains("Sananko (3 Concealed Triplets -- Does Not Qualify if 3 Triplets Are Not Closed)"));
-        assertTrue(possibleHand.getOptHan() == 2);
+                possibleHand.getQualifiedYaku()
+                        .contains("Sananko (3 Concealed Triplets)"));
+        assertTrue(possibleHand.getHan() == 2);
     }
 }

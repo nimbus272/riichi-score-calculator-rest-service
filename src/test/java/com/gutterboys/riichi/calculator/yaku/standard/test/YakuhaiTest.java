@@ -37,7 +37,7 @@ public class YakuhaiTest {
 
         assertTrue(possibleHand.getQualifiedYaku().size() == 1);
         assertTrue(
-                possibleHand.getQualifiedYaku().contains("Yakuhai (Triplet or Quad or relevant winds or dragon tiles"));
+                possibleHand.getQualifiedYaku().contains("Yakuhai (Triplet or Quad of relevant winds or dragon tiles"));
         assertTrue(possibleHand.getHan() == 4);
     }
 }

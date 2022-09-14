@@ -90,8 +90,6 @@ public class ChiitoitsuOrRyanpeiko implements SpecialYaku {
 
     }
 
-    // TODO get melds for ryanpeiko
-
     private void generateMeldsForRyanpeiko(PossibleHand possibleHand, GameContext gameContext, ScoreResponse response)
             throws RiichiCalculatorException {
 

@@ -6,6 +6,7 @@ import java.util.List;
 public class GameContext {
 
     private List<Integer> tiles = new ArrayList<Integer>();
+    private List<List<Integer>> openMelds = new ArrayList<List<Integer>>();
     private List<List<Integer>> melds = new ArrayList<List<Integer>>();
     private List<Integer> doraTiles = new ArrayList<Integer>();
     private int currentMeld = 0;
@@ -190,6 +191,10 @@ public class GameContext {
 
     public void setLastTileDraw(boolean lastTileDraw) {
         this.lastTileDraw = lastTileDraw;
+    }
+
+    public List<List<Integer>> getOpenMelds() {
+        return openMelds;
     }
 
 }

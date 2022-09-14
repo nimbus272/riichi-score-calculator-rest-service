@@ -41,9 +41,9 @@ public class Yakuhai implements StandardStructureYaku {
     private void addYakuAndHan(PossibleHand possibleHand) {
         possibleHand.setHan(possibleHand.getHan() + 1);
         if (!possibleHand.getQualifiedYaku()
-                .contains("Yakuhai (Triplet or Quad or relevant winds or dragon tiles")) {
+                .contains("Yakuhai (Triplet or Quad of relevant winds or dragon tiles")) {
             possibleHand.getQualifiedYaku()
-                    .add("Yakuhai (Triplet or Quad or relevant winds or dragon tiles");
+                    .add("Yakuhai (Triplet or Quad of relevant winds or dragon tiles");
         }
     }
 }

@@ -82,31 +82,6 @@ public class ChiitoitsuOrRyanpeikoTest {
     }
 
     @Test
-    @SuppressWarnings("unchecked")
-    public void execute_IsRyanpeikoTest() throws RiichiCalculatorException {
-        gameContext.getTiles()
-                .addAll(Arrays.asList(1, 1, 2, 2, 3, 3, 9, 9, 10, 10, 11, 11, 33, 33));
-
-        Mockito.doAnswer(invocation -> {
-            Object[] args = invocation.getArguments();
-            if (args[2] instanceof ArrayList<?>) {
-                ArrayList<List<Integer>> possibleChis = (ArrayList<List<Integer>>) args[2];
-                possibleChis.add(new ArrayList<Integer>());
-            }
-            return null;
-        }).when(sortUtil).checkChi(anyList(), anyInt(), anyList(), anyInt());
-
-        yaku.execute(gameContext, response);
-
-        Mockito.verify(sortUtil, times(14)).checkChi(anyList(), anyInt(), anyList(), anyInt());
-        assertTrue(response.getPossibleHands().size() != 0);
-        assertEquals(3, response.getPossibleHands().get(0).getHan());
-        assertFalse(response.getPossibleHands().get(0).getQualifiedYaku().contains("Chiitoitsu (Seven Pairs)"));
-        assertTrue(response.getPossibleHands().get(0).getQualifiedYaku()
-                .contains("Ryanpeiko (Two sets of identical sequences)"));
-    }
-
-    @Test
     public void execute_IsInvalidHandTest() throws RiichiCalculatorException {
         gameContext.getTiles()
                 .addAll(Arrays.asList(0, 0, 9, 9, 18, 18, 27, 27, 29, 29, 29, 33, 33, 33));
