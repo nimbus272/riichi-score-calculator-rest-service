@@ -3,14 +3,14 @@ package com.gutterboys.riichi.calculator.model;
 import java.util.HashSet;
 import java.util.Set;
 
-import com.gutterboys.riichi.calculator.yaku.common.CommonYaku;
+import com.gutterboys.riichi.calculator.yaku.universal.UniversalYaku;
 
 public class GenericResponse {
     private String status = "200";
     private String message = "Request Completed Successfully!";
-    private Set<CommonYaku> yakuList = new HashSet<CommonYaku>();
+    private Set<UniversalYaku> yakuList = new HashSet<UniversalYaku>();
 
-    public Set<CommonYaku> getYakuList() {
+    public Set<UniversalYaku> getYakuList() {
         return yakuList;
     }
 

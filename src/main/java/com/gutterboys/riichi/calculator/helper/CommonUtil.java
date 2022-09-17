@@ -21,6 +21,16 @@ public class CommonUtil {
 
     }
 
+    public static boolean isTerminalChi(List<Integer> meld) {
+        int tile = meld.get(0);
+        return (meld.containsAll((Arrays.asList(tile, tile + 1, tile + 2)))
+                || meld.containsAll(Arrays.asList(tile - 1, tile, tile + 1))
+                || meld.containsAll(Arrays.asList(tile - 2, tile - 1, tile)))
+                && (RiichiCalculatorConstants.TERMINALS.contains(tile)
+                        || RiichiCalculatorConstants.TERMINALS.contains(tile + 1)
+                        || RiichiCalculatorConstants.TERMINALS.contains(tile + 2));
+    }
+
     public static void removeAndAddPonFromList(List<Integer> hand, int tile, int numberOfTiles) {
         for (int i = 0; i < numberOfTiles; i++) {
             hand.remove(hand.indexOf(tile));

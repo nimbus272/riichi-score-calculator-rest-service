@@ -10,8 +10,8 @@ import com.gutterboys.riichi.calculator.model.GameContext;
 import com.gutterboys.riichi.calculator.model.PossibleHand;
 import com.gutterboys.riichi.calculator.model.ScoreResponse;
 import com.gutterboys.riichi.calculator.yaku.common.CommonYaku;
-import com.gutterboys.riichi.calculator.yaku.special.SpecialYaku;
-import com.gutterboys.riichi.calculator.yaku.standard.StandardStructureYaku;
+import com.gutterboys.riichi.calculator.yaku.first.FirstYaku;
+import com.gutterboys.riichi.calculator.yaku.universal.UniversalYaku;
 
 @Component
 public class YakuEligibilityEngine {
@@ -19,29 +19,29 @@ public class YakuEligibilityEngine {
     // autowiring a set of an interface will get every implementation of that
     // interface and place it in the set
     @Autowired
-    Set<CommonYaku> yakuAllCompatible;
+    Set<UniversalYaku> yakuAllCompatible;
 
     @Autowired
-    Set<SpecialYaku> specialYaku;
+    Set<FirstYaku> specialYaku;
 
     @Autowired
-    Set<StandardStructureYaku> standardYaku;
+    Set<CommonYaku> standardYaku;
 
     public void executeAllCompatible(GameContext gameContext, PossibleHand possibleHand) {
-        for (CommonYaku yaku : yakuAllCompatible) {
+        for (UniversalYaku yaku : yakuAllCompatible) {
             yaku.execute(gameContext, possibleHand);
         }
 
     }
 
     public void executeSpecial(GameContext gameContext, ScoreResponse response) throws RiichiCalculatorException {
-        for (SpecialYaku yaku : specialYaku) {
+        for (FirstYaku yaku : specialYaku) {
             yaku.execute(gameContext, response);
         }
     }
 
     public void executeStandard(GameContext gameContext, PossibleHand possibleHand) {
-        for (StandardStructureYaku yaku : standardYaku) {
+        for (CommonYaku yaku : standardYaku) {
             yaku.execute(gameContext, possibleHand);
         }
     }

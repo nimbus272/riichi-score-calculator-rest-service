@@ -29,18 +29,16 @@ WORKS FOR MOST (NOT CHIITOITSU OR KOKUSHI OR RYANPEIKO)
 LAST
 ------------------------
 
-- HONROUTO - all terminals and honors (only applicable for Toitoi and Chiitoitsu)
+- HONROUTO - all terminals and honors (only applicable for Toitoi and Chiitoitsu)- DONE
 
-- CHANTA - terminal or honor in each meld, at least one instance of 123 or 789 - 1 open/ 2 closed
-- JUNCHAN - terminal no honors in each meld, chanta - 2 open / 3 closed
+- CHANTA - terminal or honor in each meld, at least one instance of 123 or 789 - 1 open/ 2 closed - DONE
+- JUNCHAN - terminal no honors in each meld, chanta - 2 open / 3 closed - DONE
 
 - 7 pairs list
 ---------------
 - ryanpeiko (covered)
 - honitsu
 - chinitsu
-- honrouto 
-
 YAKUMAN 
 --------
 - SUUANKO - DONE (via toitoi)
