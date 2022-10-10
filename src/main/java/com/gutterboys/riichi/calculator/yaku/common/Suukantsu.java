@@ -6,15 +6,16 @@ import com.gutterboys.riichi.calculator.model.GameContext;
 import com.gutterboys.riichi.calculator.model.PossibleHand;
 
 @Component
-public class Sankantsu implements CommonYaku {
+public class Suukantsu implements CommonYaku {
 
     @Override
     public void execute(GameContext gameContext, PossibleHand possibleHand) {
-        if (gameContext.getKanCount() < 3) {
-            return;
+
+        if (possibleHand.getMelds().stream().filter(meld -> meld.size() == 4).count() == 4L) {
+            possibleHand.setHan(possibleHand.getHan() + 13);
+            possibleHand.getQualifiedYaku().add("Suukantsu (Four Kans)");
         }
-        possibleHand.setHan(possibleHand.getHan() + 2);
-        possibleHand.getQualifiedYaku().add("Sankantsu (Three Kans)");
+
     }
 
 }

@@ -1,10 +1,13 @@
 package com.gutterboys.riichi.calculator.service;
 
+import java.util.Collections;
+
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.util.CollectionUtils;
 
+import com.gutterboys.riichi.calculator.constants.RiichiCalculatorConstants;
 import com.gutterboys.riichi.calculator.exception.InvalidHandException;
 import com.gutterboys.riichi.calculator.exception.RiichiCalculatorException;
 import com.gutterboys.riichi.calculator.helper.CommonUtil;
@@ -43,7 +46,7 @@ public class CalculatorService {
             scoreUtil.countDora(gameContext);
         }
         gameContext.getTiles().sort((a, b) -> a - b);
-        eligibilityEngine.executeSpecial(gameContext, response);
+        eligibilityEngine.executeFirst(gameContext, response);
 
         if (!CollectionUtils.isEmpty(response.getPossibleHands())
                 && response.getPossibleHands().get(0).getQualifiedYaku().contains("Kokushi Musou (Thirteen Orphans)")) {
@@ -72,13 +75,22 @@ public class CalculatorService {
         for (int i = 0; i < response.getPossibleHands().size(); i++) {
 
             PossibleHand hand = response.getPossibleHands().get(i);
-            scoreUtil.countFu(gameContext, hand);
-            eligibilityEngine.executeAllCompatible(gameContext, hand);
-            if (!(hand.getQualifiedYaku().contains("Kokushi Musou (Thirteen Orphans)")
-                    || hand.getQualifiedYaku().contains("Chiitoitsu (Seven Pairs)"))) {
 
-                eligibilityEngine.executeStandard(gameContext, hand);
+            scoreUtil.countFu(gameContext, hand);
+
+            eligibilityEngine.executeUniversal(gameContext, hand);
+
+            if (!Collections.disjoint(RiichiCalculatorConstants.STANDARD_YAKU_EXCLUSION_LIST,
+                    hand.getQualifiedYaku())) {
+                eligibilityEngine.executeCommon(gameContext, hand);
             }
+
+            if (hand.getQualifiedYaku().contains("Chiitoitsu (Seven Pairs)")) {
+                eligibilityEngine.executeSpecialSevenPairs(gameContext, hand);
+            }
+
+            eligibilityEngine.executeLast(gameContext, hand);
+
         }
 
         for (int i = 0; i < response.getPossibleHands().size(); i++) {
