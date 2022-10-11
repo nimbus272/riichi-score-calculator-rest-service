@@ -29,12 +29,15 @@ public class ChurenPotoTest {
     public void execute_ChurenPotoTest() {
         // possibleHand.getTiles().addAll(Arrays.asList(0, 0, 0, 1, 2, 3, 4, 5, 6, 7, 8,
         // 8, 8, 2));
-        possibleHand.getTiles().addAll(Arrays.asList(0, 1, 2, 3, 4, 5, 6, 7, 8, 2, 2, 2, 5,5));
+        // possibleHand.getTiles().addAll(Arrays.asList(0, 1, 2, 3, 4, 5, 6, 7, 8, 2, 2,
+        // 2, 5, 5));
+        possibleHand.getTiles().addAll(Arrays.asList(0, 0, 0, 1, 2, 3, 4, 5, 6, 7, 8,
+                8, 8, 0));
         gameContext.setWinningTile(2);
 
         yaku.execute(gameContext, possibleHand);
 
-        assertEquals(26, possibleHand.getHan());
+        assertEquals(13, possibleHand.getHan());
         assertTrue(possibleHand.getQualifiedYaku().contains("Churen Poto (Nine Gates)"));
     }
 }

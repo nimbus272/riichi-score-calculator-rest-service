@@ -6,6 +6,7 @@ import java.util.List;
 
 import org.springframework.stereotype.Component;
 
+import com.gutterboys.riichi.calculator.helper.CommonUtil;
 import com.gutterboys.riichi.calculator.model.GameContext;
 import com.gutterboys.riichi.calculator.model.PossibleHand;
 
@@ -17,18 +18,60 @@ public class ChurenPoto implements CommonYaku {
 
     @Override
     public void execute(GameContext gameContext, PossibleHand possibleHand) {
-        if (possibleHand.getTiles().containsAll(GATES_MAN) || possibleHand.getTiles().containsAll(GATES_PIN)
-                || possibleHand.getTiles().containsAll(GATES_SOU)) {
-            List<Integer> tiles = new ArrayList<Integer>(possibleHand.getTiles());
-            tiles.remove(possibleHand.getTiles().indexOf(gameContext.getWinningTile()));
-            if (tiles.containsAll(GATES_MAN) || tiles.containsAll(GATES_PIN) || tiles.containsAll(GATES_SOU)) {
-                possibleHand.getQualifiedYaku().add("Churen Poto (Nine Gates)");
-                possibleHand.setHan(possibleHand.getHan() + 26);
-                return;
-            }
+        String suit = CommonUtil.determineFlushSuit(possibleHand.getTiles());
+
+        if (suit.equals("n/a")) {
+            return;
+        }
+
+        List<Integer> tiles = new ArrayList<Integer>();
+        tiles.addAll(possibleHand.getTiles());
+
+        tiles.remove(possibleHand.getTiles().indexOf(gameContext.getWinningTile()));
+
+        if (tiles.equals(GATES_MAN) || tiles.equals(GATES_PIN) || tiles.equals(GATES_SOU)) {
+            possibleHand.getQualifiedYaku().add("Churen Poto (Nine Gates)");
+            possibleHand.setHan(possibleHand.getHan() + 26);
+            return;
+        }
+
+        tiles.add(gameContext.getWinningTile());
+        tiles.sort((a, b) -> a - b);
+
+        determineExtraTile(tiles, suit);
+
+        if (tiles.equals(GATES_MAN) || tiles.equals(GATES_PIN) || tiles.equals(GATES_SOU)) {
             possibleHand.getQualifiedYaku().add("Churen Poto (Nine Gates)");
             possibleHand.setHan(possibleHand.getHan() + 13);
         }
+
+    }
+
+    private void determineExtraTile(List<Integer> tiles, String suit) {
+        for (int i = 0; i < tiles.size(); i++) {
+            int tile = tiles.get(i);
+            switch (suit) {
+                case "man":
+                    if (tile != GATES_MAN.get(i)) {
+                        tiles.remove(tiles.indexOf(tile));
+                        return;
+                    }
+                    break;
+                case "pin":
+                    if (tile != GATES_PIN.get(i)) {
+                        tiles.remove(tiles.indexOf(tile));
+                        return;
+                    }
+                    break;
+                case "sou":
+                    if (tile != GATES_SOU.get(i)) {
+                        tiles.remove(tiles.indexOf(tile));
+                        return;
+                    }
+                    break;
+            }
+        }
+        return;
 
     }
 }

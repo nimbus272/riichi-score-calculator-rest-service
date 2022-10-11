@@ -137,4 +137,18 @@ public class CommonUtil {
             return -1;
         }
     }
+
+    public static String determineFlushSuit(List<Integer> tiles) {
+        if (tiles.stream().filter(tile -> RiichiCalculatorConstants.MAN.contains(tile)).count() == tiles.size()) {
+            return "man";
+        }
+        if (tiles.stream().filter(tile -> RiichiCalculatorConstants.PIN.contains(tile)).count() == tiles.size()) {
+            return "pin";
+        }
+        if (tiles.stream().filter(tile -> RiichiCalculatorConstants.SOU.contains(tile)).count() == tiles.size()) {
+            return "sou";
+        }
+
+        return "n/a";
+    }
 }
