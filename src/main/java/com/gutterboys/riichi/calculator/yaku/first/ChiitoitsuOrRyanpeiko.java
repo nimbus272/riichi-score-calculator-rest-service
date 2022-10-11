@@ -63,6 +63,7 @@ public class ChiitoitsuOrRyanpeiko implements FirstYaku {
 
             possibleHand.setHan(possibleHand.getHan() + 2);
             possibleHand.getQualifiedYaku().add("Chiitoitsu (Seven Pairs)");
+            possibleHand.setFu(25);
             possibleHand.getTiles().addAll(response.getTiles());
             generateMeldsForChiitoitsu(possibleHand, gameContext);
             possibleHand.getMelds().sort((a, b) -> a.get(0) - b.get(0));

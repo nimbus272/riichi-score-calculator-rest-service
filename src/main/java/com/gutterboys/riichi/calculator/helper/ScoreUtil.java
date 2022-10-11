@@ -193,6 +193,9 @@ public class ScoreUtil {
     }
 
     public void countFu(GameContext gameContext, PossibleHand possibleHand) {
+        if (possibleHand.getQualifiedYaku().contains("Chiitoitsu (Seven Pairs)")) {
+            return;
+        }
         // any winning hand is automatically awarded 20 fu
         possibleHand.setFu(possibleHand.getFu() + 20);
 

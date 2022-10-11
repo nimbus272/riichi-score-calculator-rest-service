@@ -23,7 +23,7 @@ WORKS FOR MOST (NOT CHIITOITSU OR KOKUSHI OR RYANPEIKO)
 - CHINITSU - all same suit - 6 closed / 5 open - DONE
 - TOITOI - all triplets, no sequences, (if tsumo, not open -> yakuman) - 2 han - DONE
 - SANANKO - three concealed triplets or kans - 2 han  - DONE
-- PINFU - not open, 1 han
+- PINFU - not open, 1 han- "DONE"
 
 
 LAST
