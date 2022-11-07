@@ -47,6 +47,7 @@ public class ScoreUtil {
 
     public void determineScore(ScoreResponse response, GameContext gameContext, PossibleHand possibleHand) {
         LOGGER.info("Determining score...");
+        possibleHand.setHan(possibleHand.getHan() + gameContext.getDoraCount());
         if (possibleHand.getHan() > 4) {
             handleSpecialScoring(gameContext, possibleHand);
             return;
@@ -84,8 +85,8 @@ public class ScoreUtil {
         ronToNonDealer = (int) Math.ceil((double) ronToNonDealer / 100);
 
         if (context.isTsumo()) {
-            possibleHand.setTsumoFromNonDealer((int) dealerPaymentTsumo * 100);
-            possibleHand.setTsumoFromDealer((int) nonDealerPaymentTsumo * 100);
+            possibleHand.setTsumoFromNonDealer((int) nonDealerPaymentTsumo * 100);
+            possibleHand.setTsumoFromDealer((int) dealerPaymentTsumo * 100);
             LOGGER.debug("Tsumo to non dealer: {}, Tsumo to dealer: {}", possibleHand.getTsumoFromNonDealer(),
                     possibleHand.getTsumoFromDealer());
             return;
@@ -252,7 +253,9 @@ public class ScoreUtil {
                 return false;
             }).count() == 1L) {
                 if (meld.contains(gameContext.getWinningTile())) {
-                    if (meld.size() == 3 && meld.indexOf(gameContext.getWinningTile()) == 1) {
+                    if (meld.size() == 2) {
+                        possibleHand.setFu(possibleHand.getFu() + 2);
+                    } else if (meld.size() == 3 && meld.indexOf(gameContext.getWinningTile()) == 1) {
                         possibleHand.setFu(possibleHand.getFu() + 2);
                     } else if ((RiichiCalculatorConstants.TERMINALS.contains(meld.get(0))
                             && meld.indexOf(gameContext.getWinningTile()) == 2)
@@ -260,8 +263,6 @@ public class ScoreUtil {
                                     && meld.indexOf(gameContext.getWinningTile()) == 0)) {
                         possibleHand.setFu(possibleHand.getFu() + 2);
 
-                    } else if (meld.size() == 2) {
-                        possibleHand.setFu(possibleHand.getFu() + 2);
                     }
                 }
             }
@@ -271,6 +272,11 @@ public class ScoreUtil {
             if (possibleHand.getQualifiedYaku().contains("Chiitoitsu (Seven Pairs)")) {
                 possibleHand.setFu(25);
             }
+
+        }
+
+        if (!possibleHand.getQualifiedYaku().contains("Chiitoitsu (Seven Pairs)")) {
+            possibleHand.setFu((int) Math.ceil(possibleHand.getFu() / 10.0) * 10);
         }
 
     }

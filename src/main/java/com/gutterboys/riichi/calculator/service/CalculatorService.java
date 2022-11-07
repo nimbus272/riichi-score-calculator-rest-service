@@ -80,7 +80,7 @@ public class CalculatorService {
 
             eligibilityEngine.executeUniversal(gameContext, hand);
 
-            if (!Collections.disjoint(RiichiCalculatorConstants.STANDARD_YAKU_EXCLUSION_LIST,
+            if (Collections.disjoint(RiichiCalculatorConstants.STANDARD_YAKU_EXCLUSION_LIST,
                     hand.getQualifiedYaku())) {
                 eligibilityEngine.executeCommon(gameContext, hand);
             }

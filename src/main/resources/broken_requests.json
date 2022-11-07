@@ -1,0 +1,26 @@
+{
+    "one": {
+	"tiles": [12, 13, 14, 20, 21, 22, 19, 19],
+	"openMelds": [[28, 28, 28], [30, 30, 30]],
+	"winningTile": 19,
+	"seatWind": 31,
+	"prevalentWind": 30,
+	"riichi": false,
+	"opened": true,
+	"tsumo": true
+},
+
+"two": {
+	"tiles": [13, 35, 14, 15, 16, 23, 24, 25],
+	"openMelds": [[29, 29, 29], [30, 30, 30]],
+	"winningTile": 23,
+	"seatWind": 31,
+	"prevalentWind": 30,
+	"riichi": false,
+	"opened": true,
+	"tsumo": false
+	
+	
+	
+}
+}
