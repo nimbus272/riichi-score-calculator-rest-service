@@ -14,7 +14,8 @@ public class Sananko implements CommonYaku {
 
     @Override
     public void execute(GameContext gameContext, PossibleHand possibleHand) {
-        List<List<Integer>> ponsOrKans = possibleHand.getMelds().stream().filter(meld -> !CommonUtil.isChi(meld))
+        List<List<Integer>> ponsOrKans = possibleHand.getMelds().stream()
+                .filter(meld -> !CommonUtil.isChi(meld) && meld.size() > 2)
                 .collect(Collectors.toList());
 
         if (ponsOrKans.size() > 2) {
