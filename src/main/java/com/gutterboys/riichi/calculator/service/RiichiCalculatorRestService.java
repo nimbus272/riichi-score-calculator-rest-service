@@ -16,7 +16,7 @@ import com.gutterboys.riichi.calculator.exception.RiichiCalculatorException;
 import com.gutterboys.riichi.calculator.model.GameContext;
 import com.gutterboys.riichi.calculator.model.GenericResponse;
 import com.gutterboys.riichi.calculator.model.ScoreResponse;
-import com.gutterboys.riichi.calculator.yaku.Yaku;
+import com.gutterboys.riichi.calculator.yaku.universal.UniversalYaku;
 
 import ch.qos.logback.classic.Logger;
 
@@ -30,11 +30,12 @@ public class RiichiCalculatorRestService {
     CalculatorService service;
 
     @Autowired
-    Set<Yaku> allYaku;
+    Set<UniversalYaku> allYaku;
 
     @PostMapping("/gutterboys/evaluateHand")
     public GenericResponse evaluateHand(@Valid @RequestBody GameContext gameContext) {
         LOGGER.info("Request recieved!");
+
         ScoreResponse response = new ScoreResponse();
         try {
             service.evaluateHand(gameContext, response);

@@ -1,32 +1,37 @@
 package com.gutterboys.riichi.calculator.helper.test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import com.gutterboys.riichi.calculator.exception.RiichiCalculatorException;
 import com.gutterboys.riichi.calculator.helper.HandSortUtil;
 import com.gutterboys.riichi.calculator.model.GameContext;
-
-import java.util.ArrayList;
-import java.util.Arrays;
+import com.gutterboys.riichi.calculator.model.PossibleMelds;
+import com.gutterboys.riichi.calculator.model.ScoreResponse;
 
 public class HandSortUtilTest {
 
         GameContext gameContext;
 
+        ScoreResponse response;
+
         List<Integer> hand;
 
         HandSortUtil sortUtil = new HandSortUtil();
 
-        @Before
+        @BeforeEach
         public void setUp() {
                 gameContext = new GameContext();
                 hand = new ArrayList<Integer>();
+                response = new ScoreResponse();
         }
 
         @Test
@@ -303,11 +308,32 @@ public class HandSortUtilTest {
 
         }
 
-        @Test(expected = RiichiCalculatorException.class)
+        @Test()
         public void testCheckHonors_OneHonorTest() throws RiichiCalculatorException {
                 gameContext.getTiles().addAll(Arrays.asList(0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 33));
 
-                sortUtil.checkHonors(gameContext);
+                RiichiCalculatorException exception = assertThrows(RiichiCalculatorException.class,
+                                () -> sortUtil.checkHonors(gameContext));
+
+                assertTrue(exception.getMessage().equals("Invalid hand"));
+
+        }
+
+        @Test
+        public void testReduceHand_Fully_Sortable() {
+                List<Integer> tiles = new ArrayList<Integer>(
+                                Arrays.asList(3, 3, 3, 12, 13, 14, 24, 25, 26, 22, 22, 30, 30, 30));
+                gameContext.getTiles().addAll(tiles);
+                PossibleMelds possibleMelds = new PossibleMelds();
+
+                try {
+                        sortUtil.reduceHand(gameContext, response, possibleMelds);
+                } catch (Exception e) {
+
+                }
+
+                assertTrue(gameContext.getTiles().stream().filter(x -> x != -1).count() == 0);
+                assertTrue(response.getPossibleHands().size() == 1);
 
         }
 
