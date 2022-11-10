@@ -46,8 +46,8 @@ public class ScoreUtilTest {
 
         util.applyScoreMultipliers(gameContext, possibleHand);
 
-        assertEquals(1300, possibleHand.getTsumoFromNonDealer());
-        assertEquals(700, possibleHand.getTsumoFromDealer());
+        assertEquals(700, possibleHand.getTsumoFromNonDealer());
+        assertEquals(1300, possibleHand.getTsumoFromDealer());
     }
 
     @Test
