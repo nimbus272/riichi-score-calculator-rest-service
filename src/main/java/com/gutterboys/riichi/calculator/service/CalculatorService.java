@@ -40,8 +40,8 @@ public class CalculatorService {
             }
         }
         LOGGER.info("Calculating score...");
-        response.getTiles().addAll(gameContext.getTiles());
         handSortUtil.swapFives(gameContext);
+        response.getTiles().addAll(gameContext.getTiles());
         if (gameContext.getDoraTiles().size() > 0) {
             scoreUtil.countDora(gameContext);
         }

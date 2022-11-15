@@ -25,7 +25,6 @@ public class HandSortUtil {
 
     public void swapFives(GameContext gameContext) {
         LOGGER.info("Swapping fives...");
-        List<Integer> newTiles = new ArrayList<Integer>();
         for (int i = 0; i < gameContext.getTiles().size(); i++) {
             Integer tile = gameContext.getTiles().get(i);
             switch (tile) {
@@ -48,7 +47,6 @@ public class HandSortUtil {
                     continue;
             }
         }
-        gameContext.getTiles().addAll(newTiles);
     }
 
     public void checkChi(List<Integer> hand, int tile, List<List<Integer>> possibleChis, int numberOfDuplicateTiles) {

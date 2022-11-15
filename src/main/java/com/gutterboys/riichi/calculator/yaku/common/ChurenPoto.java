@@ -54,18 +54,21 @@ public class ChurenPoto implements CommonYaku {
                 case "man":
                     if (tile != GATES_MAN.get(i)) {
                         tiles.remove(tiles.indexOf(tile));
+                        i--;
                         return;
                     }
                     break;
                 case "pin":
                     if (tile != GATES_PIN.get(i)) {
                         tiles.remove(tiles.indexOf(tile));
+                        i--;
                         return;
                     }
                     break;
                 case "sou":
                     if (tile != GATES_SOU.get(i)) {
                         tiles.remove(tiles.indexOf(tile));
+                        i--;
                         return;
                     }
                     break;
