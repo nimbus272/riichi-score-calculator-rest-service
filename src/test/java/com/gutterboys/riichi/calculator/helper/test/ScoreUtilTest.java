@@ -1,12 +1,13 @@
 package com.gutterboys.riichi.calculator.helper.test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.Arrays;
 
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import com.gutterboys.riichi.calculator.constants.SpecialScoringType;
 import com.gutterboys.riichi.calculator.helper.ScoreUtil;
@@ -21,7 +22,7 @@ public class ScoreUtilTest {
 
     ScoreUtil util = new ScoreUtil();
 
-    @Before
+    @BeforeEach
     public void setUp() {
         gameContext = new GameContext();
         possibleHand = new PossibleHand();
@@ -45,8 +46,8 @@ public class ScoreUtilTest {
 
         util.applyScoreMultipliers(gameContext, possibleHand);
 
-        assertEquals(1300, possibleHand.getTsumoFromNonDealer());
-        assertEquals(700, possibleHand.getTsumoFromDealer());
+        assertEquals(700, possibleHand.getTsumoFromNonDealer());
+        assertEquals(1300, possibleHand.getTsumoFromDealer());
     }
 
     @Test
@@ -140,11 +141,13 @@ public class ScoreUtilTest {
         assertEquals(SpecialScoringType.YAKUMAN, possibleHand.getSpecialScoreType());
     }
 
-    @Test(expected = NullPointerException.class)
+    @Test()
     public void handleSpecialScoring_FourHanTest() {
         possibleHand.setHan(4);
 
-        util.handleSpecialScoring(gameContext, possibleHand);
+        assertThrows(NullPointerException.class,
+                () -> util.handleSpecialScoring(gameContext, possibleHand));
+
     }
 
     @Test

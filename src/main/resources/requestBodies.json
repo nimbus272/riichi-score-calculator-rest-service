@@ -1,0 +1,20 @@
+{
+  "requests": [
+    {
+      "tiles": [10, 10, 11, 11, 12, 12, 13, 13, 14, 14, 10, 27, 27, 27],
+      "winningTile": 10,
+      "doraTiles": [27],
+      "seatWind": 30,
+      "prevalentWind": 30,
+      "riichi": false,
+      "doubleRiichi": false,
+      "ippatsu": false,
+      "robbedKan": false,
+      "deadWallDraw": false,
+      "lastDiscard": false,
+      "lastTileDraw": true,
+      "tsumo": true,
+      "opened": true
+    }
+  ]
+}

@@ -1,15 +1,35 @@
 package com.gutterboys.riichi.calculator.helper;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
 import com.google.gson.Gson;
+import com.gutterboys.riichi.calculator.constants.RiichiCalculatorConstants;
 import com.gutterboys.riichi.calculator.model.GameContext;
 import com.gutterboys.riichi.calculator.model.PossibleHand;
 import com.gutterboys.riichi.calculator.model.PossibleMelds;
 
 public class CommonUtil {
+
+    public static boolean isChi(List<Integer> meld) {
+        int tile = meld.get(0);
+        return (meld.containsAll((Arrays.asList(tile, tile + 1, tile + 2)))
+                || meld.containsAll(Arrays.asList(tile - 1, tile, tile + 1))
+                || meld.containsAll(Arrays.asList(tile - 2, tile - 1, tile)));
+
+    }
+
+    public static boolean isTerminalChi(List<Integer> meld) {
+        int tile = meld.get(0);
+        return (meld.containsAll((Arrays.asList(tile, tile + 1, tile + 2)))
+                || meld.containsAll(Arrays.asList(tile - 1, tile, tile + 1))
+                || meld.containsAll(Arrays.asList(tile - 2, tile - 1, tile)))
+                && (RiichiCalculatorConstants.TERMINALS.contains(tile)
+                        || RiichiCalculatorConstants.TERMINALS.contains(tile + 1)
+                        || RiichiCalculatorConstants.TERMINALS.contains(tile + 2));
+    }
 
     public static void removeAndAddPonFromList(List<Integer> hand, int tile, int numberOfTiles) {
         for (int i = 0; i < numberOfTiles; i++) {
@@ -76,7 +96,6 @@ public class CommonUtil {
         }
     }
 
-
     public static void checkAndRemoveDuplicatePossibleHands(List<PossibleHand> possibleHands) {
         Gson gson = new Gson();
         for (int i = 0; i < possibleHands.size(); i++) {
@@ -92,5 +111,44 @@ public class CommonUtil {
             }
 
         }
+    }
+
+    public static String getSuit(List<Integer> meld) {
+        if (RiichiCalculatorConstants.MAN.contains(meld.get(0))) {
+            return "MAN";
+        } else if (RiichiCalculatorConstants.PIN.contains(meld.get(0))) {
+            return "PIN";
+        } else if (RiichiCalculatorConstants.SOU.contains(meld.get(0))) {
+            return "SOU";
+        } else if (RiichiCalculatorConstants.HONORS.contains(meld.get(0))) {
+            return "HONOR";
+        }
+        return null;
+    }
+
+    public static int getIndexFromTile(int tile) {
+        if (tile < 9) {
+            return tile;
+        } else if (tile > 8 && tile < 18) {
+            return tile - 9;
+        } else if (tile > 17 && tile < 27) {
+            return tile - 18;
+        } else {
+            return -1;
+        }
+    }
+
+    public static String determineFlushSuit(List<Integer> tiles) {
+        if (tiles.stream().filter(tile -> RiichiCalculatorConstants.MAN.contains(tile)).count() == tiles.size()) {
+            return "man";
+        }
+        if (tiles.stream().filter(tile -> RiichiCalculatorConstants.PIN.contains(tile)).count() == tiles.size()) {
+            return "pin";
+        }
+        if (tiles.stream().filter(tile -> RiichiCalculatorConstants.SOU.contains(tile)).count() == tiles.size()) {
+            return "sou";
+        }
+
+        return "n/a";
     }
 }

@@ -7,6 +7,7 @@ import javax.validation.Valid;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
@@ -16,12 +17,13 @@ import com.gutterboys.riichi.calculator.exception.RiichiCalculatorException;
 import com.gutterboys.riichi.calculator.model.GameContext;
 import com.gutterboys.riichi.calculator.model.GenericResponse;
 import com.gutterboys.riichi.calculator.model.ScoreResponse;
-import com.gutterboys.riichi.calculator.yaku.Yaku;
+import com.gutterboys.riichi.calculator.yaku.universal.UniversalYaku;
 
 import ch.qos.logback.classic.Logger;
 
 @RestController
 @Validated
+@CrossOrigin
 public class RiichiCalculatorRestService {
 
     private static final Logger LOGGER = (Logger) LoggerFactory.getLogger(RiichiCalculatorRestService.class);
@@ -30,11 +32,12 @@ public class RiichiCalculatorRestService {
     CalculatorService service;
 
     @Autowired
-    Set<Yaku> allYaku;
+    Set<UniversalYaku> allYaku;
 
     @PostMapping("/gutterboys/evaluateHand")
     public GenericResponse evaluateHand(@Valid @RequestBody GameContext gameContext) {
         LOGGER.info("Request recieved!");
+
         ScoreResponse response = new ScoreResponse();
         try {
             service.evaluateHand(gameContext, response);

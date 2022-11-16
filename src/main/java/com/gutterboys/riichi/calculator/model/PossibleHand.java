@@ -18,6 +18,24 @@ public class PossibleHand {
     private boolean doubleYakuman;
     private String specialScoreType;
 
+    public PossibleHand() {
+    };
+
+    public PossibleHand(PossibleHand possibleHand) {
+        this.melds = new ArrayList<List<Integer>>(possibleHand.getMelds());
+        this.qualifiedYaku = new ArrayList<String>(possibleHand.getQualifiedYaku());
+        this.tiles = new ArrayList<Integer>(possibleHand.getTiles());
+        this.han = possibleHand.getHan();
+        this.fu = possibleHand.getFu();
+        this.baseScore = possibleHand.getBaseScore();
+        this.tsumoFromNonDealer = possibleHand.getTsumoFromNonDealer();
+        this.tsumoFromDealer = possibleHand.getTsumoFromDealer();
+        this.ronToNonDealer = possibleHand.getRonToNonDealer();
+        this.ronToDealer = possibleHand.getRonToDealer();
+        this.doubleYakuman = possibleHand.isDoubleYakuman();
+        this.specialScoreType = possibleHand.getSpecialScoreType();
+    }
+
     public List<Integer> getTiles() {
         return tiles;
     }
@@ -101,5 +119,4 @@ public class PossibleHand {
     public void setDoubleYakuman(boolean doubleYakuman) {
         this.doubleYakuman = doubleYakuman;
     }
-
 }

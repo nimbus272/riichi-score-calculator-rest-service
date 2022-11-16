@@ -25,3 +25,6 @@ replay_pid*
 target/*
 log/*
 .vscode/
+mvnw
+mvnw.cmd
+.mvn/wrapper/maven-wrapper.properties
