@@ -41,7 +41,7 @@ public class KokushiMusou implements FirstYaku {
                 }
                 possibleHand.getQualifiedYaku().add("Kokushi Musou (Thirteen Orphans)");
                 possibleHand.setHan(possibleHand.getHan() + 13);
-                possibleHand.getTiles().addAll(tracker.getTiles());
+                possibleHand.getTiles().addAll(response.getTiles());
                 response.getPossibleHands().add(possibleHand);
             }
         }

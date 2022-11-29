@@ -151,7 +151,7 @@ public class HandSortUtil {
 
         if (tracker.getTiles().stream().filter(x -> x != -1).count() == 0 && tracker.getMelds().size() == 5) {
             PossibleHand possibleHand = new PossibleHand();
-            possibleHand.getTiles().addAll(tracker.getTiles());
+            possibleHand.getTiles().addAll(response.getTiles());
             possibleHand.getMelds().addAll(tracker.getMelds());
             possibleHand.getMelds().sort((a, b) -> a.get(0) - b.get(0));
             response.getPossibleHands().add(possibleHand);
