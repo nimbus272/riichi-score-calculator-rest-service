@@ -7,8 +7,9 @@ import java.util.stream.Collectors;
 import org.springframework.stereotype.Component;
 
 import com.gutterboys.riichi.calculator.helper.CommonUtil;
-import com.gutterboys.riichi.calculator.model.RiichiCalculatorRequest;
+import com.gutterboys.riichi.calculator.model.CalculatorTracker;
 import com.gutterboys.riichi.calculator.model.PossibleHand;
+import com.gutterboys.riichi.calculator.model.RiichiCalculatorRequest;
 
 @Component
 public class Pinfu implements CommonYaku {
@@ -16,7 +17,7 @@ public class Pinfu implements CommonYaku {
     private static final List<Integer> SEVENS = Arrays.asList(6, 15, 24);
 
     @Override
-    public void execute(RiichiCalculatorRequest request, PossibleHand possibleHand) {
+    public void execute(RiichiCalculatorRequest request, CalculatorTracker tracker, PossibleHand possibleHand) {
         if (request.isOpened() || possibleHand.getTiles().size() != 14) {
             return;
         }

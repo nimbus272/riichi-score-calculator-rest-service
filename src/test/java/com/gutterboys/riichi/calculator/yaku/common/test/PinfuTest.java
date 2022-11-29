@@ -9,6 +9,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import com.gutterboys.riichi.calculator.model.RiichiCalculatorRequest;
+import com.gutterboys.riichi.calculator.model.CalculatorTracker;
 import com.gutterboys.riichi.calculator.model.PossibleHand;
 import com.gutterboys.riichi.calculator.yaku.common.Pinfu;
 
@@ -16,6 +17,7 @@ public class PinfuTest {
 
     RiichiCalculatorRequest request;
     PossibleHand possibleHand;
+    CalculatorTracker tracker;
 
     Pinfu yaku = new Pinfu();
 
@@ -23,6 +25,7 @@ public class PinfuTest {
     public void setUp() {
         request = new RiichiCalculatorRequest();
         possibleHand = new PossibleHand();
+        tracker = new CalculatorTracker();
     }
 
     @Test
@@ -37,7 +40,7 @@ public class PinfuTest {
         possibleHand.getMelds().add(Arrays.asList(6, 7, 8));
         possibleHand.getMelds().add(Arrays.asList(9, 9));
 
-        yaku.execute(request, possibleHand);
+        yaku.execute(request, tracker, possibleHand);
 
         assertEquals(1, possibleHand.getHan());
         assertTrue(possibleHand.getQualifiedYaku().contains("Pinfu (No-points Hand)"));

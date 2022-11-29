@@ -8,6 +8,7 @@ import java.util.Arrays;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import com.gutterboys.riichi.calculator.model.CalculatorTracker;
 import com.gutterboys.riichi.calculator.model.RiichiCalculatorRequest;
 import com.gutterboys.riichi.calculator.model.RiichiCalculatorResponse;
 import com.gutterboys.riichi.calculator.yaku.first.KokushiMusou;
@@ -18,21 +19,25 @@ public class KokushiMusouTest {
 
     RiichiCalculatorResponse response;
 
+    CalculatorTracker tracker;
+
     KokushiMusou yaku = new KokushiMusou();
 
     @BeforeEach
     public void setUp() {
         request = new RiichiCalculatorRequest();
         response = new RiichiCalculatorResponse();
+        tracker = new CalculatorTracker();
+
     }
 
     @Test
     public void execute_isKokushiMusouTest_noDouble() {
-        request.getTiles()
+        tracker.getTiles()
                 .addAll(Arrays.asList(0, 8, 9, 17, 18, 26, 27, 28, 29,
                         30, 31, 32, 33, 33));
         request.setWinningTile(0);
-        yaku.execute(request, response);
+        yaku.execute(request, tracker, response);
 
         assertTrue(response.getPossibleHands().size() == 1);
         assertEquals(13, response.getPossibleHands().get(0).getHan());
@@ -41,11 +46,11 @@ public class KokushiMusouTest {
 
     @Test
     public void execute_isKokushiMusouTest_Double() {
-        request.getTiles()
+        tracker.getTiles()
                 .addAll(Arrays.asList(0, 8, 9, 17, 18, 26, 27, 28, 29,
                         30, 31, 32, 33, 33));
         request.setWinningTile(33);
-        yaku.execute(request, response);
+        yaku.execute(request, tracker, response);
 
         assertTrue(response.getPossibleHands().size() == 1);
         assertEquals(13, response.getPossibleHands().get(0).getHan());
@@ -59,7 +64,7 @@ public class KokushiMusouTest {
                 .addAll(Arrays.asList(0, 8, 9, 17, 18, 26, 5, 28, 29, 30,
                         31, 32, 33, 33));
         request.setWinningTile(0);
-        yaku.execute(request, response);
+        yaku.execute(request, tracker, response);
 
         assertTrue(response.getPossibleHands().size() == 0);
 
@@ -71,7 +76,7 @@ public class KokushiMusouTest {
                 .addAll(Arrays.asList(0, 8, 9, 17, 18, 26, 27, 28, 29,
                         30, 31, 33, 33, 33));
         request.setWinningTile(0);
-        yaku.execute(request, response);
+        yaku.execute(request, tracker, response);
 
         assertTrue(response.getPossibleHands().size() == 0);
     }

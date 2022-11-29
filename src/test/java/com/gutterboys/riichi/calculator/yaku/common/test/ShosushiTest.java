@@ -8,8 +8,9 @@ import java.util.Arrays;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import com.gutterboys.riichi.calculator.model.RiichiCalculatorRequest;
+import com.gutterboys.riichi.calculator.model.CalculatorTracker;
 import com.gutterboys.riichi.calculator.model.PossibleHand;
+import com.gutterboys.riichi.calculator.model.RiichiCalculatorRequest;
 import com.gutterboys.riichi.calculator.yaku.common.Shosushi;
 
 public class ShosushiTest {
@@ -18,12 +19,15 @@ public class ShosushiTest {
 
     PossibleHand possibleHand;
 
+    CalculatorTracker tracker;
+
     Shosushi yaku = new Shosushi();
 
     @BeforeEach
     public void setUp() {
         request = new RiichiCalculatorRequest();
         possibleHand = new PossibleHand();
+        tracker = new CalculatorTracker();
     }
 
     @Test
@@ -35,7 +39,7 @@ public class ShosushiTest {
         possibleHand.getMelds().add(Arrays.asList(28, 28, 28, 28));
         possibleHand.getMelds().add(Arrays.asList(32, 32, 32));
 
-        yaku.execute(request, possibleHand);
+        yaku.execute(request, tracker, possibleHand);
 
         assertEquals(13, possibleHand.getHan());
         assertTrue(possibleHand.getQualifiedYaku()
@@ -51,7 +55,7 @@ public class ShosushiTest {
         possibleHand.getMelds().add(Arrays.asList(30, 30, 30, 30));
         possibleHand.getMelds().add(Arrays.asList(32, 32, 32));
 
-        yaku.execute(request, possibleHand);
+        yaku.execute(request, tracker, possibleHand);
 
         assertEquals(13, possibleHand.getHan());
         assertTrue(possibleHand.getQualifiedYaku()

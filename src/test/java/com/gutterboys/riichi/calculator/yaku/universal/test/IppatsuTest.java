@@ -8,6 +8,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import com.gutterboys.riichi.calculator.model.RiichiCalculatorRequest;
+import com.gutterboys.riichi.calculator.model.CalculatorTracker;
 import com.gutterboys.riichi.calculator.model.PossibleHand;
 import com.gutterboys.riichi.calculator.yaku.universal.Ippatsu;
 
@@ -16,6 +17,7 @@ public class IppatsuTest {
     RiichiCalculatorRequest request;
 
     PossibleHand possibleHand;
+    CalculatorTracker tracker;
 
     Ippatsu yaku = new Ippatsu();
 
@@ -23,13 +25,14 @@ public class IppatsuTest {
     public void setUp() {
         request = new RiichiCalculatorRequest();
         possibleHand = new PossibleHand();
+        tracker = new CalculatorTracker();
     }
 
     @Test
     public void execute_IsIppatsuTest() {
         request.setIppatsu(true);
 
-        yaku.execute(request, possibleHand);
+        yaku.execute(request, tracker, possibleHand);
 
         assertEquals(1, possibleHand.getHan());
         assertTrue(possibleHand.getQualifiedYaku().contains("Ippatsu (One-shot)"));
@@ -40,7 +43,7 @@ public class IppatsuTest {
         request.setIppatsu(true);
         request.setOpened(true);
 
-        yaku.execute(request, possibleHand);
+        yaku.execute(request, tracker, possibleHand);
 
         assertEquals(0, possibleHand.getHan());
         assertFalse(possibleHand.getQualifiedYaku().contains("Ippatsu (One-shot)"));
@@ -49,9 +52,9 @@ public class IppatsuTest {
     @Test
     public void execute_IsNotIppatsuTest2() {
         request.setIppatsu(true);
-        request.setKanCount(1);
+        tracker.setKanCount(1);
 
-        yaku.execute(request, possibleHand);
+        yaku.execute(request, tracker, possibleHand);
 
         assertEquals(0, possibleHand.getHan());
         assertFalse(possibleHand.getQualifiedYaku().contains("Ippatsu (One-shot)"));
@@ -60,7 +63,7 @@ public class IppatsuTest {
     @Test
     public void execute_IsNotIppatsuTest3() {
 
-        yaku.execute(request, possibleHand);
+        yaku.execute(request, tracker, possibleHand);
 
         assertEquals(0, possibleHand.getHan());
         assertFalse(possibleHand.getQualifiedYaku().contains("Ippatsu (One-shot)"));

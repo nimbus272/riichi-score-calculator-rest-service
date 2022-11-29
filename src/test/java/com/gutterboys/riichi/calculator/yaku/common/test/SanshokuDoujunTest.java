@@ -8,6 +8,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import com.gutterboys.riichi.calculator.model.RiichiCalculatorRequest;
+import com.gutterboys.riichi.calculator.model.CalculatorTracker;
 import com.gutterboys.riichi.calculator.model.PossibleHand;
 import com.gutterboys.riichi.calculator.yaku.common.SanshokuDoujun;
 
@@ -16,12 +17,15 @@ public class SanshokuDoujunTest {
 
     PossibleHand possibleHand;
 
-    SanshokuDoujun sanshokuDoujun = new SanshokuDoujun();
+    CalculatorTracker tracker;
+
+    SanshokuDoujun yaku = new SanshokuDoujun();
 
     @BeforeEach
     public void setUp() {
         request = new RiichiCalculatorRequest();
         possibleHand = new PossibleHand();
+        tracker = new CalculatorTracker();
     }
 
     @Test
@@ -32,7 +36,7 @@ public class SanshokuDoujunTest {
         possibleHand.getMelds().add(Arrays.asList(9, 10, 11));
         possibleHand.getMelds().add(Arrays.asList(18, 19, 20));
         possibleHand.getMelds().add(Arrays.asList(27, 27));
-        sanshokuDoujun.execute(request, possibleHand);
+        yaku.execute(request, tracker, possibleHand);
 
         assertTrue(possibleHand.getQualifiedYaku().size() > 0);
         assertTrue(possibleHand.getQualifiedYaku().contains("Sanshoku Doujun (Same Sequence in All Suits)"));

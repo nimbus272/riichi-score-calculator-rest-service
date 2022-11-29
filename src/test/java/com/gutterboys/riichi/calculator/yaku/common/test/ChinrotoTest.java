@@ -9,8 +9,9 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import com.gutterboys.riichi.calculator.exception.RiichiCalculatorException;
-import com.gutterboys.riichi.calculator.model.RiichiCalculatorRequest;
+import com.gutterboys.riichi.calculator.model.CalculatorTracker;
 import com.gutterboys.riichi.calculator.model.PossibleHand;
+import com.gutterboys.riichi.calculator.model.RiichiCalculatorRequest;
 import com.gutterboys.riichi.calculator.yaku.common.Chinroto;
 
 public class ChinrotoTest {
@@ -19,12 +20,15 @@ public class ChinrotoTest {
 
     PossibleHand possibleHand;
 
+    CalculatorTracker tracker;  
+
     Chinroto yaku = new Chinroto();
 
     @BeforeEach
     public void setUp() {
         request = new RiichiCalculatorRequest();
         possibleHand = new PossibleHand();
+        tracker = new CalculatorTracker();
     }
 
     @Test
@@ -32,7 +36,7 @@ public class ChinrotoTest {
 
         possibleHand.getTiles().addAll(Arrays.asList(0, 0, 0, 8, 8, 9, 9, 9, 17, 17, 17, 17, 18, 18, 18));
 
-        yaku.execute(request, possibleHand);
+        yaku.execute(request, tracker, possibleHand);
 
         assertEquals(13, possibleHand.getHan());
         assertTrue(possibleHand.getQualifiedYaku().contains("Chinroto (All Terminals)"));

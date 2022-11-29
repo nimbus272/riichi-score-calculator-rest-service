@@ -9,6 +9,7 @@ import org.springframework.stereotype.Component;
 import com.gutterboys.riichi.calculator.constants.RiichiCalculatorConstants;
 import com.gutterboys.riichi.calculator.constants.SpecialScoringType;
 import com.gutterboys.riichi.calculator.model.RiichiCalculatorRequest;
+import com.gutterboys.riichi.calculator.model.CalculatorTracker;
 import com.gutterboys.riichi.calculator.model.PossibleHand;
 import com.gutterboys.riichi.calculator.model.RiichiCalculatorResponse;
 import com.gutterboys.riichi.calculator.yaku.YakuEligibilityEngine;
@@ -23,21 +24,21 @@ public class ScoreUtil {
     @Autowired
     YakuEligibilityEngine engine;
 
-    public void countDora(RiichiCalculatorRequest request) {
+    public void countDora(RiichiCalculatorRequest request, CalculatorTracker tracker) {
         LOGGER.info("Counting dora...");
         for (Integer tile : request.getDoraTiles()) {
-            switch ((int) request.getTiles().stream().filter(x -> x.equals(tile)).count()) {
+            switch ((int) tracker.getTiles().stream().filter(x -> x.equals(tile)).count()) {
                 case 1:
-                    request.setDoraCount(request.getDoraCount() + 1);
+                    tracker.setDoraCount(tracker.getDoraCount() + 1);
                     continue;
                 case 2:
-                    request.setDoraCount(request.getDoraCount() + 2);
+                    tracker.setDoraCount(tracker.getDoraCount() + 2);
                     continue;
                 case 3:
-                    request.setDoraCount(request.getDoraCount() + 3);
+                    tracker.setDoraCount(tracker.getDoraCount() + 3);
                     continue;
                 case 4:
-                    request.setDoraCount(request.getDoraCount() + 4);
+                    tracker.setDoraCount(tracker.getDoraCount() + 4);
                     continue;
                 default:
                     continue;
@@ -45,9 +46,11 @@ public class ScoreUtil {
         }
     }
 
-    public void determineScore(RiichiCalculatorResponse response, RiichiCalculatorRequest request, PossibleHand possibleHand) {
+    public void determineScore(RiichiCalculatorResponse response, RiichiCalculatorRequest request,
+            CalculatorTracker tracker,
+            PossibleHand possibleHand) {
         LOGGER.info("Determining score...");
-        possibleHand.setHan(possibleHand.getHan() + request.getDoraCount());
+        possibleHand.setHan(possibleHand.getHan() + tracker.getDoraCount());
         if (possibleHand.getHan() > 4) {
             handleSpecialScoring(request, possibleHand);
             return;

@@ -1,18 +1,18 @@
 package com.gutterboys.riichi.calculator.yaku.common;
 
-
 import java.util.List;
 
 import org.springframework.stereotype.Component;
 
 import com.gutterboys.riichi.calculator.constants.RiichiCalculatorConstants;
-import com.gutterboys.riichi.calculator.model.RiichiCalculatorRequest;
+import com.gutterboys.riichi.calculator.model.CalculatorTracker;
 import com.gutterboys.riichi.calculator.model.PossibleHand;
+import com.gutterboys.riichi.calculator.model.RiichiCalculatorRequest;
 
 @Component
 public class Ittsuu implements CommonYaku {
     @Override
-    public void execute(RiichiCalculatorRequest request, PossibleHand possibleHand) {
+    public void execute(RiichiCalculatorRequest request, CalculatorTracker tracker, PossibleHand possibleHand) {
         List<Integer> tiles = possibleHand.getTiles();
         if (tiles.containsAll(RiichiCalculatorConstants.MAN) ||
                 tiles.containsAll(RiichiCalculatorConstants.SOU) ||

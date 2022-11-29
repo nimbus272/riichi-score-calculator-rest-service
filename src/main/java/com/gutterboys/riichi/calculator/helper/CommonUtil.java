@@ -7,7 +7,7 @@ import java.util.stream.Collectors;
 
 import com.google.gson.Gson;
 import com.gutterboys.riichi.calculator.constants.RiichiCalculatorConstants;
-import com.gutterboys.riichi.calculator.model.RiichiCalculatorRequest;
+import com.gutterboys.riichi.calculator.model.CalculatorTracker;
 import com.gutterboys.riichi.calculator.model.PossibleHand;
 import com.gutterboys.riichi.calculator.model.PossibleMelds;
 
@@ -86,12 +86,12 @@ public class CommonUtil {
         possibleMelds.getChis().addAll(newMeldList);
     }
 
-    public static void addTempMeldsToRequest(RiichiCalculatorRequest tempRequest, RiichiCalculatorRequest request) {
-        for (int i = 0; i < tempRequest.getMelds().size(); i++) {
-            request.getMelds().add(tempRequest.getMelds().get(i));
-            for (int j = 0; j < tempRequest.getMelds().get(i).size(); j++) {
-                request.getTiles().remove(tempRequest.getMelds().get(i).get(j));
-                request.getTiles().add(0, -1);
+    public static void addTempMeldsToTracker(CalculatorTracker tempTracker, CalculatorTracker mainTracker) {
+        for (int i = 0; i < tempTracker.getMelds().size(); i++) {
+            mainTracker.getMelds().add(tempTracker.getMelds().get(i));
+            for (int j = 0; j < tempTracker.getMelds().get(i).size(); j++) {
+                mainTracker.getTiles().remove(tempTracker.getMelds().get(i).get(j));
+                mainTracker.getTiles().add(0, -1);
             }
         }
     }

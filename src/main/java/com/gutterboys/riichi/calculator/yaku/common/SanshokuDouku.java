@@ -5,14 +5,15 @@ import java.util.List;
 import org.springframework.stereotype.Component;
 
 import com.gutterboys.riichi.calculator.helper.CommonUtil;
-import com.gutterboys.riichi.calculator.model.RiichiCalculatorRequest;
+import com.gutterboys.riichi.calculator.model.CalculatorTracker;
 import com.gutterboys.riichi.calculator.model.PossibleHand;
+import com.gutterboys.riichi.calculator.model.RiichiCalculatorRequest;
 
 @Component
 public class SanshokuDouku implements CommonYaku {
 
     @Override
-    public void execute(RiichiCalculatorRequest request, PossibleHand possibleHand) {
+    public void execute(RiichiCalculatorRequest request, CalculatorTracker tracker, PossibleHand possibleHand) {
         for (int i = 0; i < possibleHand.getMelds().size(); i++) {
             List<Integer> meld = possibleHand.getMelds().get(i);
             if (!CommonUtil.isChi(meld) && meld.size() > 2) {

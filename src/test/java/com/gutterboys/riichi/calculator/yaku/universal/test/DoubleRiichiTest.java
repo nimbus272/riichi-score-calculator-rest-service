@@ -8,6 +8,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import com.gutterboys.riichi.calculator.model.RiichiCalculatorRequest;
+import com.gutterboys.riichi.calculator.model.CalculatorTracker;
 import com.gutterboys.riichi.calculator.model.PossibleHand;
 import com.gutterboys.riichi.calculator.yaku.universal.DoubleRiichi;
 
@@ -16,6 +17,7 @@ public class DoubleRiichiTest {
     RiichiCalculatorRequest request;
 
     PossibleHand possibleHand;
+    CalculatorTracker tracker;
 
     DoubleRiichi yaku = new DoubleRiichi();
 
@@ -23,13 +25,14 @@ public class DoubleRiichiTest {
     public void setUp() {
         request = new RiichiCalculatorRequest();
         possibleHand = new PossibleHand();
+        tracker = new CalculatorTracker();
     }
 
     @Test
     public void execute_IsDoubleRiichiTest() {
         request.setDoubleRiichi(true);
 
-        yaku.execute(request, possibleHand);
+        yaku.execute(request, tracker, possibleHand);
 
         assertEquals(2, possibleHand.getHan());
         assertTrue(possibleHand.getQualifiedYaku().contains("Double Riichi"));
@@ -40,7 +43,7 @@ public class DoubleRiichiTest {
         request.setDoubleRiichi(true);
         request.setOpened(true);
 
-        yaku.execute(request, possibleHand);
+        yaku.execute(request, tracker, possibleHand);
 
         assertEquals(0, possibleHand.getHan());
         assertFalse(possibleHand.getQualifiedYaku().contains("Double Riichi"));
@@ -49,7 +52,7 @@ public class DoubleRiichiTest {
     @Test
     public void execute_IsNotDoubleRiichiTest2() {
 
-        yaku.execute(request, possibleHand);
+        yaku.execute(request, tracker, possibleHand);
 
         assertEquals(0, possibleHand.getHan());
         assertFalse(possibleHand.getQualifiedYaku().contains("Double Riichi"));

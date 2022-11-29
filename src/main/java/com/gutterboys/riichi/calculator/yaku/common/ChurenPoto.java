@@ -7,8 +7,9 @@ import java.util.List;
 import org.springframework.stereotype.Component;
 
 import com.gutterboys.riichi.calculator.helper.CommonUtil;
-import com.gutterboys.riichi.calculator.model.RiichiCalculatorRequest;
+import com.gutterboys.riichi.calculator.model.CalculatorTracker;
 import com.gutterboys.riichi.calculator.model.PossibleHand;
+import com.gutterboys.riichi.calculator.model.RiichiCalculatorRequest;
 
 @Component
 public class ChurenPoto implements CommonYaku {
@@ -17,7 +18,7 @@ public class ChurenPoto implements CommonYaku {
     private static final List<Integer> GATES_SOU = Arrays.asList(18, 18, 18, 19, 20, 21, 22, 23, 24, 25, 26, 26, 26);
 
     @Override
-    public void execute(RiichiCalculatorRequest request, PossibleHand possibleHand) {
+    public void execute(RiichiCalculatorRequest request, CalculatorTracker tracker, PossibleHand possibleHand) {
         String suit = CommonUtil.determineFlushSuit(possibleHand.getTiles());
 
         if (suit.equals("n/a")) {

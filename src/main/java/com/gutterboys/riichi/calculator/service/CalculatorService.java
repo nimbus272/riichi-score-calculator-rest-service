@@ -13,6 +13,7 @@ import com.gutterboys.riichi.calculator.helper.CalculatorServiceHelper;
 import com.gutterboys.riichi.calculator.helper.CommonUtil;
 import com.gutterboys.riichi.calculator.helper.HandSortUtil;
 import com.gutterboys.riichi.calculator.helper.ScoreUtil;
+import com.gutterboys.riichi.calculator.model.CalculatorTracker;
 import com.gutterboys.riichi.calculator.model.PossibleHand;
 import com.gutterboys.riichi.calculator.model.PossibleMelds;
 import com.gutterboys.riichi.calculator.model.RiichiCalculatorRequest;
@@ -35,24 +36,27 @@ public class CalculatorService {
     @Autowired
     CalculatorServiceHelper helper;
 
-    public void evaluateHand(RiichiCalculatorRequest request, RiichiCalculatorResponse response) throws RiichiCalculatorException {
+    public void evaluateHand(RiichiCalculatorRequest request, RiichiCalculatorResponse response)
+            throws RiichiCalculatorException {
         LOGGER.info("Calculating score...");
 
-        helper.stageRequestResponseData(request, response);
+        CalculatorTracker tracker = new CalculatorTracker();
 
-        eligibilityEngine.executeFirst(request, response);
+        helper.stageTrackerData(request, response, tracker);
 
-        handSortUtil.checkHonors(request);
+        eligibilityEngine.executeFirst(request, tracker, response);
+
+        handSortUtil.checkHonors(tracker);
 
         // Loop over remaining tiles in hand to see what melds can be made
         PossibleMelds possibleMelds = new PossibleMelds();
         if (response.getPossibleHands().isEmpty()) {
             LOGGER.info("Reducing hand...");
-            handSortUtil.reduceHand(request, response, possibleMelds);
-            CommonUtil.checkMeldTypesAndRemoveDupes(possibleMelds, request.getTiles());
+            handSortUtil.reduceHand(tracker, response, possibleMelds);
+            CommonUtil.checkMeldTypesAndRemoveDupes(possibleMelds, tracker.getTiles());
         }
         if (response.getPossibleHands().isEmpty()) {
-            handSortUtil.reducePossibleMelds(possibleMelds, request, response);
+            handSortUtil.reducePossibleMelds(possibleMelds, tracker, response);
         }
 
         if (response.getPossibleHands().isEmpty()) {
@@ -67,15 +71,15 @@ public class CalculatorService {
 
             scoreUtil.countFu(request, hand);
 
-            eligibilityEngine.executeUniversal(request, hand);
+            eligibilityEngine.executeUniversal(request, tracker, hand);
 
             if (Collections.disjoint(RiichiCalculatorConstants.STANDARD_YAKU_EXCLUSION_LIST,
                     hand.getQualifiedYaku())) {
-                eligibilityEngine.executeCommon(request, hand);
+                eligibilityEngine.executeCommon(request, tracker, hand);
             }
 
             if (hand.getQualifiedYaku().contains("Chiitoitsu (Seven Pairs)")) {
-                eligibilityEngine.executeSpecialSevenPairs(request, hand);
+                eligibilityEngine.executeSpecialSevenPairs(request, tracker, hand);
             }
 
             eligibilityEngine.executeLast(request, hand);
@@ -83,7 +87,7 @@ public class CalculatorService {
         }
 
         for (int i = 0; i < response.getPossibleHands().size(); i++) {
-            scoreUtil.determineScore(response, request, response.getPossibleHands().get(i));
+            scoreUtil.determineScore(response, request, tracker, response.getPossibleHands().get(i));
         }
 
     }

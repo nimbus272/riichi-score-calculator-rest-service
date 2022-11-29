@@ -8,6 +8,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import com.gutterboys.riichi.calculator.model.RiichiCalculatorRequest;
+import com.gutterboys.riichi.calculator.model.CalculatorTracker;
 import com.gutterboys.riichi.calculator.model.PossibleHand;
 import com.gutterboys.riichi.calculator.yaku.universal.HaiteiRaoyue;
 
@@ -16,6 +17,7 @@ public class HaiteiRaoyueTest {
     RiichiCalculatorRequest request;
 
     PossibleHand possibleHand;
+    CalculatorTracker tracker;
 
     HaiteiRaoyue yaku = new HaiteiRaoyue();
 
@@ -23,6 +25,7 @@ public class HaiteiRaoyueTest {
     public void setUp() {
         request = new RiichiCalculatorRequest();
         possibleHand = new PossibleHand();
+        tracker = new CalculatorTracker();
     }
 
     @Test
@@ -30,7 +33,7 @@ public class HaiteiRaoyueTest {
         request.setLastTileDraw(true);
         request.setTsumo(true);
 
-        yaku.execute(request, possibleHand);
+        yaku.execute(request, tracker, possibleHand);
 
         assertEquals(1, possibleHand.getHan());
         assertTrue(possibleHand.getQualifiedYaku().contains("Haitei Raoyue (Last Tile Drawn From Wall)"));
@@ -40,7 +43,7 @@ public class HaiteiRaoyueTest {
     public void execute_IsNotHaiteiRaoyueTest1() {
         request.setLastTileDraw(true);
 
-        yaku.execute(request, possibleHand);
+        yaku.execute(request, tracker, possibleHand);
 
         assertEquals(0, possibleHand.getHan());
         assertFalse(possibleHand.getQualifiedYaku().contains("Haitei Raoyue (Last Tile Drawn From Wall)"));
@@ -49,7 +52,7 @@ public class HaiteiRaoyueTest {
     @Test
     public void execute_IsNotHaiteiRaoyueTest2() {
 
-        yaku.execute(request, possibleHand);
+        yaku.execute(request, tracker, possibleHand);
 
         assertEquals(0, possibleHand.getHan());
         assertFalse(possibleHand.getQualifiedYaku().contains("Haitei Raoyue (Last Tile Drawn From Wall)"));

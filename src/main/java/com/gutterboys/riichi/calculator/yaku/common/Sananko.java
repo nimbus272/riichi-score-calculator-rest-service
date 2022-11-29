@@ -6,14 +6,15 @@ import java.util.stream.Collectors;
 import org.springframework.stereotype.Component;
 
 import com.gutterboys.riichi.calculator.helper.CommonUtil;
-import com.gutterboys.riichi.calculator.model.RiichiCalculatorRequest;
+import com.gutterboys.riichi.calculator.model.CalculatorTracker;
 import com.gutterboys.riichi.calculator.model.PossibleHand;
+import com.gutterboys.riichi.calculator.model.RiichiCalculatorRequest;
 
 @Component
 public class Sananko implements CommonYaku {
 
     @Override
-    public void execute(RiichiCalculatorRequest request, PossibleHand possibleHand) {
+    public void execute(RiichiCalculatorRequest request, CalculatorTracker tracker, PossibleHand possibleHand) {
         List<List<Integer>> ponsOrKans = possibleHand.getMelds().stream()
                 .filter(meld -> !CommonUtil.isChi(meld) && meld.size() > 2)
                 .collect(Collectors.toList());

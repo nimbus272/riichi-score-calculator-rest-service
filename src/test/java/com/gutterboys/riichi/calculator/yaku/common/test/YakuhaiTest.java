@@ -8,18 +8,21 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import com.gutterboys.riichi.calculator.model.RiichiCalculatorRequest;
+import com.gutterboys.riichi.calculator.model.CalculatorTracker;
 import com.gutterboys.riichi.calculator.model.PossibleHand;
 import com.gutterboys.riichi.calculator.yaku.common.Yakuhai;
 
 public class YakuhaiTest {
     RiichiCalculatorRequest request;
     PossibleHand possibleHand;
+    CalculatorTracker tracker;
     Yakuhai yaku = new Yakuhai();
 
     @BeforeEach
     public void setUp() {
         request = new RiichiCalculatorRequest();
         possibleHand = new PossibleHand();
+        tracker = new CalculatorTracker();
     }
 
     @Test
@@ -33,7 +36,7 @@ public class YakuhaiTest {
         request.setSeatWind(30);
         request.setPrevalentWind(30);
 
-        yaku.execute(request, possibleHand);
+        yaku.execute(request, tracker, possibleHand);
 
         assertTrue(possibleHand.getQualifiedYaku().size() == 1);
         assertTrue(

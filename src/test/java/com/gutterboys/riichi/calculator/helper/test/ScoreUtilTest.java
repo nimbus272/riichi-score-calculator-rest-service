@@ -11,8 +11,9 @@ import org.junit.jupiter.api.Test;
 
 import com.gutterboys.riichi.calculator.constants.SpecialScoringType;
 import com.gutterboys.riichi.calculator.helper.ScoreUtil;
-import com.gutterboys.riichi.calculator.model.RiichiCalculatorRequest;
+import com.gutterboys.riichi.calculator.model.CalculatorTracker;
 import com.gutterboys.riichi.calculator.model.PossibleHand;
+import com.gutterboys.riichi.calculator.model.RiichiCalculatorRequest;
 
 public class ScoreUtilTest {
 
@@ -20,12 +21,16 @@ public class ScoreUtilTest {
 
     PossibleHand possibleHand;
 
+    CalculatorTracker tracker;
+
     ScoreUtil util = new ScoreUtil();
 
     @BeforeEach
     public void setUp() {
         request = new RiichiCalculatorRequest();
         possibleHand = new PossibleHand();
+        tracker = new CalculatorTracker();
+
     }
 
     @Test
@@ -263,28 +268,28 @@ public class ScoreUtilTest {
     @Test
     public void testCountDora_2dora() {
         request.getDoraTiles().addAll(Arrays.asList(0, 1));
-        request.getTiles()
+        tracker.getTiles()
                 .addAll(Arrays.asList(0, 1, 2, 3, 4, 5, 6, 7, 8, 27, 27, 27, 33, 33));
-        util.countDora(request);
-        assertEquals(2, request.getDoraCount());
+        util.countDora(request, tracker);
+        assertEquals(2, tracker.getDoraCount());
     }
 
     @Test
     public void testCountDora_NoDora() {
         request.getDoraTiles().addAll(Arrays.asList(0, 1));
-        request.getTiles()
+        tracker.getTiles()
                 .addAll(Arrays.asList(3, 3, 2, 3, 4, 5, 6, 7, 8, 27, 27, 27, 33, 33));
-        util.countDora(request);
-        assertEquals(0, request.getDoraCount());
+        util.countDora(request, tracker);
+        assertEquals(0, tracker.getDoraCount());
     }
 
     @Test
     public void testCountDora_MultipleTiles() {
         request.getDoraTiles().addAll(Arrays.asList(0, 1, 0));
-        request.getTiles()
+        tracker.getTiles()
                 .addAll(Arrays.asList(0, 0, 0, 3, 4, 5, 6, 7, 8, 27, 27, 27, 1, 1));
-        util.countDora(request);
-        assertEquals(8, request.getDoraCount());
+        util.countDora(request, tracker);
+        assertEquals(8, tracker.getDoraCount());
     }
 
     @Test
