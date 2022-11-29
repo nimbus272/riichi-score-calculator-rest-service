@@ -10,10 +10,11 @@ import org.springframework.stereotype.Component;
 import com.gutterboys.riichi.calculator.exception.RiichiCalculatorException;
 import com.gutterboys.riichi.calculator.helper.CommonUtil;
 import com.gutterboys.riichi.calculator.helper.HandSortUtil;
-import com.gutterboys.riichi.calculator.model.GameContext;
+import com.gutterboys.riichi.calculator.model.RiichiCalculatorRequest;
+import com.gutterboys.riichi.calculator.model.CalculatorTracker;
 import com.gutterboys.riichi.calculator.model.PossibleHand;
 import com.gutterboys.riichi.calculator.model.PossibleMelds;
-import com.gutterboys.riichi.calculator.model.ScoreResponse;
+import com.gutterboys.riichi.calculator.model.RiichiCalculatorResponse;
 
 @Component
 public class ChiitoitsuOrRyanpeiko implements FirstYaku {
@@ -22,13 +23,14 @@ public class ChiitoitsuOrRyanpeiko implements FirstYaku {
     HandSortUtil sortUtil;
 
     @Override
-    public void execute(GameContext gameContext, ScoreResponse response) throws RiichiCalculatorException {
-        if (gameContext.isOpened()) {
+    public void execute(RiichiCalculatorRequest request, CalculatorTracker tracker, RiichiCalculatorResponse response)
+            throws RiichiCalculatorException {
+        if (request.isOpened()) {
             return;
         }
         PossibleHand possibleHand = new PossibleHand();
 
-        List<Integer> tempHand = new ArrayList<Integer>(gameContext.getTiles());
+        List<Integer> tempHand = new ArrayList<Integer>(tracker.getTiles());
         int pairCount = 0;
         for (int i = 0; i < tempHand.size(); i++) {
             Integer tile = tempHand.get(i);
@@ -45,12 +47,12 @@ public class ChiitoitsuOrRyanpeiko implements FirstYaku {
         if (pairCount == 7) {
             List<List<Integer>> possibleChis = new ArrayList<List<Integer>>();
 
-            for (int i = 0; i < gameContext.getTiles().size(); i++) {
-                int tile = gameContext.getTiles().get(i);
-                sortUtil.checkChi(gameContext.getTiles(), tile, possibleChis, 2);
+            for (int i = 0; i < tracker.getTiles().size(); i++) {
+                int tile = tracker.getTiles().get(i);
+                sortUtil.checkChi(tracker.getTiles(), tile, possibleChis, 2);
             }
             if (possibleChis.size() >= 12) {
-                generateMeldsForRyanpeiko(possibleHand, gameContext, response);
+                generateMeldsForRyanpeiko(possibleHand, tracker, response);
                 for (int i = 0; i < response.getPossibleHands().size(); i++) {
                     PossibleHand ryanpeiko = response.getPossibleHands().get(i);
                     ryanpeiko.setHan(ryanpeiko.getHan() + 3);
@@ -65,41 +67,42 @@ public class ChiitoitsuOrRyanpeiko implements FirstYaku {
             possibleHand.getQualifiedYaku().add("Chiitoitsu (Seven Pairs)");
             possibleHand.setFu(25);
             possibleHand.getTiles().addAll(response.getTiles());
-            generateMeldsForChiitoitsu(possibleHand, gameContext);
+            generateMeldsForChiitoitsu(possibleHand, tracker);
             possibleHand.getMelds().sort((a, b) -> a.get(0) - b.get(0));
             response.getPossibleHands().add(possibleHand);
         }
 
     }
 
-    private void generateMeldsForChiitoitsu(PossibleHand possibleHand, GameContext gameContext) {
-        for (int i = 0; i < gameContext.getTiles().size(); i++) {
-            int tile = gameContext.getTiles().get(i);
+    private void generateMeldsForChiitoitsu(PossibleHand possibleHand, CalculatorTracker tracker) {
+        for (int i = 0; i < tracker.getTiles().size(); i++) {
+            int tile = tracker.getTiles().get(i);
 
             if (tile == -1) {
                 continue;
             }
 
-            List<Integer> pair = gameContext.getTiles().stream().filter(x -> x == tile).collect(Collectors.toList());
+            List<Integer> pair = tracker.getTiles().stream().filter(x -> x == tile).collect(Collectors.toList());
             possibleHand.getMelds().add(pair);
-            gameContext.getTiles().remove(gameContext.getTiles().indexOf(tile));
-            gameContext.getTiles().remove(gameContext.getTiles().indexOf(tile));
-            gameContext.getTiles().add(0, -1);
-            gameContext.getTiles().add(0, -1);
+            tracker.getTiles().remove(tracker.getTiles().indexOf(tile));
+            tracker.getTiles().remove(tracker.getTiles().indexOf(tile));
+            tracker.getTiles().add(0, -1);
+            tracker.getTiles().add(0, -1);
 
         }
 
     }
 
-    private void generateMeldsForRyanpeiko(PossibleHand possibleHand, GameContext gameContext, ScoreResponse response)
+    private void generateMeldsForRyanpeiko(PossibleHand possibleHand, CalculatorTracker tracker,
+            RiichiCalculatorResponse response)
             throws RiichiCalculatorException {
 
         PossibleMelds possibleMelds = new PossibleMelds();
 
-        sortUtil.reduceHand(gameContext, response, possibleMelds);
+        sortUtil.determineConfirmedMelds(tracker, response, possibleMelds);
 
         if (response.getPossibleHands().size() == 0) {
-            sortUtil.reducePossibleMelds(possibleMelds, gameContext, response);
+            sortUtil.guessAndCheckPossibleMelds(possibleMelds, tracker, response);
         }
 
     }

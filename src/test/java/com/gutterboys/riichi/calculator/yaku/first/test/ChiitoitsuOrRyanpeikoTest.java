@@ -7,9 +7,7 @@ import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.ArgumentMatchers.anyList;
 import static org.mockito.Mockito.times;
 
-
 import java.util.Arrays;
-
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -21,16 +19,18 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import com.gutterboys.riichi.calculator.exception.RiichiCalculatorException;
 import com.gutterboys.riichi.calculator.helper.HandSortUtil;
-import com.gutterboys.riichi.calculator.model.GameContext;
-import com.gutterboys.riichi.calculator.model.ScoreResponse;
+import com.gutterboys.riichi.calculator.model.CalculatorTracker;
+import com.gutterboys.riichi.calculator.model.RiichiCalculatorRequest;
+import com.gutterboys.riichi.calculator.model.RiichiCalculatorResponse;
 import com.gutterboys.riichi.calculator.yaku.first.ChiitoitsuOrRyanpeiko;
 
 @ExtendWith(MockitoExtension.class)
 public class ChiitoitsuOrRyanpeikoTest {
 
-    GameContext gameContext;
+    RiichiCalculatorRequest request;
 
-    ScoreResponse response;
+    RiichiCalculatorResponse response;
+    CalculatorTracker tracker;
 
     @Mock
     HandSortUtil sortUtil;
@@ -40,16 +40,17 @@ public class ChiitoitsuOrRyanpeikoTest {
 
     @BeforeEach
     public void setUp() {
-        gameContext = new GameContext();
-        response = new ScoreResponse();
+        request = new RiichiCalculatorRequest();
+        response = new RiichiCalculatorResponse();
+        tracker = new CalculatorTracker();
     }
 
     @Test
     public void execute_IsChiitoitsuTest() throws RiichiCalculatorException {
-        gameContext.getTiles()
+        tracker.getTiles()
                 .addAll(Arrays.asList(0, 0, 9, 9, 18, 18, 27, 27, 29, 29, 31, 31, 33, 33));
 
-        yaku.execute(gameContext, response);
+        yaku.execute(request, tracker, response);
 
         Mockito.verify(sortUtil, times(14)).checkChi(anyList(), anyInt(), anyList(), anyInt());
         assertTrue(response.getPossibleHands().size() != 0);
@@ -61,21 +62,21 @@ public class ChiitoitsuOrRyanpeikoTest {
 
     @Test()
     public void execute_IsNotChiitoitsuTest() throws RiichiCalculatorException {
-        gameContext.getTiles()
+        request.getTiles()
                 .addAll(Arrays.asList(0, 0, 0, 18, 18, 18, 27, 27, 29, 29, 31, 31, 33, 33));
 
-        yaku.execute(gameContext, response);
+        yaku.execute(request, tracker, response);
 
         assertTrue(response.getPossibleHands().size() == 0);
     }
 
     @Test
     public void execute_IsOpenHandTest() throws RiichiCalculatorException {
-        gameContext.getTiles()
+        request.getTiles()
                 .addAll(Arrays.asList(0, 0, 9, 9, 18, 18, 27, 27, 29, 29, 31, 31, 33, 33));
-        gameContext.setOpened(true);
+        request.setOpened(true);
 
-        yaku.execute(gameContext, response);
+        yaku.execute(request, tracker, response);
 
         Mockito.verify(sortUtil, times(0)).checkChi(anyList(), anyInt(), anyList(), anyInt());
         assertTrue(response.getPossibleHands().size() == 0);
@@ -83,10 +84,10 @@ public class ChiitoitsuOrRyanpeikoTest {
 
     @Test
     public void execute_IsInvalidHandTest() throws RiichiCalculatorException {
-        gameContext.getTiles()
+        request.getTiles()
                 .addAll(Arrays.asList(0, 0, 9, 9, 18, 18, 27, 27, 29, 29, 29, 33, 33, 33));
 
-        yaku.execute(gameContext, response);
+        yaku.execute(request, tracker, response);
 
         Mockito.verify(sortUtil, times(0)).checkChi(anyList(), anyInt(), anyList(), anyInt());
         assertTrue(response.getPossibleHands().size() == 0);

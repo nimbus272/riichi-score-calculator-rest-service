@@ -6,13 +6,14 @@ import java.util.List;
 import org.springframework.stereotype.Component;
 
 import com.gutterboys.riichi.calculator.helper.CommonUtil;
-import com.gutterboys.riichi.calculator.model.GameContext;
+import com.gutterboys.riichi.calculator.model.CalculatorTracker;
 import com.gutterboys.riichi.calculator.model.PossibleHand;
+import com.gutterboys.riichi.calculator.model.RiichiCalculatorRequest;
 
 @Component
 public class SanshokuDoujun implements CommonYaku {
     @Override
-    public void execute(GameContext gameContext, PossibleHand possibleHand) {
+    public void execute(RiichiCalculatorRequest request, CalculatorTracker tracker, PossibleHand possibleHand) {
         for (int i = 0; i < possibleHand.getMelds().size(); i++) {
             List<Integer> meld = possibleHand.getMelds().get(i);
             if (CommonUtil.isChi(meld)) {
@@ -24,7 +25,7 @@ public class SanshokuDoujun implements CommonYaku {
                     }
                     return false;
                 }).count() > 2L) {
-                    if (gameContext.isOpened()) {
+                    if (request.isOpened()) {
                         possibleHand.setHan(possibleHand.getHan() + 1);
                     } else {
                         possibleHand.setHan(possibleHand.getHan() + 2);

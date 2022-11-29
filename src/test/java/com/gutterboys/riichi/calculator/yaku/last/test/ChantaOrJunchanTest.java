@@ -9,13 +9,13 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import com.gutterboys.riichi.calculator.exception.RiichiCalculatorException;
-import com.gutterboys.riichi.calculator.model.GameContext;
+import com.gutterboys.riichi.calculator.model.RiichiCalculatorRequest;
 import com.gutterboys.riichi.calculator.model.PossibleHand;
 import com.gutterboys.riichi.calculator.yaku.last.ChantaOrJunchan;
 
 
 public class ChantaOrJunchanTest {
-    GameContext gameContext;
+    RiichiCalculatorRequest request;
 
     PossibleHand possibleHand;
 
@@ -24,7 +24,7 @@ public class ChantaOrJunchanTest {
 
     @BeforeEach
     public void setUp() {
-        gameContext = new GameContext();
+        request = new RiichiCalculatorRequest();
         possibleHand = new PossibleHand();
     }
 
@@ -37,7 +37,7 @@ public class ChantaOrJunchanTest {
         possibleHand.getMelds().add(Arrays.asList(18, 19, 20));
         possibleHand.getMelds().add(Arrays.asList(24, 25, 26));
 
-        junchan.execute(gameContext, possibleHand);
+        junchan.execute(request, possibleHand);
 
         assertEquals(3, possibleHand.getHan());
         assertTrue(possibleHand.getQualifiedYaku().contains("Junchan (Terminal in Each Set)"));
@@ -53,7 +53,7 @@ public class ChantaOrJunchanTest {
         possibleHand.getMelds().add(Arrays.asList(26, 26, 26));
         possibleHand.getMelds().add(Arrays.asList(27, 27));
 
-        chanta.execute(gameContext, possibleHand);
+        chanta.execute(request, possibleHand);
 
         assertEquals(2, possibleHand.getHan());
         assertTrue(possibleHand.getQualifiedYaku().contains("Chanta (Terminal or Honor in Each Set)"));

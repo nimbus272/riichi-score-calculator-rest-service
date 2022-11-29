@@ -9,9 +9,7 @@ public class HandContentConstraintValidator implements ConstraintValidator<HandC
 
     @Override
     public boolean isValid(List<Integer> tiles, ConstraintValidatorContext context) {
-        return tiles.stream().filter(tile -> tile > 36 || tile < 0).count() == 0; 
+        return tiles.stream().filter(tile -> tile > 36 || tile < 0).count() == 0;
     }
 
-    
-    
 }

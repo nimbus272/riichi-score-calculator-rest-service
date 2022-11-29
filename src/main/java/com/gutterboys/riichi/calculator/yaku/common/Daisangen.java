@@ -7,14 +7,15 @@ import org.springframework.stereotype.Component;
 
 import com.gutterboys.riichi.calculator.constants.RiichiCalculatorConstants;
 import com.gutterboys.riichi.calculator.helper.CommonUtil;
-import com.gutterboys.riichi.calculator.model.GameContext;
+import com.gutterboys.riichi.calculator.model.CalculatorTracker;
 import com.gutterboys.riichi.calculator.model.PossibleHand;
+import com.gutterboys.riichi.calculator.model.RiichiCalculatorRequest;
 
 @Component
 public class Daisangen implements CommonYaku {
 
     @Override
-    public void execute(GameContext gameContext, PossibleHand hand) {
+    public void execute(RiichiCalculatorRequest request, CalculatorTracker tracker, PossibleHand hand) {
 
         List<List<Integer>> dragonMelds = hand.getMelds().stream().filter((meld) -> {
             if (meld.size() < 3 || CommonUtil.isChi(meld) || !RiichiCalculatorConstants.DRAGONS.contains(meld.get(0))) {

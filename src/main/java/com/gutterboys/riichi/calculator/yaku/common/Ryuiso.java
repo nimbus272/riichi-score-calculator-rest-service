@@ -3,14 +3,15 @@ package com.gutterboys.riichi.calculator.yaku.common;
 import org.springframework.stereotype.Component;
 
 import com.gutterboys.riichi.calculator.constants.RiichiCalculatorConstants;
-import com.gutterboys.riichi.calculator.model.GameContext;
+import com.gutterboys.riichi.calculator.model.CalculatorTracker;
 import com.gutterboys.riichi.calculator.model.PossibleHand;
+import com.gutterboys.riichi.calculator.model.RiichiCalculatorRequest;
 
 @Component
 public class Ryuiso implements CommonYaku {
 
     @Override
-    public void execute(GameContext gameContext, PossibleHand possibleHand) {
+    public void execute(RiichiCalculatorRequest request, CalculatorTracker tracker, PossibleHand possibleHand) {
 
         if (possibleHand.getTiles().stream().filter(tile -> !RiichiCalculatorConstants.GREEN.contains(tile))
                 .count() == 0) {

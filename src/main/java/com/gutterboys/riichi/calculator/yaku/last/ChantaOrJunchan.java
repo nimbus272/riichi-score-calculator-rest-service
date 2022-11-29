@@ -7,14 +7,14 @@ import org.springframework.util.CollectionUtils;
 import com.gutterboys.riichi.calculator.constants.RiichiCalculatorConstants;
 import com.gutterboys.riichi.calculator.exception.RiichiCalculatorException;
 import com.gutterboys.riichi.calculator.helper.CommonUtil;
-import com.gutterboys.riichi.calculator.model.GameContext;
+import com.gutterboys.riichi.calculator.model.RiichiCalculatorRequest;
 import com.gutterboys.riichi.calculator.model.PossibleHand;
 
 @Component
 public class ChantaOrJunchan implements LastYaku {
 
     @Override
-    public void execute(GameContext gameContext, PossibleHand possibleHand) throws RiichiCalculatorException {
+    public void execute(RiichiCalculatorRequest request, PossibleHand possibleHand) throws RiichiCalculatorException {
         if (possibleHand.getMelds().stream().filter(meld -> CommonUtil.isTerminalChi(meld)).count() > 0) {
             List<List<Integer>> melds = possibleHand.getMelds();
             int validMelds = 0;
@@ -27,7 +27,7 @@ public class ChantaOrJunchan implements LastYaku {
             if (validMelds == melds.size()) {
                 List<Integer> tiles = possibleHand.getTiles();
                 if (CollectionUtils.containsAny(tiles, RiichiCalculatorConstants.HONORS)) {
-                    if (gameContext.isOpened()) {
+                    if (request.isOpened()) {
                         possibleHand.setHan(possibleHand.getHan() + 1);
                         possibleHand.getQualifiedYaku().add("Chanta (Terminal or Honor in Each Set)");
                     } else {
@@ -35,7 +35,7 @@ public class ChantaOrJunchan implements LastYaku {
                         possibleHand.getQualifiedYaku().add("Chanta (Terminal or Honor in Each Set)");
                     }
                 } else {
-                    if (gameContext.isOpened()) {
+                    if (request.isOpened()) {
                         possibleHand.setHan(possibleHand.getHan() + 2);
                         possibleHand.getQualifiedYaku().add("Junchan (Terminal in Each Set)");
                     } else {

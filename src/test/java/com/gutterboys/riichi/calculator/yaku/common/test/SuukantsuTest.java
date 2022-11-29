@@ -9,22 +9,26 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import com.gutterboys.riichi.calculator.exception.RiichiCalculatorException;
-import com.gutterboys.riichi.calculator.model.GameContext;
+import com.gutterboys.riichi.calculator.model.CalculatorTracker;
 import com.gutterboys.riichi.calculator.model.PossibleHand;
+import com.gutterboys.riichi.calculator.model.RiichiCalculatorRequest;
 import com.gutterboys.riichi.calculator.yaku.common.Suukantsu;
 
 public class SuukantsuTest {
 
-    GameContext gameContext;
+    RiichiCalculatorRequest request;
 
     PossibleHand possibleHand;
+
+    CalculatorTracker tracker;
 
     Suukantsu yaku = new Suukantsu();
 
     @BeforeEach
     public void setUp() {
-        gameContext = new GameContext();
+        request = new RiichiCalculatorRequest();
         possibleHand = new PossibleHand();
+        tracker = new CalculatorTracker();
     }
 
     @Test
@@ -36,7 +40,7 @@ public class SuukantsuTest {
         possibleHand.getMelds().add(Arrays.asList(28, 28, 28, 28));
         possibleHand.getMelds().add(Arrays.asList(30, 30, 30, 30));
 
-        yaku.execute(gameContext, possibleHand);
+        yaku.execute(request, tracker, possibleHand);
 
         assertEquals(13, possibleHand.getHan());
         assertTrue(possibleHand.getQualifiedYaku().contains("Suukantsu (Four Kans)"));

@@ -7,19 +7,22 @@ import java.util.Arrays;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import com.gutterboys.riichi.calculator.model.GameContext;
+import com.gutterboys.riichi.calculator.model.CalculatorTracker;
 import com.gutterboys.riichi.calculator.model.PossibleHand;
+import com.gutterboys.riichi.calculator.model.RiichiCalculatorRequest;
 import com.gutterboys.riichi.calculator.yaku.common.Shousangen;
 
 public class ShousangenTest {
-    GameContext gameContext;
+    RiichiCalculatorRequest request;
     PossibleHand possibleHand;
+    CalculatorTracker tracker;
     Shousangen yaku = new Shousangen();
 
     @BeforeEach
     public void setUp() {
-        gameContext = new GameContext();
+        request = new RiichiCalculatorRequest();
         possibleHand = new PossibleHand();
+        tracker = new CalculatorTracker();
     }
 
     @Test
@@ -30,10 +33,10 @@ public class ShousangenTest {
         possibleHand.getMelds().add(Arrays.asList(27, 27, 27));
         possibleHand.getMelds().add(Arrays.asList(28, 28, 28, 28));
         possibleHand.getMelds().add(Arrays.asList(29, 29));
-        gameContext.setSeatWind(30);
-        gameContext.setPrevalentWind(30);
+        request.setSeatWind(30);
+        request.setPrevalentWind(30);
 
-        yaku.execute(gameContext, possibleHand);
+        yaku.execute(request, tracker, possibleHand);
 
         assertTrue(possibleHand.getQualifiedYaku().size() > 0);
         assertTrue(

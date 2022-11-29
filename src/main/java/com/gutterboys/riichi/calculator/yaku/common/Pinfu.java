@@ -7,8 +7,9 @@ import java.util.stream.Collectors;
 import org.springframework.stereotype.Component;
 
 import com.gutterboys.riichi.calculator.helper.CommonUtil;
-import com.gutterboys.riichi.calculator.model.GameContext;
+import com.gutterboys.riichi.calculator.model.CalculatorTracker;
 import com.gutterboys.riichi.calculator.model.PossibleHand;
+import com.gutterboys.riichi.calculator.model.RiichiCalculatorRequest;
 
 @Component
 public class Pinfu implements CommonYaku {
@@ -16,24 +17,24 @@ public class Pinfu implements CommonYaku {
     private static final List<Integer> SEVENS = Arrays.asList(6, 15, 24);
 
     @Override
-    public void execute(GameContext gameContext, PossibleHand possibleHand) {
-        if (gameContext.isOpened() || possibleHand.getTiles().size() != 14) {
+    public void execute(RiichiCalculatorRequest request, CalculatorTracker tracker, PossibleHand possibleHand) {
+        if (request.isOpened() || possibleHand.getTiles().size() != 14) {
             return;
         }
-        if (possibleHand.getTiles().contains(gameContext.getPrevalentWind())
-                || possibleHand.getTiles().contains(gameContext.getSeatWind())) {
+        if (possibleHand.getTiles().contains(request.getPrevalentWind())
+                || possibleHand.getTiles().contains(request.getSeatWind())) {
             return;
         }
         if (possibleHand.getMelds().stream().filter(meld -> CommonUtil.isChi(meld)).count() == 4) {
-            int winningTile = gameContext.getWinningTile();
+            int winningTile = request.getWinningTile();
             List<List<Integer>> winningMelds = possibleHand.getMelds().stream()
-                    .filter(meld -> meld.contains(gameContext.getWinningTile())).collect(Collectors.toList());
+                    .filter(meld -> meld.contains(request.getWinningTile())).collect(Collectors.toList());
             for (List<Integer> meld : winningMelds) {
                 if (meld.contains(winningTile) && meld.contains(winningTile + 1) && meld.contains(winningTile + 2)
                         && !SEVENS.contains(winningTile)) {
                     possibleHand.setHan(possibleHand.getHan() + 1);
                     possibleHand.getQualifiedYaku().add("Pinfu (No-points Hand)");
-                    if (gameContext.isTsumo()) {
+                    if (request.isTsumo()) {
                         possibleHand.setFu(20);
                     } else {
                         possibleHand.setFu(30);
@@ -45,7 +46,7 @@ public class Pinfu implements CommonYaku {
                         && !THREES.contains(winningTile)) {
                     possibleHand.setHan(possibleHand.getHan() + 1);
                     possibleHand.getQualifiedYaku().add("Pinfu (No-points Hand)");
-                    if (gameContext.isTsumo()) {
+                    if (request.isTsumo()) {
                         possibleHand.setFu(20);
                     } else {
                         possibleHand.setFu(30);

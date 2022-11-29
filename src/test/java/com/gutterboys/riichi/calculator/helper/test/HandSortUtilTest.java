@@ -1,7 +1,6 @@
 package com.gutterboys.riichi.calculator.helper.test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.ArrayList;
@@ -13,15 +12,18 @@ import org.junit.jupiter.api.Test;
 
 import com.gutterboys.riichi.calculator.exception.RiichiCalculatorException;
 import com.gutterboys.riichi.calculator.helper.HandSortUtil;
-import com.gutterboys.riichi.calculator.model.GameContext;
+import com.gutterboys.riichi.calculator.model.CalculatorTracker;
 import com.gutterboys.riichi.calculator.model.PossibleMelds;
-import com.gutterboys.riichi.calculator.model.ScoreResponse;
+import com.gutterboys.riichi.calculator.model.RiichiCalculatorRequest;
+import com.gutterboys.riichi.calculator.model.RiichiCalculatorResponse;
 
 public class HandSortUtilTest {
 
-        GameContext gameContext;
+        RiichiCalculatorRequest request;
 
-        ScoreResponse response;
+        RiichiCalculatorResponse response;
+
+        CalculatorTracker tracker;
 
         List<Integer> hand;
 
@@ -29,33 +31,34 @@ public class HandSortUtilTest {
 
         @BeforeEach
         public void setUp() {
-                gameContext = new GameContext();
+                request = new RiichiCalculatorRequest();
                 hand = new ArrayList<Integer>();
-                response = new ScoreResponse();
+                response = new RiichiCalculatorResponse();
+                tracker = new CalculatorTracker();
         }
 
         @Test
         public void testSwapFives_1Five() {
-                gameContext.getTiles()
+                tracker.getTiles()
                                 .addAll(Arrays.asList(0, 1, 2, 3, 34, 5, 6, 7, 8, 27, 27, 27, 33, 33));
 
                 List<Integer> expected = Arrays.asList(4, 0, 1, 2, 3, 5, 6, 7, 8, 27, 27, 27, 33,
                                 33);
 
-                sortUtil.swapFives(gameContext);
+                sortUtil.swapFives(Arrays.asList(34), tracker);
 
-                assertEquals(expected, gameContext.getTiles());
+                assertEquals(expected, tracker.getTiles());
 
         }
 
         @Test
         public void testSwapFives_NoFives() {
-                gameContext.getTiles().addAll(Arrays.asList(0, 1, 2, 3, 4, 5, 6, 7, 8, 27, 27, 27, 33,
+                tracker.getTiles().addAll(Arrays.asList(0, 1, 2, 3, 4, 5, 6, 7, 8, 27, 27, 27, 33,
                                 33));
                 List<Integer> expected = Arrays.asList(0, 1, 2, 3, 4, 5, 6, 7, 8, 27, 27, 27, 33,
                                 33);
-                sortUtil.swapFives(gameContext);
-                assertEquals(expected, gameContext.getTiles());
+                sortUtil.swapFives(Arrays.asList(), tracker);
+                assertEquals(expected, tracker.getTiles());
 
         }
 
@@ -108,7 +111,7 @@ public class HandSortUtilTest {
 
         @Test
         public void testCheckHonors_HakuPairTest() throws RiichiCalculatorException {
-                gameContext.getTiles().addAll(Arrays.asList(0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 27, 27, 9,
+                tracker.getTiles().addAll(Arrays.asList(0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 27, 27, 9,
                                 9));
 
                 List<Integer> expectedHand = new ArrayList<Integer>(
@@ -117,18 +120,18 @@ public class HandSortUtilTest {
 
                 List<Integer> expectedMeld = new ArrayList<Integer>(Arrays.asList(27, 27));
 
-                sortUtil.checkHonors(gameContext);
+                sortUtil.checkHonors(tracker);
 
-                assertEquals(expectedHand, gameContext.getTiles());
-                assertTrue(gameContext.getMelds().size() == 1);
-                assertTrue(gameContext.getPairCount() == 1);
-                assertEquals(expectedMeld, gameContext.getMelds().get(0));
+                assertEquals(expectedHand, tracker.getTiles());
+                assertTrue(tracker.getMelds().size() == 1);
+                assertTrue(tracker.getPairCount() == 1);
+                assertEquals(expectedMeld, tracker.getMelds().get(0));
 
         }
 
         @Test
         public void testCheckHonors_HakuPonTest() throws RiichiCalculatorException {
-                gameContext.getTiles().addAll(Arrays.asList(0, 1, 2, 3, 4, 5, 6, 7, 8, 27, 27, 27, 9,
+                tracker.getTiles().addAll(Arrays.asList(0, 1, 2, 3, 4, 5, 6, 7, 8, 27, 27, 27, 9,
                                 9));
 
                 List<Integer> expectedHand = new ArrayList<Integer>(
@@ -137,18 +140,17 @@ public class HandSortUtilTest {
 
                 List<Integer> expectedMeld = new ArrayList<Integer>(Arrays.asList(27, 27, 27));
 
-                sortUtil.checkHonors(gameContext);
+                sortUtil.checkHonors(tracker);
 
-                assertEquals(expectedHand, gameContext.getTiles());
-                assertTrue(gameContext.getMelds().size() == 1);
-                assertTrue(gameContext.getPonCount() == 1);
-                assertEquals(expectedMeld, gameContext.getMelds().get(0));
+                assertEquals(expectedHand, tracker.getTiles());
+                assertTrue(tracker.getMelds().size() == 1);
+                assertEquals(expectedMeld, tracker.getMelds().get(0));
 
         }
 
         @Test
         public void testCheckHonors_HakuPonChunPairTest() throws RiichiCalculatorException {
-                gameContext.getTiles().addAll(Arrays.asList(0, 1, 2, 3, 4, 5, 6, 7, 8, 27, 27, 27, 29,
+                tracker.getTiles().addAll(Arrays.asList(0, 1, 2, 3, 4, 5, 6, 7, 8, 27, 27, 27, 29,
                                 29));
 
                 List<Integer> expectedHand = new ArrayList<Integer>(
@@ -162,19 +164,18 @@ public class HandSortUtilTest {
                 expectedMelds.add(meld1);
                 expectedMelds.add(meld2);
 
-                sortUtil.checkHonors(gameContext);
+                sortUtil.checkHonors(tracker);
 
-                assertEquals(expectedHand, gameContext.getTiles());
-                assertTrue(gameContext.getMelds().size() == 2);
-                assertTrue(gameContext.getPairCount() == 1);
-                assertTrue(gameContext.getPonCount() == 1);
-                assertEquals(expectedMelds, gameContext.getMelds());
+                assertEquals(expectedHand, tracker.getTiles());
+                assertTrue(tracker.getMelds().size() == 2);
+                assertTrue(tracker.getPairCount() == 1);
+                assertEquals(expectedMelds, tracker.getMelds());
 
         }
 
         @Test
         public void testCheckHonors_HakuPonChunPairNorthKanTest() throws RiichiCalculatorException {
-                gameContext.getTiles().addAll(Arrays.asList(0, 1, 2, 3, 4, 5, 33, 33, 33, 33, 27, 27, 27, 29,
+                tracker.getTiles().addAll(Arrays.asList(0, 1, 2, 3, 4, 5, 33, 33, 33, 33, 27, 27, 27, 29,
                                 29));
 
                 List<Integer> expectedHand = new ArrayList<Integer>(
@@ -190,20 +191,19 @@ public class HandSortUtilTest {
                 expectedMelds.add(meld2);
                 expectedMelds.add(meld3);
 
-                sortUtil.checkHonors(gameContext);
+                sortUtil.checkHonors(tracker);
 
-                assertEquals(expectedHand, gameContext.getTiles());
-                assertTrue(gameContext.getMelds().size() == 3);
-                assertTrue(gameContext.getPairCount() == 1);
-                assertTrue(gameContext.getPonCount() == 1);
-                assertTrue(gameContext.getKanCount() == 1);
-                assertEquals(expectedMelds, gameContext.getMelds());
+                assertEquals(expectedHand, tracker.getTiles());
+                assertTrue(tracker.getMelds().size() == 3);
+                assertTrue(tracker.getPairCount() == 1);
+                assertTrue(tracker.getKanCount() == 1);
+                assertEquals(expectedMelds, tracker.getMelds());
 
         }
 
         @Test
         public void testCheckHonors_MultiplePonsTest() throws RiichiCalculatorException {
-                gameContext.getTiles().addAll(Arrays.asList(0, 1, 2, 3, 4, 33, 33, 33, 27, 27, 27, 29,
+                tracker.getTiles().addAll(Arrays.asList(0, 1, 2, 3, 4, 33, 33, 33, 27, 27, 27, 29,
                                 29, 29));
 
                 List<Integer> expectedHand = new ArrayList<Integer>(
@@ -219,18 +219,17 @@ public class HandSortUtilTest {
                 expectedMelds.add(meld2);
                 expectedMelds.add(meld3);
 
-                sortUtil.checkHonors(gameContext);
+                sortUtil.checkHonors(tracker);
 
-                assertEquals(expectedHand, gameContext.getTiles());
-                assertTrue(gameContext.getMelds().size() == 3);
-                assertTrue(gameContext.getPonCount() == 3);
-                assertEquals(expectedMelds, gameContext.getMelds());
+                assertEquals(expectedHand, tracker.getTiles());
+                assertTrue(tracker.getMelds().size() == 3);
+                assertEquals(expectedMelds, tracker.getMelds());
 
         }
 
         @Test
         public void testCheckHonors_MultipleKansTest() throws RiichiCalculatorException {
-                gameContext.getTiles().addAll(Arrays.asList(0, 1, 2, 3, 4, 33, 33, 33, 33, 27, 27, 27, 27, 29,
+                tracker.getTiles().addAll(Arrays.asList(0, 1, 2, 3, 4, 33, 33, 33, 33, 27, 27, 27, 27, 29,
                                 29, 29, 29));
 
                 List<Integer> expectedHand = new ArrayList<Integer>(
@@ -246,18 +245,18 @@ public class HandSortUtilTest {
                 expectedMelds.add(meld2);
                 expectedMelds.add(meld3);
 
-                sortUtil.checkHonors(gameContext);
+                sortUtil.checkHonors(tracker);
 
-                assertEquals(expectedHand, gameContext.getTiles());
-                assertTrue(gameContext.getMelds().size() == 3);
-                assertTrue(gameContext.getKanCount() == 3);
-                assertEquals(expectedMelds, gameContext.getMelds());
+                assertEquals(expectedHand, tracker.getTiles());
+                assertTrue(tracker.getMelds().size() == 3);
+                assertTrue(tracker.getKanCount() == 3);
+                assertEquals(expectedMelds, tracker.getMelds());
 
         }
 
         @Test
         public void testCheckHonors_FullySortHandTest() throws RiichiCalculatorException {
-                gameContext.getTiles().addAll(Arrays.asList(30, 30, 30, 28, 28, 33, 33, 33, 33, 27, 27, 27, 29,
+                tracker.getTiles().addAll(Arrays.asList(30, 30, 30, 28, 28, 33, 33, 33, 33, 27, 27, 27, 29,
                                 29, 29));
 
                 List<Integer> expectedHand = new ArrayList<Integer>(
@@ -277,62 +276,49 @@ public class HandSortUtilTest {
                 expectedMelds.add(meld4);
                 expectedMelds.add(meld5);
 
-                sortUtil.checkHonors(gameContext);
+                sortUtil.checkHonors(tracker);
 
-                assertEquals(expectedHand, gameContext.getTiles());
-                assertTrue(gameContext.getMelds().size() == 5);
-                assertTrue(gameContext.getKanCount() == 1);
-                assertTrue(gameContext.getPonCount() == 3);
-                assertTrue(gameContext.getPairCount() == 1);
-                assertEquals(expectedMelds, gameContext.getMelds());
+                assertEquals(expectedHand, tracker.getTiles());
+                assertTrue(tracker.getMelds().size() == 5);
+                assertTrue(tracker.getKanCount() == 1);
+                assertTrue(tracker.getPairCount() == 1);
+                assertEquals(expectedMelds, tracker.getMelds());
 
         }
 
         @Test
         public void testCheckHonors_NoHonorsTest() throws RiichiCalculatorException {
-                gameContext.getTiles().addAll(Arrays.asList(0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13));
+                tracker.getTiles().addAll(Arrays.asList(0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13));
 
                 List<Integer> expectedHand = new ArrayList<Integer>(
                                 Arrays.asList(0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13));
 
                 List<List<Integer>> expectedMelds = new ArrayList<List<Integer>>();
 
-                sortUtil.checkHonors(gameContext);
+                sortUtil.checkHonors(tracker);
 
-                assertEquals(expectedHand, gameContext.getTiles());
-                assertTrue(gameContext.getMelds().size() == 0);
-                assertTrue(gameContext.getKanCount() == 0);
-                assertTrue(gameContext.getPonCount() == 0);
-                assertTrue(gameContext.getPairCount() == 0);
-                assertEquals(expectedMelds, gameContext.getMelds());
-
-        }
-
-        @Test()
-        public void testCheckHonors_OneHonorTest() throws RiichiCalculatorException {
-                gameContext.getTiles().addAll(Arrays.asList(0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 33));
-
-                RiichiCalculatorException exception = assertThrows(RiichiCalculatorException.class,
-                                () -> sortUtil.checkHonors(gameContext));
-
-                assertTrue(exception.getMessage().equals("Invalid hand"));
+                assertEquals(expectedHand, tracker.getTiles());
+                assertTrue(tracker.getMelds().size() == 0);
+                assertTrue(tracker.getKanCount() == 0);
+                assertTrue(tracker.getPairCount() == 0);
+                assertEquals(expectedMelds, tracker.getMelds());
 
         }
 
         @Test
-        public void testReduceHand_Fully_Sortable() {
+        public void testDetermineConfirmedMelds_Fully_Sortable() {
                 List<Integer> tiles = new ArrayList<Integer>(
                                 Arrays.asList(3, 3, 3, 12, 13, 14, 24, 25, 26, 22, 22, 30, 30, 30));
-                gameContext.getTiles().addAll(tiles);
+                tracker.getTiles().addAll(tiles);
                 PossibleMelds possibleMelds = new PossibleMelds();
 
                 try {
-                        sortUtil.reduceHand(gameContext, response, possibleMelds);
+                        sortUtil.determineConfirmedMelds(tracker, response, possibleMelds);
                 } catch (Exception e) {
 
                 }
 
-                assertTrue(gameContext.getTiles().stream().filter(x -> x != -1).count() == 0);
+                assertTrue(tracker.getTiles().stream().filter(x -> x != -1).count() == 0);
                 assertTrue(response.getPossibleHands().size() == 1);
 
         }

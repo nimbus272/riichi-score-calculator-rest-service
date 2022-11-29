@@ -7,29 +7,32 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import com.gutterboys.riichi.calculator.model.GameContext;
+import com.gutterboys.riichi.calculator.model.RiichiCalculatorRequest;
+import com.gutterboys.riichi.calculator.model.CalculatorTracker;
 import com.gutterboys.riichi.calculator.model.PossibleHand;
 import com.gutterboys.riichi.calculator.yaku.universal.DoubleRiichi;
 
 public class DoubleRiichiTest {
 
-    GameContext gameContext;
+    RiichiCalculatorRequest request;
 
     PossibleHand possibleHand;
+    CalculatorTracker tracker;
 
     DoubleRiichi yaku = new DoubleRiichi();
 
     @BeforeEach
     public void setUp() {
-        gameContext = new GameContext();
+        request = new RiichiCalculatorRequest();
         possibleHand = new PossibleHand();
+        tracker = new CalculatorTracker();
     }
 
     @Test
     public void execute_IsDoubleRiichiTest() {
-        gameContext.setDoubleRiichi(true);
+        request.setDoubleRiichi(true);
 
-        yaku.execute(gameContext, possibleHand);
+        yaku.execute(request, tracker, possibleHand);
 
         assertEquals(2, possibleHand.getHan());
         assertTrue(possibleHand.getQualifiedYaku().contains("Double Riichi"));
@@ -37,10 +40,10 @@ public class DoubleRiichiTest {
 
     @Test
     public void execute_IsNotDoubleRiichiTest1() {
-        gameContext.setDoubleRiichi(true);
-        gameContext.setOpened(true);
+        request.setDoubleRiichi(true);
+        request.setOpened(true);
 
-        yaku.execute(gameContext, possibleHand);
+        yaku.execute(request, tracker, possibleHand);
 
         assertEquals(0, possibleHand.getHan());
         assertFalse(possibleHand.getQualifiedYaku().contains("Double Riichi"));
@@ -49,7 +52,7 @@ public class DoubleRiichiTest {
     @Test
     public void execute_IsNotDoubleRiichiTest2() {
 
-        yaku.execute(gameContext, possibleHand);
+        yaku.execute(request, tracker, possibleHand);
 
         assertEquals(0, possibleHand.getHan());
         assertFalse(possibleHand.getQualifiedYaku().contains("Double Riichi"));

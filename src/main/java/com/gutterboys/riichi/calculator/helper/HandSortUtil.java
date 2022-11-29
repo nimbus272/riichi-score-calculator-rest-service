@@ -11,10 +11,11 @@ import org.springframework.stereotype.Component;
 import com.gutterboys.riichi.calculator.constants.RiichiCalculatorConstants;
 import com.gutterboys.riichi.calculator.exception.InvalidHandException;
 import com.gutterboys.riichi.calculator.exception.RiichiCalculatorException;
-import com.gutterboys.riichi.calculator.model.GameContext;
+import com.gutterboys.riichi.calculator.model.RiichiCalculatorRequest;
+import com.gutterboys.riichi.calculator.model.CalculatorTracker;
 import com.gutterboys.riichi.calculator.model.PossibleHand;
 import com.gutterboys.riichi.calculator.model.PossibleMelds;
-import com.gutterboys.riichi.calculator.model.ScoreResponse;
+import com.gutterboys.riichi.calculator.model.RiichiCalculatorResponse;
 
 import ch.qos.logback.classic.Logger;
 
@@ -23,25 +24,25 @@ public class HandSortUtil {
 
     private static final Logger LOGGER = (Logger) LoggerFactory.getLogger(HandSortUtil.class);
 
-    public void swapFives(GameContext gameContext) {
+    public void swapFives(List<Integer> redFives, CalculatorTracker tracker) {
         LOGGER.info("Swapping fives...");
-        for (int i = 0; i < gameContext.getTiles().size(); i++) {
-            Integer tile = gameContext.getTiles().get(i);
+        for (int i = 0; i < redFives.size(); i++) {
+            Integer tile = redFives.get(i);
             switch (tile) {
                 case 34:
-                    gameContext.getTiles().remove(gameContext.getTiles().indexOf(tile));
-                    gameContext.getTiles().add(0, 4);
-                    gameContext.setDoraCount(gameContext.getDoraCount() + 1);
+                    tracker.getTiles().remove(tracker.getTiles().indexOf(tile));
+                    tracker.getTiles().add(0, 4);
+                    tracker.setDoraCount(tracker.getDoraCount() + 1);
                     continue;
                 case 35:
-                    gameContext.getTiles().remove(gameContext.getTiles().indexOf(tile));
-                    gameContext.getTiles().add(0, 13);
-                    gameContext.setDoraCount(gameContext.getDoraCount() + 1);
+                    tracker.getTiles().remove(tracker.getTiles().indexOf(tile));
+                    tracker.getTiles().add(0, 13);
+                    tracker.setDoraCount(tracker.getDoraCount() + 1);
                     continue;
                 case 36:
-                    gameContext.getTiles().remove(gameContext.getTiles().indexOf(tile));
-                    gameContext.getTiles().add(0, 22);
-                    gameContext.setDoraCount(gameContext.getDoraCount() + 1);
+                    tracker.getTiles().remove(tracker.getTiles().indexOf(tile));
+                    tracker.getTiles().add(0, 22);
+                    tracker.setDoraCount(tracker.getDoraCount() + 1);
                     continue;
                 default:
                     continue;
@@ -49,7 +50,7 @@ public class HandSortUtil {
         }
     }
 
-    public void checkChi(List<Integer> hand, int tile, List<List<Integer>> possibleChis, int numberOfDuplicateTiles) {
+    public void checkChi(List<Integer> hand, int tile, List<List<Integer>> possibleChis, int numberOfDuplicates) {
         if (tile > 26) {
             return;
         }
@@ -97,66 +98,61 @@ public class HandSortUtil {
         }
     }
 
-    public void checkHonors(GameContext gameContext) throws RiichiCalculatorException {
+    public void checkHonors(CalculatorTracker tracker)
+            throws RiichiCalculatorException {
         LOGGER.info("Checking honors...");
-        for (int i = 0; i < gameContext.getTiles().size(); i++) {
-            int tile = gameContext.getTiles().get(i);
+        for (int i = 0; i < tracker.getTiles().size(); i++) {
+            int tile = tracker.getTiles().get(i);
             if (RiichiCalculatorConstants.HONORS.contains(tile)) {
-                switch ((int) gameContext.getTiles().stream().filter(x -> x == tile).count()) {
-                    case 1:
-                        LOGGER.error("Invalid hand detected in checkHonors(): {}", gameContext.getTiles());
-                        throw new RiichiCalculatorException("Invalid hand");
+                switch ((int) tracker.getTiles().stream().filter(x -> x == tile).count()) {
                     case 2:
-                        gameContext.getMelds().add(gameContext.getCurrentMeld(),
-                                new ArrayList<Integer>(Arrays.asList(tile, tile)));
-                        CommonUtil.removeAndAddPonFromList(gameContext.getTiles(), tile, 2);
-                        gameContext.setPairCount(gameContext.getPairCount() + 1);
+                        tracker.getMelds().add(new ArrayList<Integer>(Arrays.asList(tile, tile)));
+                        CommonUtil.removeAndAddPonFromList(tracker.getTiles(), tile, 2);
+                        tracker.setPairCount(tracker.getPairCount() + 1);
                         break;
                     case 3:
-                        gameContext.getMelds().add(gameContext.getCurrentMeld(),
-                                new ArrayList<Integer>(Arrays.asList(tile, tile, tile)));
-                        CommonUtil.removeAndAddPonFromList(gameContext.getTiles(), tile, 3);
-                        gameContext.setPonCount(gameContext.getPonCount() + 1);
+                        tracker.getMelds().add(new ArrayList<Integer>(Arrays.asList(tile, tile, tile)));
+                        CommonUtil.removeAndAddPonFromList(tracker.getTiles(), tile, 3);
                         break;
                     case 4:
-                        gameContext.getMelds().add(gameContext.getCurrentMeld(),
-                                new ArrayList<Integer>(Arrays.asList(tile, tile, tile, tile)));
-                        CommonUtil.removeAndAddPonFromList(gameContext.getTiles(), tile, 4);
-                        gameContext.setKanCount(gameContext.getKanCount() + 1);
+                        tracker.getMelds().add(new ArrayList<Integer>(Arrays.asList(tile, tile, tile, tile)));
+                        CommonUtil.removeAndAddPonFromList(tracker.getTiles(), tile, 4);
+                        tracker.setKanCount(tracker.getKanCount() + 1);
                         break;
                     default:
                         break;
                 }
-                gameContext.setCurrentMeld(gameContext.getCurrentMeld() + 1);
             }
         }
     }
 
-    public void reduceHand(GameContext gameContext, ScoreResponse response, PossibleMelds possibleMelds)
+    public void determineConfirmedMelds(CalculatorTracker tracker,
+            RiichiCalculatorResponse response,
+            PossibleMelds possibleMelds)
             throws InvalidHandException {
-        int unsortedCount = (int) gameContext.getTiles().stream().filter(x -> x != -1).count();
+        int unsortedCount = (int) tracker.getTiles().stream().filter(x -> x != -1).count();
 
-        for (int i = 0; i < gameContext.getTiles().size(); i++) {
-            int tile = gameContext.getTiles().get(i);
+        for (int i = 0; i < tracker.getTiles().size(); i++) {
+            int tile = tracker.getTiles().get(i);
+            int numberOfDuplicates = (int) tracker.getTiles().stream().filter(x -> x == tile).count();
             List<List<Integer>> possibleChis = new ArrayList<List<Integer>>();
 
             if (tile == -1) {
                 continue;
             }
 
-            tryGetMeld(gameContext, possibleChis, possibleMelds, tile,
-                    (int) gameContext.getTiles().stream().filter(x -> x == tile).count());
+            tryGetMeld(tracker, possibleChis, possibleMelds, tile, numberOfDuplicates);
 
         }
-        if (unsortedCount > (int) gameContext.getTiles().stream().filter(x -> x != -1).count()) {
-            reduceHand(gameContext, response, possibleMelds);
+        if (unsortedCount > (int) tracker.getTiles().stream().filter(x -> x != -1).count()) {
+            determineConfirmedMelds(tracker, response, possibleMelds);
             return;
         }
 
-        if (gameContext.getTiles().stream().filter(x -> x != -1).count() == 0 && gameContext.getMelds().size() == 5) {
+        if (tracker.getTiles().stream().filter(x -> x != -1).count() == 0 && tracker.getMelds().size() == 5) {
             PossibleHand possibleHand = new PossibleHand();
             possibleHand.getTiles().addAll(response.getTiles());
-            possibleHand.getMelds().addAll(gameContext.getMelds());
+            possibleHand.getMelds().addAll(tracker.getMelds());
             possibleHand.getMelds().sort((a, b) -> a.get(0) - b.get(0));
             response.getPossibleHands().add(possibleHand);
             return;
@@ -164,56 +160,45 @@ public class HandSortUtil {
         return;
     }
 
-    public void reducePossibleMelds(PossibleMelds possibleMelds, GameContext gameContext, ScoreResponse response)
+    public void guessAndCheckPossibleMelds(PossibleMelds possibleMelds, CalculatorTracker tracker,
+            RiichiCalculatorResponse response)
             throws InvalidHandException {
         LOGGER.info("Reducing possible melds...");
-        List<Integer> reducedHand = new ArrayList<>(gameContext.getTiles());
-        List<List<Integer>> lockedMelds = new ArrayList<List<Integer>>(gameContext.getMelds());
-        if (possibleMelds.getPairs().size() > 0 && gameContext.getPairCount() == 0) {
+        List<Integer> reducedHand = new ArrayList<>(tracker.getTiles());
+        List<List<Integer>> lockedMelds = new ArrayList<List<Integer>>(tracker.getMelds());
+        if (possibleMelds.getPairs().size() > 0 && tracker.getPairCount() == 0) {
             for (int i = 0; i < possibleMelds.getPairs().size(); i++) {
-                GameContext tempContext = new GameContext();
+                CalculatorTracker tempTracker = new CalculatorTracker();
                 List<Integer> tempHand = new ArrayList<>(reducedHand);
                 List<Integer> pair = possibleMelds.getPairs().get(i);
                 tempHand.remove(pair.get(0));
                 tempHand.remove(pair.get(1));
-                if (tempContext.getTiles().size() > 0) {
-                    tempContext.getTiles().clear();
+                if (tempTracker.getTiles().size() > 0) {
+                    tempTracker.getTiles().clear();
                 }
-                tempContext.getTiles().addAll(tempHand);
-                // set temp pair count to one so we don't find a pair in reduceHand() and think
-                // that is this hand's pair, which would result in 2 pairs in the final
-                // evaluation
-                // ref [18, 18, 19, 19, 19, 19, 20, 20, 2, 3, 4, 13, 14, 15]
-                tempContext.setPairCount(1);
+                tempTracker.getTiles().addAll(tempHand);
+                tempTracker.setPairCount(1);
                 try {
-                    reduceAndAddHand(gameContext, tempContext, response, lockedMelds, pair);
+                    determineConfirmedMeldsFromTempTracker(tracker, tempTracker, response, lockedMelds, reducedHand);
                 } catch (InvalidHandException e) {
-                    // this did not work, try another pair
                     continue;
                 }
             }
-
-            // Probably wrong but we'll get there when we get there
 
         }
 
         if (possibleMelds.getPons().size() > 0) {
             for (int i = 0; i < possibleMelds.getPons().size(); i++) {
-                GameContext tempContext = new GameContext();
+                CalculatorTracker tempTracker = new CalculatorTracker();
                 List<Integer> tempHand = new ArrayList<Integer>(reducedHand);
                 List<Integer> pon = possibleMelds.getPons().get(i);
                 tempHand.remove(pon.get(0));
                 tempHand.remove(pon.get(1));
                 tempHand.remove(pon.get(2));
-                tempContext.getTiles().addAll(tempHand);
-                // set temp pair count to one so we don't find a pair in reduceHand() and think
-                // that is this hand's pair, which would result in 2 pairs in the final
-                // evaluation
-                // ref [18, 18, 19, 19, 19, 19, 20, 20, 2, 3, 4, 13, 14, 15]
+                tempTracker.getTiles().addAll(tempHand);
                 try {
-                    reduceAndAddHand(gameContext, tempContext, response, lockedMelds, pon);
+                    determineConfirmedMeldsFromTempTracker(tracker, tempTracker, response, lockedMelds, pon);
                 } catch (InvalidHandException e) {
-                    // this did not work, try another pair
                     continue;
                 }
 
@@ -221,57 +206,50 @@ public class HandSortUtil {
         }
         if (possibleMelds.getChis().size() > 0) {
             for (int i = 0; i < possibleMelds.getChis().size(); i++) {
-                GameContext tempContext = new GameContext();
+                CalculatorTracker tempTracker = new CalculatorTracker();
                 List<Integer> tempHand = new ArrayList<Integer>(reducedHand);
                 List<Integer> chi = possibleMelds.getChis().get(i);
                 tempHand.remove(chi.get(0));
                 tempHand.remove(chi.get(1));
                 tempHand.remove(chi.get(2));
-                tempContext.getTiles().addAll(tempHand);
-                // set temp pair count to one so we don't find a pair in reduceHand() and think
-                // that is this hand's pair, which would result in 2 pairs in the final
-                // evaluation
-                // ref [18, 18, 19, 19, 19, 19, 20, 20, 2, 3, 4, 13, 14, 15]
+                tempTracker.getTiles().addAll(tempHand);
                 try {
-                    reduceAndAddHand(gameContext, tempContext, response, lockedMelds, chi);
+                    determineConfirmedMeldsFromTempTracker(tracker, tempTracker, response, lockedMelds, chi);
                 } catch (InvalidHandException e) {
-                    // this did not work, try another pair
                     continue;
                 }
             }
         }
 
-        // probably wrong but we'll get there when we get there
         if (response.getPossibleHands().size() == 0) {
             LOGGER.error("Invalid hand detected in reducePossibleMelds(): {}",
-                    gameContext.getTiles());
+                    tracker.getTiles());
             throw new InvalidHandException("Invalid hand");
         } else {
             CommonUtil.checkAndRemoveDuplicatePossibleHands(response.getPossibleHands());
-            gameContext.getTiles()
-                    .removeAll(gameContext.getTiles().stream().filter(x -> x != -1).collect(Collectors.toList()));
+            tracker.getTiles()
+                    .removeAll(tracker.getTiles().stream().filter(x -> x != -1).collect(Collectors.toList()));
             return;
         }
 
     }
 
-    private void reduceAndAddHand(GameContext gameContext, GameContext tempContext, ScoreResponse response,
+    private void determineConfirmedMeldsFromTempTracker(CalculatorTracker mainTracker, CalculatorTracker tempTracker,
+            RiichiCalculatorResponse response,
             List<List<Integer>> lockedMelds, List<Integer> meld) throws InvalidHandException {
         PossibleMelds tempPossibleMelds = new PossibleMelds();
         try {
-            reduceHand(tempContext, response, tempPossibleMelds);
+            determineConfirmedMelds(tempTracker, response, tempPossibleMelds);
         } catch (InvalidHandException e) {
-            // this did not work, try another pair
             throw new InvalidHandException("Invalid hand detected.");
-
         }
 
-        if (tempContext.getTiles().stream().filter(x -> x != -1).count() == 0) {
+        if (tempTracker.getTiles().stream().filter(x -> x != -1).count() == 0) {
 
-            CommonUtil.checkMeldTypesAndRemoveDupes(tempPossibleMelds, tempContext.getTiles());
+            CommonUtil.checkMeldTypesAndRemoveDupes(tempPossibleMelds, tempTracker.getTiles());
             LOGGER.info("Hand determined!");
-            CommonUtil.addTempMeldsToGameContext(tempContext, gameContext);
-            gameContext.getMelds().add(meld);
+            CommonUtil.addTempMeldsToTracker(tempTracker, mainTracker);
+            mainTracker.getMelds().add(meld);
 
             for (int j = 0; j < response.getPossibleHands().size(); j++) {
                 if (response.getPossibleHands().get(j).getMelds().size() < 5) {
@@ -279,84 +257,59 @@ public class HandSortUtil {
                 }
             }
             PossibleHand possibleHand = new PossibleHand();
-            possibleHand.getMelds().addAll(gameContext.getMelds());
+            possibleHand.getMelds().addAll(mainTracker.getMelds());
             possibleHand.getTiles().addAll(response.getTiles());
             possibleHand.getMelds().sort((a, b) -> a.get(0) - b.get(0));
             response.getPossibleHands().add(possibleHand);
-            gameContext.getMelds().clear();
-            gameContext.getMelds().addAll(lockedMelds);
+            mainTracker.getMelds().clear();
+            mainTracker.getMelds().addAll(lockedMelds);
 
         }
     }
 
-    private void tryGetMeld(GameContext gameContext, List<List<Integer>> possibleChis, PossibleMelds possibleMelds,
-            int tile, int numberOfDuplicateTiles) throws InvalidHandException {
+    private void tryGetMeld(CalculatorTracker tracker,
+            List<List<Integer>> possibleChis,
+            PossibleMelds possibleMelds,
+            int tile, int numberOfDuplicates) throws InvalidHandException {
 
-        checkChi(gameContext.getTiles(), tile, possibleChis, numberOfDuplicateTiles);
+        checkChi(tracker.getTiles(), tile, possibleChis, numberOfDuplicates);
 
         if (possibleChis.size() == 0) {
-            switch (numberOfDuplicateTiles) {
+            switch (numberOfDuplicates) {
                 case 1:
-                    LOGGER.error("Invalid hand detected in reduceHand(): {}", gameContext.getTiles());
+                    LOGGER.error("Invalid hand detected in reduceHand(): {}", tracker.getTiles());
                     throw new InvalidHandException("Invalid hand -- tile " + tile + " does not fit into meld");
                 case 2:
-                    if (gameContext.getPairCount() == 0) {
-                        // HEY WILL it turns out if we already have a pair and we find 2 of a tile
-                        // we cant error out, it could still be valid
-
-                        // ref [10, 10, 11, 11, 13, 13, 14, 14, 30, 30, 10, 22, 23, 24]
-                        gameContext.getMelds().add(new ArrayList<Integer>(Arrays.asList(tile, tile)));
-
-                        CommonUtil.removeAndAddPonFromList(gameContext.getTiles(), tile, 2);
-                        gameContext.setPairCount(gameContext.getPairCount() + 1);
-                        // } else {
-                        // throw new InvalidHandException("Invalid hand -- tile " + tile + " does not
-                        // fit into meld");
+                    if (tracker.getPairCount() == 0) {
+                        tracker.getMelds().add(new ArrayList<Integer>(Arrays.asList(tile, tile)));
+                        CommonUtil.removeAndAddPonFromList(tracker.getTiles(), tile, 2);
+                        tracker.setPairCount(tracker.getPairCount() + 1);
                     }
-
                     break;
                 case 3:
-                    // if we have three of a given tile, and that tile does not fit into a chi, it
-                    // must be a pon
-
-                    gameContext.getMelds().add(Arrays.asList(tile, tile, tile));
-                    CommonUtil.removeAndAddPonFromList(gameContext.getTiles(), tile, 3);
-                    gameContext.setPonCount(gameContext.getPonCount() + 1);
-                    gameContext.setCurrentMeld(gameContext.getCurrentMeld() + 1);
-
+                    tracker.getMelds().add(Arrays.asList(tile, tile, tile));
+                    CommonUtil.removeAndAddPonFromList(tracker.getTiles(), tile, 3);
                     break;
                 case 4:
-                    gameContext.getMelds().add(new ArrayList<Integer>(Arrays.asList(tile, tile, tile, tile)));
-                    CommonUtil.removeAndAddPonFromList(gameContext.getTiles(), tile, 4);
-                    gameContext.setKanCount(gameContext.getKanCount() + 1);
-                    gameContext.setCurrentMeld(gameContext.getCurrentMeld() + 1);
+                    tracker.getMelds().add(new ArrayList<Integer>(Arrays.asList(tile, tile, tile, tile)));
+                    CommonUtil.removeAndAddPonFromList(tracker.getTiles(), tile, 4);
+                    tracker.setKanCount(tracker.getKanCount() + 1);
                     break;
                 default:
                     break;
-
             }
         } else if (possibleChis.size() == 1) {
-            switch (numberOfDuplicateTiles) {
+            switch (numberOfDuplicates) {
                 case 1:
-                    // if the tile only fits into one meld, that meld must be part of the hand
-                    // add those tiles to the current meld, then remove the tiles from the hand and
-                    // increment currentMeld
-                    CommonUtil.removeAndAddChiFromList(gameContext.getTiles(), possibleChis.get(0).get(0));
-                    gameContext.getMelds().add(possibleChis.get(0));
-                    gameContext.setChiCount(gameContext.getChiCount() + 1);
-                    gameContext.setCurrentMeld(gameContext.getCurrentMeld() + 1);
+                    CommonUtil.removeAndAddChiFromList(tracker.getTiles(), possibleChis.get(0).get(0));
+                    tracker.getMelds().add(possibleChis.get(0));
                     break;
                 case 2:
-                    if (gameContext.getPairCount() == 1) {
-                        // if we already know the pair, and there's only one possible chi, then that chi
-                        // must be one of the melds
-                        CommonUtil.removeAndAddChiFromList(gameContext.getTiles(), possibleChis.get(0).get(0));
-                        gameContext.getMelds().add(possibleChis.get(0));
-                        gameContext.setChiCount(gameContext.getChiCount() + 1);
-                        gameContext.setCurrentMeld(gameContext.getCurrentMeld() + 1);
+                    if (tracker.getPairCount() == 1) {
+                        CommonUtil.removeAndAddChiFromList(tracker.getTiles(), possibleChis.get(0).get(0));
+                        tracker.getMelds().add(possibleChis.get(0));
                         break;
                     } else {
-                        // if we don't know the pair, add both melds to possibleMelds and continue
                         for (int j = 0; j < possibleChis.size(); j++) {
                             possibleMelds.getChis().add(possibleChis.get(j));
                         }
@@ -367,55 +320,46 @@ public class HandSortUtil {
                     break;
             }
         } else if (possibleChis.size() == 2) {
-            if (possibleChis.get(0).containsAll(possibleChis.get(1)) && gameContext.getPairCount() == 1) {
-                // if there are only 2 possible chis and they are the same, and we've found a
-                // pair, we assume they are
-                // an identical sequence
-                if (gameContext.getTiles().stream().filter(x -> x == possibleChis.get(0).get(0)).count() == 2L
-                        && gameContext.getTiles().stream().filter(x -> x == possibleChis.get(0).get(1)).count() == 2L
-                        && gameContext.getTiles().stream().filter(x -> x == possibleChis.get(0).get(2)).count() == 2L) {
-                    CommonUtil.removeAndAddChiFromList(gameContext.getTiles(), possibleChis.get(0).get(0));
-                    CommonUtil.removeAndAddChiFromList(gameContext.getTiles(), possibleChis.get(1).get(0));
-                    gameContext.getMelds().add(possibleChis.get(0));
-                    gameContext.getMelds().add(possibleChis.get(1));
-                } else {
-                    handleTooManyPossibilities(possibleChis, possibleMelds, numberOfDuplicateTiles, tile);
-                }
+            if (possibleChis.get(0).containsAll(possibleChis.get(1)) && tracker.getPairCount() == 1) {
+                checkMultipleDuplicateSequences(tracker, possibleChis, 2);
 
             } else {
-                handleTooManyPossibilities(possibleChis, possibleMelds, numberOfDuplicateTiles, tile);
+                handleTooManyPossibilities(possibleChis, possibleMelds, numberOfDuplicates, tile);
             }
-
-        } else if (possibleChis.size() == 3 && gameContext.getTiles().size() < 14) {
+        } else if (possibleChis.size() == 3 && tracker.getTiles().size() < 14) {
             if (possibleChis.get(0).containsAll(possibleChis.get(1))
                     && possibleChis.get(1).containsAll(possibleChis.get(2))) {
-                if (gameContext.getTiles().stream().filter(x -> x == possibleChis.get(0).get(0)).count() == 3L
-                        && gameContext.getTiles().stream().filter(x -> x == possibleChis.get(0).get(1)).count() == 3L
-                        && gameContext.getTiles().stream().filter(x -> x == possibleChis.get(0).get(2)).count() == 3L) {
-                    CommonUtil.removeAndAddChiFromList(gameContext.getTiles(), possibleChis.get(0).get(0));
-                    CommonUtil.removeAndAddChiFromList(gameContext.getTiles(), possibleChis.get(1).get(0));
-                    CommonUtil.removeAndAddChiFromList(gameContext.getTiles(), possibleChis.get(2).get(0));
-                    gameContext.getMelds().add(possibleChis.get(0));
-                    gameContext.getMelds().add(possibleChis.get(1));
-                    gameContext.getMelds().add(possibleChis.get(2));
-                }
-
+                checkMultipleDuplicateSequences(tracker, possibleChis, 3);
             }
         } else {
 
-            handleTooManyPossibilities(possibleChis, possibleMelds, numberOfDuplicateTiles, tile);
+            handleTooManyPossibilities(possibleChis, possibleMelds, numberOfDuplicates, tile);
 
         }
     }
 
+    private void checkMultipleDuplicateSequences(CalculatorTracker tracker, List<List<Integer>> possibleChis,
+            int numberOfChis) {
+        if (tracker.getTiles().stream().filter(x -> x == possibleChis.get(0).get(0)).count() == (long) numberOfChis
+                && tracker.getTiles().stream().filter(x -> x == possibleChis.get(0).get(1))
+                        .count() == (long) numberOfChis
+                && tracker.getTiles().stream().filter(x -> x == possibleChis.get(0).get(2))
+                        .count() == (long) numberOfChis) {
+            for (int i = 0; i < numberOfChis; i++) {
+                CommonUtil.removeAndAddChiFromList(tracker.getTiles(), possibleChis.get(0).get(0));
+                tracker.getMelds().add(possibleChis.get(i));
+            }
+        }
+    }
+
     private void handleTooManyPossibilities(List<List<Integer>> possibleChis, PossibleMelds possibleMelds,
-            int numberOfDuplicateTiles, int tile) {
+            int numberOfDuplicates, int tile) {
         if (possibleChis.size() > 0) {
             for (int i = 0; i < possibleChis.size(); i++) {
                 possibleMelds.getChis().add(possibleChis.get(i));
             }
         }
-        switch (numberOfDuplicateTiles) {
+        switch (numberOfDuplicates) {
             case 2:
                 possibleMelds.getPairs().add(Arrays.asList(tile, tile));
                 break;
@@ -430,6 +374,15 @@ public class HandSortUtil {
                 break;
             default:
                 break;
+        }
+    }
+
+    public void addOpenMeldsToTiles(RiichiCalculatorRequest request, CalculatorTracker tracker) {
+        LOGGER.info("Adding open melds to list of tiles...");
+        if (request.getOpenMelds().size() > 0) {
+            for (int i = 0; i < request.getOpenMelds().size(); i++) {
+                tracker.getTiles().addAll(request.getOpenMelds().get(i));
+            }
         }
     }
 

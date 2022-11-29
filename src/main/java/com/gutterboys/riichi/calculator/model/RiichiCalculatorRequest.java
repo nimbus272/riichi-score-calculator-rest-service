@@ -9,7 +9,7 @@ import javax.validation.constraints.NotNull;
 import com.gutterboys.riichi.calculator.validation.HandContentConstraint;
 import com.gutterboys.riichi.calculator.validation.HandSizeConstraint;
 
-public class GameContext {
+public class RiichiCalculatorRequest {
 
     @NotNull(message = "Hand cannot be empty.")
     @NotEmpty(message = "Hand cannot be empty.")
@@ -17,9 +17,7 @@ public class GameContext {
     @HandContentConstraint
     private List<Integer> tiles = new ArrayList<Integer>();
     private List<List<Integer>> openMelds = new ArrayList<List<Integer>>();
-    private List<List<Integer>> melds = new ArrayList<List<Integer>>();
     private List<Integer> doraTiles = new ArrayList<Integer>();
-    private int currentMeld = 0;
     private int winningTile;
     private int seatWind;
     private int prevalentWind;
@@ -33,66 +31,9 @@ public class GameContext {
     private boolean tsumo;
     private boolean opened;
     private int honba;
-    private int ponCount;
-    private int chiCount;
-    private int kanCount;
-    private int pairCount;
-    private int doraCount = 0;
-
-    public int getCurrentMeld() {
-        return currentMeld;
-    }
-
-    public void setCurrentMeld(int currentMeld) {
-        this.currentMeld = currentMeld;
-    }
-
-    public int getPairCount() {
-        return pairCount;
-    }
-
-    public void setPairCount(int pairCount) {
-        this.pairCount = pairCount;
-    }
-
-    public int getPonCount() {
-        return ponCount;
-    }
-
-    public void setPonCount(int ponCount) {
-        this.ponCount = ponCount;
-    }
-
-    public int getChiCount() {
-        return chiCount;
-    }
-
-    public void setChiCount(int chiCount) {
-        this.chiCount = chiCount;
-    }
-
-    public int getKanCount() {
-        return kanCount;
-    }
-
-    public void setKanCount(int kanCount) {
-        this.kanCount = kanCount;
-    }
-
-    public int getDoraCount() {
-        return doraCount;
-    }
-
-    public void setDoraCount(int doraCount) {
-        this.doraCount = doraCount;
-    }
 
     public List<Integer> getDoraTiles() {
         return doraTiles;
-    }
-
-    public List<List<Integer>> getMelds() {
-        return melds;
     }
 
     public boolean isDoubleRiichi() {

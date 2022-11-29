@@ -8,9 +8,10 @@ import org.springframework.stereotype.Component;
 
 import com.gutterboys.riichi.calculator.constants.RiichiCalculatorConstants;
 import com.gutterboys.riichi.calculator.constants.SpecialScoringType;
-import com.gutterboys.riichi.calculator.model.GameContext;
+import com.gutterboys.riichi.calculator.model.RiichiCalculatorRequest;
+import com.gutterboys.riichi.calculator.model.CalculatorTracker;
 import com.gutterboys.riichi.calculator.model.PossibleHand;
-import com.gutterboys.riichi.calculator.model.ScoreResponse;
+import com.gutterboys.riichi.calculator.model.RiichiCalculatorResponse;
 import com.gutterboys.riichi.calculator.yaku.YakuEligibilityEngine;
 
 import ch.qos.logback.classic.Logger;
@@ -23,21 +24,21 @@ public class ScoreUtil {
     @Autowired
     YakuEligibilityEngine engine;
 
-    public void countDora(GameContext gameContext) {
+    public void countDora(RiichiCalculatorRequest request, CalculatorTracker tracker) {
         LOGGER.info("Counting dora...");
-        for (Integer tile : gameContext.getDoraTiles()) {
-            switch ((int) gameContext.getTiles().stream().filter(x -> x.equals(tile)).count()) {
+        for (Integer tile : request.getDoraTiles()) {
+            switch ((int) tracker.getTiles().stream().filter(x -> x.equals(tile)).count()) {
                 case 1:
-                    gameContext.setDoraCount(gameContext.getDoraCount() + 1);
+                    tracker.setDoraCount(tracker.getDoraCount() + 1);
                     continue;
                 case 2:
-                    gameContext.setDoraCount(gameContext.getDoraCount() + 2);
+                    tracker.setDoraCount(tracker.getDoraCount() + 2);
                     continue;
                 case 3:
-                    gameContext.setDoraCount(gameContext.getDoraCount() + 3);
+                    tracker.setDoraCount(tracker.getDoraCount() + 3);
                     continue;
                 case 4:
-                    gameContext.setDoraCount(gameContext.getDoraCount() + 4);
+                    tracker.setDoraCount(tracker.getDoraCount() + 4);
                     continue;
                 default:
                     continue;
@@ -45,16 +46,16 @@ public class ScoreUtil {
         }
     }
 
-    public void determineScore(ScoreResponse response, GameContext gameContext, PossibleHand possibleHand) {
+    public void determineScore(RiichiCalculatorResponse response, RiichiCalculatorRequest request,
+            CalculatorTracker tracker,
+            PossibleHand possibleHand) {
         LOGGER.info("Determining score...");
-        possibleHand.setHan(possibleHand.getHan() + gameContext.getDoraCount());
+        possibleHand.setHan(possibleHand.getHan() + tracker.getDoraCount());
         if (possibleHand.getHan() > 4) {
-            handleSpecialScoring(gameContext, possibleHand);
-            return;
+            handleSpecialScoring(request, possibleHand);
         } else {
             determineBaseScore(possibleHand);
-            applyScoreMultipliers(gameContext, possibleHand);
-            return;
+            applyScoreMultipliers(request, possibleHand);
         }
 
     }
@@ -71,7 +72,7 @@ public class ScoreUtil {
         LOGGER.debug("Base score has been set to: {}", possibleHand.getBaseScore());
     }
 
-    public void applyScoreMultipliers(GameContext context, PossibleHand possibleHand) {
+    public void applyScoreMultipliers(RiichiCalculatorRequest request, PossibleHand possibleHand) {
         LOGGER.info("Applying score multipliers...");
         LOGGER.debug("Setting actual scores... Base score: {}", possibleHand.getBaseScore());
 
@@ -84,7 +85,7 @@ public class ScoreUtil {
         int ronToNonDealer = possibleHand.getBaseScore() * 4;
         ronToNonDealer = (int) Math.ceil((double) ronToNonDealer / 100);
 
-        if (context.isTsumo()) {
+        if (request.isTsumo()) {
             possibleHand.setTsumoFromNonDealer((int) nonDealerPaymentTsumo * 100);
             possibleHand.setTsumoFromDealer((int) dealerPaymentTsumo * 100);
             LOGGER.debug("Tsumo to non dealer: {}, Tsumo to dealer: {}", possibleHand.getTsumoFromNonDealer(),
@@ -100,9 +101,9 @@ public class ScoreUtil {
 
     }
 
-    public void handleSpecialScoring(GameContext gameContext, PossibleHand possibleHand) {
+    public void handleSpecialScoring(RiichiCalculatorRequest request, PossibleHand possibleHand) {
         determineSpecialScoring(possibleHand);
-        setSpecialScoring(gameContext, possibleHand);
+        setSpecialScoring(request, possibleHand);
     }
 
     private void determineSpecialScoring(PossibleHand possibleHand) {
@@ -130,11 +131,11 @@ public class ScoreUtil {
         }
     }
 
-    private void setSpecialScoring(GameContext gameContext, PossibleHand possibleHand) {
+    private void setSpecialScoring(RiichiCalculatorRequest request, PossibleHand possibleHand) {
         LOGGER.info("Setting score based on special score type...");
         switch (possibleHand.getSpecialScoreType()) {
             case SpecialScoringType.MANGAN:
-                if (gameContext.isTsumo()) {
+                if (request.isTsumo()) {
                     possibleHand.setTsumoFromDealer(4000);
                     possibleHand.setTsumoFromNonDealer(2000);
                 } else {
@@ -143,7 +144,7 @@ public class ScoreUtil {
                 }
                 break;
             case SpecialScoringType.HANEMAN:
-                if (gameContext.isTsumo()) {
+                if (request.isTsumo()) {
                     possibleHand.setTsumoFromDealer(6000);
                     possibleHand.setTsumoFromNonDealer(3000);
                 } else {
@@ -152,7 +153,7 @@ public class ScoreUtil {
                 }
                 break;
             case SpecialScoringType.BAIMAN:
-                if (gameContext.isTsumo()) {
+                if (request.isTsumo()) {
                     possibleHand.setTsumoFromDealer(8000);
                     possibleHand.setTsumoFromNonDealer(4000);
                 } else {
@@ -161,7 +162,7 @@ public class ScoreUtil {
                 }
                 break;
             case SpecialScoringType.SANBAIMAN:
-                if (gameContext.isTsumo()) {
+                if (request.isTsumo()) {
                     possibleHand.setTsumoFromDealer(12000);
                     possibleHand.setTsumoFromNonDealer(6000);
                 } else {
@@ -170,7 +171,7 @@ public class ScoreUtil {
                 }
                 break;
             case SpecialScoringType.YAKUMAN:
-                if (gameContext.isTsumo()) {
+                if (request.isTsumo()) {
                     possibleHand.setTsumoFromDealer(16000);
                     possibleHand.setTsumoFromNonDealer(8000);
                 } else {
@@ -179,7 +180,7 @@ public class ScoreUtil {
                 }
                 break;
             case SpecialScoringType.DOUBLE_YAKUMAN:
-                if (gameContext.isTsumo()) {
+                if (request.isTsumo()) {
                     possibleHand.setTsumoFromDealer(32000);
                     possibleHand.setTsumoFromNonDealer(16000);
                 } else {
@@ -193,7 +194,7 @@ public class ScoreUtil {
         }
     }
 
-    public void countFu(GameContext gameContext, PossibleHand possibleHand) {
+    public void countFu(RiichiCalculatorRequest request, PossibleHand possibleHand) {
         if (possibleHand.getQualifiedYaku().contains("Chiitoitsu (Seven Pairs)")) {
             return;
         }
@@ -201,42 +202,42 @@ public class ScoreUtil {
         possibleHand.setFu(possibleHand.getFu() + 20);
 
         // 10 fu for ron with closed hand
-        if (!gameContext.isTsumo() && !gameContext.isOpened()) {
+        if (!request.isTsumo() && !request.isOpened()) {
             possibleHand.setFu(possibleHand.getFu() + 10);
         }
 
         for (int i = 0; i < possibleHand.getMelds().size(); i++) {
             List<Integer> meld = possibleHand.getMelds().get(i);
 
-            if (!CommonUtil.isChi(meld) && meld.size() == 3 && gameContext.getOpenMelds().contains(meld)) {
+            if (!CommonUtil.isChi(meld) && meld.size() == 3 && request.getOpenMelds().contains(meld)) {
                 if (RiichiCalculatorConstants.SIMPLES.contains(meld.get(0))) {
                     possibleHand.setFu(possibleHand.getFu() + 2);
                 } else {
                     possibleHand.setFu(possibleHand.getFu() + 4);
                 }
-            } else if (!CommonUtil.isChi(meld) && meld.size() == 3 && !gameContext.getOpenMelds().contains(meld)) {
+            } else if (!CommonUtil.isChi(meld) && meld.size() == 3 && !request.getOpenMelds().contains(meld)) {
                 if (RiichiCalculatorConstants.SIMPLES.contains(meld.get(0))) {
                     possibleHand.setFu(possibleHand.getFu() + 4);
                 } else {
                     possibleHand.setFu(possibleHand.getFu() + 8);
                 }
-            } else if (!CommonUtil.isChi(meld) && meld.size() == 4 && gameContext.getOpenMelds().contains(meld)) {
+            } else if (!CommonUtil.isChi(meld) && meld.size() == 4 && request.getOpenMelds().contains(meld)) {
                 if (RiichiCalculatorConstants.SIMPLES.contains(meld.get(0))) {
                     possibleHand.setFu(possibleHand.getFu() + 8);
                 } else {
                     possibleHand.setFu(possibleHand.getFu() + 16);
                 }
-            } else if (!CommonUtil.isChi(meld) && meld.size() == 4 && !gameContext.getOpenMelds().contains(meld)) {
+            } else if (!CommonUtil.isChi(meld) && meld.size() == 4 && !request.getOpenMelds().contains(meld)) {
                 if (RiichiCalculatorConstants.SIMPLES.contains(meld.get(0))) {
                     possibleHand.setFu(possibleHand.getFu() + 16);
                 } else {
                     possibleHand.setFu(possibleHand.getFu() + 32);
                 }
             } else if (!CommonUtil.isChi(meld) && meld.size() == 2) {
-                if (gameContext.getSeatWind() == gameContext.getPrevalentWind()
-                        && gameContext.getSeatWind() == meld.get(0)) {
+                if (request.getSeatWind() == request.getPrevalentWind()
+                        && request.getSeatWind() == meld.get(0)) {
                     possibleHand.setFu(possibleHand.getFu() + 4);
-                } else if (gameContext.getSeatWind() == meld.get(0) || gameContext.getPrevalentWind() == meld.get(0)
+                } else if (request.getSeatWind() == meld.get(0) || request.getPrevalentWind() == meld.get(0)
                         || RiichiCalculatorConstants.DRAGONS.contains(meld.get(0))) {
                     possibleHand.setFu(possibleHand.getFu() + 2);
                 }
@@ -247,26 +248,26 @@ public class ScoreUtil {
             // wait is end of a terminal chi (3 or 7)
 
             if (possibleHand.getMelds().stream().filter((checkmeld) -> {
-                if (checkmeld.contains(gameContext.getWinningTile())) {
+                if (checkmeld.contains(request.getWinningTile())) {
                     return true;
                 }
                 return false;
             }).count() == 1L) {
-                if (meld.contains(gameContext.getWinningTile())) {
+                if (meld.contains(request.getWinningTile())) {
                     if (meld.size() == 2) {
                         possibleHand.setFu(possibleHand.getFu() + 2);
-                    } else if (meld.size() == 3 && meld.indexOf(gameContext.getWinningTile()) == 1) {
+                    } else if (meld.size() == 3 && meld.indexOf(request.getWinningTile()) == 1) {
                         possibleHand.setFu(possibleHand.getFu() + 2);
                     } else if ((RiichiCalculatorConstants.TERMINALS.contains(meld.get(0))
-                            && meld.indexOf(gameContext.getWinningTile()) == 2)
+                            && meld.indexOf(request.getWinningTile()) == 2)
                             || (RiichiCalculatorConstants.TERMINALS.contains(meld.get(2))
-                                    && meld.indexOf(gameContext.getWinningTile()) == 0)) {
+                                    && meld.indexOf(request.getWinningTile()) == 0)) {
                         possibleHand.setFu(possibleHand.getFu() + 2);
 
                     }
                 }
             }
-            if (gameContext.isTsumo()) {
+            if (request.isTsumo()) {
                 possibleHand.setFu(possibleHand.getFu() + 2);
             }
             if (possibleHand.getQualifiedYaku().contains("Chiitoitsu (Seven Pairs)")) {
