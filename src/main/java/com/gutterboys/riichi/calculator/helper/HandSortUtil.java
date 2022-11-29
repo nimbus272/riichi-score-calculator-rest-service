@@ -104,26 +104,22 @@ public class HandSortUtil {
             if (RiichiCalculatorConstants.HONORS.contains(tile)) {
                 switch ((int) request.getTiles().stream().filter(x -> x == tile).count()) {
                     case 2:
-                        request.getMelds().add(request.getCurrentMeld(),
-                                new ArrayList<Integer>(Arrays.asList(tile, tile)));
+                        request.getMelds().add(new ArrayList<Integer>(Arrays.asList(tile, tile)));
                         CommonUtil.removeAndAddPonFromList(request.getTiles(), tile, 2);
                         request.setPairCount(request.getPairCount() + 1);
                         break;
                     case 3:
-                        request.getMelds().add(request.getCurrentMeld(),
-                                new ArrayList<Integer>(Arrays.asList(tile, tile, tile)));
+                        request.getMelds().add(new ArrayList<Integer>(Arrays.asList(tile, tile, tile)));
                         CommonUtil.removeAndAddPonFromList(request.getTiles(), tile, 3);
                         break;
                     case 4:
-                        request.getMelds().add(request.getCurrentMeld(),
-                                new ArrayList<Integer>(Arrays.asList(tile, tile, tile, tile)));
+                        request.getMelds().add(new ArrayList<Integer>(Arrays.asList(tile, tile, tile, tile)));
                         CommonUtil.removeAndAddPonFromList(request.getTiles(), tile, 4);
                         request.setKanCount(request.getKanCount() + 1);
                         break;
                     default:
                         break;
                 }
-                request.setCurrentMeld(request.getCurrentMeld() + 1);
             }
         }
     }
@@ -317,14 +313,12 @@ public class HandSortUtil {
 
                     request.getMelds().add(Arrays.asList(tile, tile, tile));
                     CommonUtil.removeAndAddPonFromList(request.getTiles(), tile, 3);
-                    request.setCurrentMeld(request.getCurrentMeld() + 1);
 
                     break;
                 case 4:
                     request.getMelds().add(new ArrayList<Integer>(Arrays.asList(tile, tile, tile, tile)));
                     CommonUtil.removeAndAddPonFromList(request.getTiles(), tile, 4);
                     request.setKanCount(request.getKanCount() + 1);
-                    request.setCurrentMeld(request.getCurrentMeld() + 1);
                     break;
                 default:
                     break;
@@ -338,7 +332,6 @@ public class HandSortUtil {
                     // increment currentMeld
                     CommonUtil.removeAndAddChiFromList(request.getTiles(), possibleChis.get(0).get(0));
                     request.getMelds().add(possibleChis.get(0));
-                    request.setCurrentMeld(request.getCurrentMeld() + 1);
                     break;
                 case 2:
                     if (request.getPairCount() == 1) {
@@ -346,7 +339,6 @@ public class HandSortUtil {
                         // must be one of the melds
                         CommonUtil.removeAndAddChiFromList(request.getTiles(), possibleChis.get(0).get(0));
                         request.getMelds().add(possibleChis.get(0));
-                        request.setCurrentMeld(request.getCurrentMeld() + 1);
                         break;
                     } else {
                         // if we don't know the pair, add both melds to possibleMelds and continue
