@@ -53,11 +53,9 @@ public class ScoreUtil {
         possibleHand.setHan(possibleHand.getHan() + tracker.getDoraCount());
         if (possibleHand.getHan() > 4) {
             handleSpecialScoring(request, possibleHand);
-            return;
         } else {
             determineBaseScore(possibleHand);
             applyScoreMultipliers(request, possibleHand);
-            return;
         }
 
     }

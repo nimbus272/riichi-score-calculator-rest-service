@@ -1,6 +1,8 @@
 package com.gutterboys.riichi.calculator.service;
 
 import java.util.Collections;
+import java.util.List;
+import java.util.stream.Collectors;
 
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,8 +11,6 @@ import org.springframework.stereotype.Component;
 import com.gutterboys.riichi.calculator.constants.RiichiCalculatorConstants;
 import com.gutterboys.riichi.calculator.exception.InvalidHandException;
 import com.gutterboys.riichi.calculator.exception.RiichiCalculatorException;
-import com.gutterboys.riichi.calculator.helper.CalculatorServiceHelper;
-import com.gutterboys.riichi.calculator.helper.CommonUtil;
 import com.gutterboys.riichi.calculator.helper.HandSortUtil;
 import com.gutterboys.riichi.calculator.helper.ScoreUtil;
 import com.gutterboys.riichi.calculator.model.CalculatorTracker;
@@ -33,8 +33,6 @@ public class CalculatorService {
     YakuEligibilityEngine eligibilityEngine;
     @Autowired
     HandSortUtil handSortUtil;
-    @Autowired
-    CalculatorServiceHelper helper;
 
     public void evaluateHand(RiichiCalculatorRequest request, RiichiCalculatorResponse response)
             throws RiichiCalculatorException {
@@ -42,9 +40,42 @@ public class CalculatorService {
 
         CalculatorTracker tracker = new CalculatorTracker();
 
-        helper.stageTrackerData(request, response, tracker);
+        stageTrackerData(request, tracker, response);
 
         eligibilityEngine.executeFirst(request, tracker, response);
+
+        sortHand(tracker, response);
+
+        determineYakuEligibility(request, tracker, response);
+
+        determineScore(request, tracker, response);
+        
+    }
+
+    private void stageTrackerData(RiichiCalculatorRequest request,
+            CalculatorTracker tracker, RiichiCalculatorResponse response) {
+
+        tracker.getTiles().addAll(request.getTiles());
+
+        if (request.getOpenMelds().size() > 0) {
+            handSortUtil.addOpenMeldsToTiles(request, tracker);
+        }
+
+        List<Integer> redFives = request.getTiles().stream().filter(tile -> tile > 33).collect(Collectors.toList());
+        if (redFives.size() > 0) {
+            handSortUtil.swapFives(redFives, tracker);
+        }
+
+        if (request.getDoraTiles().size() > 0) {
+            scoreUtil.countDora(request, tracker);
+        }
+
+        tracker.getTiles().sort((a, b) -> a - b);
+        response.getTiles().addAll(tracker.getTiles());
+    }
+
+    private void sortHand(CalculatorTracker tracker, RiichiCalculatorResponse response)
+            throws RiichiCalculatorException {
 
         handSortUtil.checkHonors(tracker);
 
@@ -53,8 +84,9 @@ public class CalculatorService {
         if (response.getPossibleHands().isEmpty()) {
             LOGGER.info("Reducing hand...");
             handSortUtil.reduceHand(tracker, response, possibleMelds);
-            CommonUtil.checkMeldTypesAndRemoveDupes(possibleMelds, tracker.getTiles());
+
         }
+
         if (response.getPossibleHands().isEmpty()) {
             handSortUtil.reducePossibleMelds(possibleMelds, tracker, response);
         }
@@ -64,12 +96,15 @@ public class CalculatorService {
             throw new InvalidHandException("No possible hands found");
         }
 
+    }
+
+    private void determineYakuEligibility(RiichiCalculatorRequest request, CalculatorTracker tracker,
+            RiichiCalculatorResponse response) throws RiichiCalculatorException {
+
         LOGGER.info("Determining compatible yaku...");
         for (int i = 0; i < response.getPossibleHands().size(); i++) {
 
             PossibleHand hand = response.getPossibleHands().get(i);
-
-            scoreUtil.countFu(request, hand);
 
             eligibilityEngine.executeUniversal(request, tracker, hand);
 
@@ -85,10 +120,14 @@ public class CalculatorService {
             eligibilityEngine.executeLast(request, hand);
 
         }
+    }
 
+    private void determineScore(RiichiCalculatorRequest request, CalculatorTracker tracker,
+            RiichiCalculatorResponse response) {
         for (int i = 0; i < response.getPossibleHands().size(); i++) {
-            scoreUtil.determineScore(response, request, tracker, response.getPossibleHands().get(i));
+            PossibleHand hand = response.getPossibleHands().get(i);
+            scoreUtil.countFu(request, hand);
+            scoreUtil.determineScore(response, request, tracker, hand);
         }
-
     }
 }
