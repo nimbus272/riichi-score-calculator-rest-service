@@ -7,13 +7,13 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import com.gutterboys.riichi.calculator.model.GameContext;
+import com.gutterboys.riichi.calculator.model.RiichiCalculatorRequest;
 import com.gutterboys.riichi.calculator.model.PossibleHand;
 import com.gutterboys.riichi.calculator.yaku.universal.RinshanKaihou;
 
 public class RinshanKaihouTest {
 
-    GameContext gameContext;
+    RiichiCalculatorRequest request;
 
     PossibleHand possibleHand;
 
@@ -21,17 +21,17 @@ public class RinshanKaihouTest {
 
     @BeforeEach
     public void setUp() {
-        gameContext = new GameContext();
+        request = new RiichiCalculatorRequest();
         possibleHand = new PossibleHand();
     }
 
     @Test
     public void execute_IsDeadWallDrawTest() {
-        gameContext.setDeadWallDraw(true);
-        gameContext.setTsumo(true);
-        gameContext.setKanCount(1);
+        request.setDeadWallDraw(true);
+        request.setTsumo(true);
+        request.setKanCount(1);
 
-        yaku.execute(gameContext, possibleHand);
+        yaku.execute(request, possibleHand);
 
         assertEquals(1, possibleHand.getHan());
         assertTrue(possibleHand.getQualifiedYaku().contains("Rinshan Kaihou (Dead Wall Draw)"));
@@ -40,7 +40,7 @@ public class RinshanKaihouTest {
     @Test
     public void execute_IsNotDeadWallDrawTest() {
 
-        yaku.execute(gameContext, possibleHand);
+        yaku.execute(request, possibleHand);
 
         assertEquals(0, possibleHand.getHan());
         assertFalse(possibleHand.getQualifiedYaku().contains("Rinshan Kaihou (Dead Wall Draw)"));

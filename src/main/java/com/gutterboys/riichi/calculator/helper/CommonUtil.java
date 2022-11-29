@@ -7,7 +7,7 @@ import java.util.stream.Collectors;
 
 import com.google.gson.Gson;
 import com.gutterboys.riichi.calculator.constants.RiichiCalculatorConstants;
-import com.gutterboys.riichi.calculator.model.GameContext;
+import com.gutterboys.riichi.calculator.model.RiichiCalculatorRequest;
 import com.gutterboys.riichi.calculator.model.PossibleHand;
 import com.gutterboys.riichi.calculator.model.PossibleMelds;
 
@@ -86,12 +86,12 @@ public class CommonUtil {
         possibleMelds.getChis().addAll(newMeldList);
     }
 
-    public static void addTempMeldsToGameContext(GameContext tempContext, GameContext gameContext) {
-        for (int i = 0; i < tempContext.getMelds().size(); i++) {
-            gameContext.getMelds().add(tempContext.getMelds().get(i));
-            for (int j = 0; j < tempContext.getMelds().get(i).size(); j++) {
-                gameContext.getTiles().remove(tempContext.getMelds().get(i).get(j));
-                gameContext.getTiles().add(0, -1);
+    public static void addTempMeldsToRequest(RiichiCalculatorRequest tempRequest, RiichiCalculatorRequest request) {
+        for (int i = 0; i < tempRequest.getMelds().size(); i++) {
+            request.getMelds().add(tempRequest.getMelds().get(i));
+            for (int j = 0; j < tempRequest.getMelds().get(i).size(); j++) {
+                request.getTiles().remove(tempRequest.getMelds().get(i).get(j));
+                request.getTiles().add(0, -1);
             }
         }
     }
@@ -151,4 +151,5 @@ public class CommonUtil {
 
         return "n/a";
     }
+
 }

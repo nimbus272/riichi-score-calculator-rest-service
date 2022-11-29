@@ -7,13 +7,13 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import com.gutterboys.riichi.calculator.model.GameContext;
+import com.gutterboys.riichi.calculator.model.RiichiCalculatorRequest;
 import com.gutterboys.riichi.calculator.model.PossibleHand;
 import com.gutterboys.riichi.calculator.yaku.universal.HaiteiRaoyue;
 
 public class HaiteiRaoyueTest {
 
-    GameContext gameContext;
+    RiichiCalculatorRequest request;
 
     PossibleHand possibleHand;
 
@@ -21,16 +21,16 @@ public class HaiteiRaoyueTest {
 
     @BeforeEach
     public void setUp() {
-        gameContext = new GameContext();
+        request = new RiichiCalculatorRequest();
         possibleHand = new PossibleHand();
     }
 
     @Test
     public void execute_IsHaiteiRaoyueTest() {
-        gameContext.setLastTileDraw(true);
-        gameContext.setTsumo(true);
+        request.setLastTileDraw(true);
+        request.setTsumo(true);
 
-        yaku.execute(gameContext, possibleHand);
+        yaku.execute(request, possibleHand);
 
         assertEquals(1, possibleHand.getHan());
         assertTrue(possibleHand.getQualifiedYaku().contains("Haitei Raoyue (Last Tile Drawn From Wall)"));
@@ -38,9 +38,9 @@ public class HaiteiRaoyueTest {
 
     @Test
     public void execute_IsNotHaiteiRaoyueTest1() {
-        gameContext.setLastTileDraw(true);
+        request.setLastTileDraw(true);
 
-        yaku.execute(gameContext, possibleHand);
+        yaku.execute(request, possibleHand);
 
         assertEquals(0, possibleHand.getHan());
         assertFalse(possibleHand.getQualifiedYaku().contains("Haitei Raoyue (Last Tile Drawn From Wall)"));
@@ -49,7 +49,7 @@ public class HaiteiRaoyueTest {
     @Test
     public void execute_IsNotHaiteiRaoyueTest2() {
 
-        yaku.execute(gameContext, possibleHand);
+        yaku.execute(request, possibleHand);
 
         assertEquals(0, possibleHand.getHan());
         assertFalse(possibleHand.getQualifiedYaku().contains("Haitei Raoyue (Last Tile Drawn From Wall)"));

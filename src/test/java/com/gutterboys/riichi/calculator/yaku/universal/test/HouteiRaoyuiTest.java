@@ -7,13 +7,13 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import com.gutterboys.riichi.calculator.model.GameContext;
+import com.gutterboys.riichi.calculator.model.RiichiCalculatorRequest;
 import com.gutterboys.riichi.calculator.model.PossibleHand;
 import com.gutterboys.riichi.calculator.yaku.universal.HouteiRaoyui;
 
 public class HouteiRaoyuiTest {
 
-    GameContext gameContext;
+    RiichiCalculatorRequest request;
 
     PossibleHand possibleHand;
 
@@ -21,15 +21,15 @@ public class HouteiRaoyuiTest {
 
     @BeforeEach
     public void setUp() {
-        gameContext = new GameContext();
+        request = new RiichiCalculatorRequest();
         possibleHand = new PossibleHand();
     }
 
     @Test
     public void execute_IsHouteiRaoyuiTest() {
-        gameContext.setLastDiscard(true);
+        request.setLastDiscard(true);
 
-        yaku.execute(gameContext, possibleHand);
+        yaku.execute(request, possibleHand);
 
         assertEquals(1, possibleHand.getHan());
         assertTrue(possibleHand.getQualifiedYaku().contains("Houtei Raoyui (Last Discarded Tile)"));
@@ -37,10 +37,10 @@ public class HouteiRaoyuiTest {
 
     @Test
     public void execute_IsNotHouteiRaoyuiTest1() {
-        gameContext.setLastTileDraw(true);
-        gameContext.setTsumo(true);
+        request.setLastTileDraw(true);
+        request.setTsumo(true);
 
-        yaku.execute(gameContext, possibleHand);
+        yaku.execute(request, possibleHand);
 
         assertEquals(0, possibleHand.getHan());
         assertFalse(possibleHand.getQualifiedYaku().contains("Houtei Raoyui (Last Discarded Tile)"));
@@ -49,7 +49,7 @@ public class HouteiRaoyuiTest {
     @Test
     public void execute_IsNotHouteiRaoyuiTest2() {
 
-        yaku.execute(gameContext, possibleHand);
+        yaku.execute(request, possibleHand);
 
         assertEquals(0, possibleHand.getHan());
         assertFalse(possibleHand.getQualifiedYaku().contains("Houtei Raoyui (Last Discarded Tile)"));

@@ -7,18 +7,18 @@ import java.util.Arrays;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import com.gutterboys.riichi.calculator.model.GameContext;
+import com.gutterboys.riichi.calculator.model.RiichiCalculatorRequest;
 import com.gutterboys.riichi.calculator.model.PossibleHand;
 import com.gutterboys.riichi.calculator.yaku.common.Sananko;
 
 public class SanankoTest {
-    GameContext gameContext;
+    RiichiCalculatorRequest request;
     PossibleHand possibleHand;
     Sananko yaku = new Sananko();
 
     @BeforeEach
     public void setUp() {
-        gameContext = new GameContext();
+        request = new RiichiCalculatorRequest();
         possibleHand = new PossibleHand();
     }
 
@@ -31,7 +31,7 @@ public class SanankoTest {
         possibleHand.getMelds().add(Arrays.asList(28, 28, 28, 28));
         possibleHand.getMelds().add(Arrays.asList(30, 30, 30));
 
-        yaku.execute(gameContext, possibleHand);
+        yaku.execute(request, possibleHand);
 
         assertTrue(possibleHand.getQualifiedYaku().size() > 0);
         assertTrue(

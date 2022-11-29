@@ -7,13 +7,13 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import com.gutterboys.riichi.calculator.model.GameContext;
+import com.gutterboys.riichi.calculator.model.RiichiCalculatorRequest;
 import com.gutterboys.riichi.calculator.model.PossibleHand;
 import com.gutterboys.riichi.calculator.yaku.universal.Riichi;
 
 public class RiichiTest {
 
-    GameContext gameContext;
+    RiichiCalculatorRequest request;
 
     PossibleHand possibleHand;
 
@@ -21,15 +21,15 @@ public class RiichiTest {
 
     @BeforeEach
     public void setUp() {
-        gameContext = new GameContext();
+        request = new RiichiCalculatorRequest();
         possibleHand = new PossibleHand();
     }
 
     @Test
     public void execute_IsRiichiTest() {
-        gameContext.setRiichi(true);
+        request.setRiichi(true);
 
-        yaku.execute(gameContext, possibleHand);
+        yaku.execute(request, possibleHand);
 
         assertEquals(1, possibleHand.getHan());
         assertTrue(possibleHand.getQualifiedYaku().contains("Riichi"));
@@ -37,10 +37,10 @@ public class RiichiTest {
 
     @Test
     public void execute_IsNotRiichiTest1() {
-        gameContext.setRiichi(true);
-        gameContext.setOpened(true);
+        request.setRiichi(true);
+        request.setOpened(true);
 
-        yaku.execute(gameContext, possibleHand);
+        yaku.execute(request, possibleHand);
 
         assertEquals(0, possibleHand.getHan());
         assertFalse(possibleHand.getQualifiedYaku().contains("Riichi"));
@@ -49,7 +49,7 @@ public class RiichiTest {
     @Test
     public void execute_IsNotRiichiTest2() {
 
-        yaku.execute(gameContext, possibleHand);
+        yaku.execute(request, possibleHand);
 
         assertEquals(0, possibleHand.getHan());
         assertFalse(possibleHand.getQualifiedYaku().contains("Riichi"));

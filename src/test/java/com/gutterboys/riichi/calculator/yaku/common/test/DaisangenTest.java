@@ -9,13 +9,13 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import com.gutterboys.riichi.calculator.exception.RiichiCalculatorException;
-import com.gutterboys.riichi.calculator.model.GameContext;
+import com.gutterboys.riichi.calculator.model.RiichiCalculatorRequest;
 import com.gutterboys.riichi.calculator.model.PossibleHand;
 import com.gutterboys.riichi.calculator.yaku.common.Daisangen;
 
 public class DaisangenTest {
 
-    GameContext gameContext;
+    RiichiCalculatorRequest request;
 
     PossibleHand possibleHand;
 
@@ -23,7 +23,7 @@ public class DaisangenTest {
 
     @BeforeEach
     public void setUp() {
-        gameContext = new GameContext();
+        request = new RiichiCalculatorRequest();
         possibleHand = new PossibleHand();
     }
 
@@ -36,7 +36,7 @@ public class DaisangenTest {
         possibleHand.getMelds().add(Arrays.asList(28, 28, 28, 28));
         possibleHand.getMelds().add(Arrays.asList(30, 30, 30));
 
-        yaku.execute(gameContext, possibleHand);
+        yaku.execute(request, possibleHand);
 
         assertEquals(13, possibleHand.getHan());
         assertTrue(possibleHand.getQualifiedYaku().contains("Daisangen (Big Three Dragons)"));

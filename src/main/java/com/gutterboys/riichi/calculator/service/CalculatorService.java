@@ -5,17 +5,17 @@ import java.util.Collections;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import org.springframework.util.CollectionUtils;
 
 import com.gutterboys.riichi.calculator.constants.RiichiCalculatorConstants;
 import com.gutterboys.riichi.calculator.exception.InvalidHandException;
 import com.gutterboys.riichi.calculator.exception.RiichiCalculatorException;
+import com.gutterboys.riichi.calculator.helper.CalculatorServiceHelper;
 import com.gutterboys.riichi.calculator.helper.CommonUtil;
 import com.gutterboys.riichi.calculator.helper.HandSortUtil;
 import com.gutterboys.riichi.calculator.helper.ScoreUtil;
-import com.gutterboys.riichi.calculator.model.GameContext;
 import com.gutterboys.riichi.calculator.model.PossibleHand;
 import com.gutterboys.riichi.calculator.model.PossibleMelds;
+import com.gutterboys.riichi.calculator.model.RiichiCalculatorRequest;
 import com.gutterboys.riichi.calculator.model.ScoreResponse;
 import com.gutterboys.riichi.calculator.yaku.YakuEligibilityEngine;
 
@@ -32,38 +32,27 @@ public class CalculatorService {
     YakuEligibilityEngine eligibilityEngine;
     @Autowired
     HandSortUtil handSortUtil;
+    @Autowired
+    CalculatorServiceHelper helper;
 
-    public void evaluateHand(GameContext gameContext, ScoreResponse response) throws RiichiCalculatorException {
-        if (gameContext.getOpenMelds().size() > 0) {
-            for (int i = 0; i < gameContext.getOpenMelds().size(); i++) {
-                gameContext.getTiles().addAll(gameContext.getOpenMelds().get(i));
-            }
-        }
+    public void evaluateHand(RiichiCalculatorRequest request, ScoreResponse response) throws RiichiCalculatorException {
         LOGGER.info("Calculating score...");
-        handSortUtil.swapFives(gameContext);
-        response.getTiles().addAll(gameContext.getTiles());
-        if (gameContext.getDoraTiles().size() > 0) {
-            scoreUtil.countDora(gameContext);
-        }
-        gameContext.getTiles().sort((a, b) -> a - b);
-        eligibilityEngine.executeFirst(gameContext, response);
 
-        if (!CollectionUtils.isEmpty(response.getPossibleHands())
-                && response.getPossibleHands().get(0).getQualifiedYaku().contains("Kokushi Musou (Thirteen Orphans)")) {
-            scoreUtil.handleSpecialScoring(gameContext, response.getPossibleHands().get(0));
-            return;
-        }
-        handSortUtil.checkHonors(gameContext);
+        helper.stageRequestResponseData(request, response);
+
+        eligibilityEngine.executeFirst(request, response);
+
+        handSortUtil.checkHonors(request);
 
         // Loop over remaining tiles in hand to see what melds can be made
         PossibleMelds possibleMelds = new PossibleMelds();
         if (response.getPossibleHands().isEmpty()) {
             LOGGER.info("Reducing hand...");
-            handSortUtil.reduceHand(gameContext, response, possibleMelds);
-            CommonUtil.checkMeldTypesAndRemoveDupes(possibleMelds, gameContext.getTiles());
+            handSortUtil.reduceHand(request, response, possibleMelds);
+            CommonUtil.checkMeldTypesAndRemoveDupes(possibleMelds, request.getTiles());
         }
         if (response.getPossibleHands().isEmpty()) {
-            handSortUtil.reducePossibleMelds(possibleMelds, gameContext, response);
+            handSortUtil.reducePossibleMelds(possibleMelds, request, response);
         }
 
         if (response.getPossibleHands().isEmpty()) {
@@ -76,25 +65,25 @@ public class CalculatorService {
 
             PossibleHand hand = response.getPossibleHands().get(i);
 
-            scoreUtil.countFu(gameContext, hand);
+            scoreUtil.countFu(request, hand);
 
-            eligibilityEngine.executeUniversal(gameContext, hand);
+            eligibilityEngine.executeUniversal(request, hand);
 
             if (Collections.disjoint(RiichiCalculatorConstants.STANDARD_YAKU_EXCLUSION_LIST,
                     hand.getQualifiedYaku())) {
-                eligibilityEngine.executeCommon(gameContext, hand);
+                eligibilityEngine.executeCommon(request, hand);
             }
 
             if (hand.getQualifiedYaku().contains("Chiitoitsu (Seven Pairs)")) {
-                eligibilityEngine.executeSpecialSevenPairs(gameContext, hand);
+                eligibilityEngine.executeSpecialSevenPairs(request, hand);
             }
 
-            eligibilityEngine.executeLast(gameContext, hand);
+            eligibilityEngine.executeLast(request, hand);
 
         }
 
         for (int i = 0; i < response.getPossibleHands().size(); i++) {
-            scoreUtil.determineScore(response, gameContext, response.getPossibleHands().get(i));
+            scoreUtil.determineScore(response, request, response.getPossibleHands().get(i));
         }
 
     }

@@ -7,7 +7,7 @@ import java.util.List;
 import org.springframework.stereotype.Component;
 
 import com.gutterboys.riichi.calculator.helper.CommonUtil;
-import com.gutterboys.riichi.calculator.model.GameContext;
+import com.gutterboys.riichi.calculator.model.RiichiCalculatorRequest;
 import com.gutterboys.riichi.calculator.model.PossibleHand;
 
 @Component
@@ -17,7 +17,7 @@ public class ChurenPoto implements CommonYaku {
     private static final List<Integer> GATES_SOU = Arrays.asList(18, 18, 18, 19, 20, 21, 22, 23, 24, 25, 26, 26, 26);
 
     @Override
-    public void execute(GameContext gameContext, PossibleHand possibleHand) {
+    public void execute(RiichiCalculatorRequest request, PossibleHand possibleHand) {
         String suit = CommonUtil.determineFlushSuit(possibleHand.getTiles());
 
         if (suit.equals("n/a")) {
@@ -27,7 +27,7 @@ public class ChurenPoto implements CommonYaku {
         List<Integer> tiles = new ArrayList<Integer>();
         tiles.addAll(possibleHand.getTiles());
 
-        tiles.remove(possibleHand.getTiles().indexOf(gameContext.getWinningTile()));
+        tiles.remove(possibleHand.getTiles().indexOf(request.getWinningTile()));
 
         if (tiles.equals(GATES_MAN) || tiles.equals(GATES_PIN) || tiles.equals(GATES_SOU)) {
             possibleHand.getQualifiedYaku().add("Churen Poto (Nine Gates)");
@@ -35,7 +35,7 @@ public class ChurenPoto implements CommonYaku {
             return;
         }
 
-        tiles.add(gameContext.getWinningTile());
+        tiles.add(request.getWinningTile());
         tiles.sort((a, b) -> a - b);
 
         determineExtraTile(tiles, suit);

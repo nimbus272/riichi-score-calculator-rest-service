@@ -9,7 +9,7 @@ import javax.validation.constraints.NotNull;
 import com.gutterboys.riichi.calculator.validation.HandContentConstraint;
 import com.gutterboys.riichi.calculator.validation.HandSizeConstraint;
 
-public class GameContext {
+public class RiichiCalculatorRequest {
 
     @NotNull(message = "Hand cannot be empty.")
     @NotEmpty(message = "Hand cannot be empty.")

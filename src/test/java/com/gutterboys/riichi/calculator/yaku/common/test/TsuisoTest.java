@@ -9,13 +9,13 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import com.gutterboys.riichi.calculator.exception.RiichiCalculatorException;
-import com.gutterboys.riichi.calculator.model.GameContext;
+import com.gutterboys.riichi.calculator.model.RiichiCalculatorRequest;
 import com.gutterboys.riichi.calculator.model.PossibleHand;
 import com.gutterboys.riichi.calculator.yaku.common.Tsuiso;
 
 public class TsuisoTest {
 
-    GameContext gameContext;
+    RiichiCalculatorRequest request;
 
     PossibleHand possibleHand;
 
@@ -23,7 +23,7 @@ public class TsuisoTest {
 
     @BeforeEach
     public void setUp() {
-        gameContext = new GameContext();
+        request = new RiichiCalculatorRequest();
         possibleHand = new PossibleHand();
     }
 
@@ -32,7 +32,7 @@ public class TsuisoTest {
 
         possibleHand.getTiles().addAll(Arrays.asList(27, 27, 27, 29, 29, 27, 27, 27, 28, 28, 28, 28, 30, 30, 30));
 
-        yaku.execute(gameContext, possibleHand);
+        yaku.execute(request, possibleHand);
 
         assertEquals(13, possibleHand.getHan());
         assertTrue(possibleHand.getQualifiedYaku().contains("Tsuiso (All Honors)"));

@@ -7,12 +7,12 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import com.gutterboys.riichi.calculator.model.GameContext;
+import com.gutterboys.riichi.calculator.model.RiichiCalculatorRequest;
 import com.gutterboys.riichi.calculator.model.PossibleHand;
 import com.gutterboys.riichi.calculator.yaku.universal.Tsumo;
 
 public class TsumoTest {
-    GameContext gameContext;
+    RiichiCalculatorRequest request;
 
     PossibleHand possibleHand;
 
@@ -20,15 +20,15 @@ public class TsumoTest {
 
     @BeforeEach
     public void setUp() {
-        gameContext = new GameContext();
+        request = new RiichiCalculatorRequest();
         possibleHand = new PossibleHand();
     }
 
     @Test
     public void execute_IsTsumoTest() {
-        gameContext.setTsumo(true);
+        request.setTsumo(true);
 
-        yaku.execute(gameContext, possibleHand);
+        yaku.execute(request, possibleHand);
 
         assertEquals(1, possibleHand.getHan());
         assertTrue(possibleHand.getQualifiedYaku().contains("Tsumo"));
@@ -36,10 +36,10 @@ public class TsumoTest {
 
     @Test
     public void execute_IsNotTsumoTest1() {
-        gameContext.setTsumo(true);
-        gameContext.setOpened(true);
+        request.setTsumo(true);
+        request.setOpened(true);
 
-        yaku.execute(gameContext, possibleHand);
+        yaku.execute(request, possibleHand);
 
         assertEquals(0, possibleHand.getHan());
         assertFalse(possibleHand.getQualifiedYaku().contains("Tsumo"));
@@ -48,7 +48,7 @@ public class TsumoTest {
     @Test
     public void execute_IsNotTsumoTest2() {
 
-        yaku.execute(gameContext, possibleHand);
+        yaku.execute(request, possibleHand);
 
         assertEquals(0, possibleHand.getHan());
         assertFalse(possibleHand.getQualifiedYaku().contains("Tsumo"));

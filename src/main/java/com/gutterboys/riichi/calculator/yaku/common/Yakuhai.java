@@ -6,14 +6,14 @@ import java.util.stream.Collectors;
 import org.springframework.stereotype.Component;
 
 import com.gutterboys.riichi.calculator.helper.CommonUtil;
-import com.gutterboys.riichi.calculator.model.GameContext;
+import com.gutterboys.riichi.calculator.model.RiichiCalculatorRequest;
 import com.gutterboys.riichi.calculator.model.PossibleHand;
 
 @Component
 public class Yakuhai implements CommonYaku {
 
     @Override
-    public void execute(GameContext gameContext, PossibleHand possibleHand) {
+    public void execute(RiichiCalculatorRequest request, PossibleHand possibleHand) {
         List<List<Integer>> honorPonsOrKans = possibleHand.getMelds().stream().filter(meld -> {
             if (!CommonUtil.isChi(meld) && meld.size() > 2 && meld.get(0) > 26) {
                 return true;
@@ -26,11 +26,11 @@ public class Yakuhai implements CommonYaku {
                 addYakuAndHan(possibleHand);
 
             } else if (meld.get(0) > 29) {
-                if (gameContext.getSeatWind() == meld.get(0)) {
+                if (request.getSeatWind() == meld.get(0)) {
                     addYakuAndHan(possibleHand);
 
                 }
-                if (gameContext.getPrevalentWind() == meld.get(0)) {
+                if (request.getPrevalentWind() == meld.get(0)) {
                     addYakuAndHan(possibleHand);
                 }
 

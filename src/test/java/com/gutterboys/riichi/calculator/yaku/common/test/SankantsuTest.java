@@ -6,24 +6,24 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import com.gutterboys.riichi.calculator.model.GameContext;
+import com.gutterboys.riichi.calculator.model.RiichiCalculatorRequest;
 import com.gutterboys.riichi.calculator.model.PossibleHand;
 import com.gutterboys.riichi.calculator.yaku.common.Sankantsu;
 
 public class SankantsuTest {
-    GameContext gameContext;
+    RiichiCalculatorRequest request;
     PossibleHand possibleHand;
     Sankantsu sankantsu = new Sankantsu();
     @BeforeEach
     public void setUp() {
-        gameContext = new GameContext();
+        request = new RiichiCalculatorRequest();
         possibleHand = new PossibleHand();
     }
     @Test
     public void sankantsuTest() {
-        gameContext.setOpened(false);
-        gameContext.setKanCount(3);
-        sankantsu.execute(gameContext, possibleHand);
+        request.setOpened(false);
+        request.setKanCount(3);
+        sankantsu.execute(request, possibleHand);
         assertTrue(possibleHand.getQualifiedYaku().size() > 0);
         assertTrue(possibleHand.getQualifiedYaku().contains("Sankantsu (Three Kans)"));
         assertTrue(possibleHand.getHan() == 2);

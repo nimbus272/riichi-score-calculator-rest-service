@@ -8,13 +8,13 @@ import java.util.Arrays;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import com.gutterboys.riichi.calculator.model.GameContext;
+import com.gutterboys.riichi.calculator.model.RiichiCalculatorRequest;
 import com.gutterboys.riichi.calculator.model.ScoreResponse;
 import com.gutterboys.riichi.calculator.yaku.first.KokushiMusou;
 
 public class KokushiMusouTest {
 
-    GameContext gameContext;
+    RiichiCalculatorRequest request;
 
     ScoreResponse response;
 
@@ -22,17 +22,17 @@ public class KokushiMusouTest {
 
     @BeforeEach
     public void setUp() {
-        gameContext = new GameContext();
+        request = new RiichiCalculatorRequest();
         response = new ScoreResponse();
     }
 
     @Test
     public void execute_isKokushiMusouTest_noDouble() {
-        gameContext.getTiles()
+        request.getTiles()
                 .addAll(Arrays.asList(0, 8, 9, 17, 18, 26, 27, 28, 29,
                         30, 31, 32, 33, 33));
-        gameContext.setWinningTile(0);
-        yaku.execute(gameContext, response);
+        request.setWinningTile(0);
+        yaku.execute(request, response);
 
         assertTrue(response.getPossibleHands().size() == 1);
         assertEquals(13, response.getPossibleHands().get(0).getHan());
@@ -41,11 +41,11 @@ public class KokushiMusouTest {
 
     @Test
     public void execute_isKokushiMusouTest_Double() {
-        gameContext.getTiles()
+        request.getTiles()
                 .addAll(Arrays.asList(0, 8, 9, 17, 18, 26, 27, 28, 29,
                         30, 31, 32, 33, 33));
-        gameContext.setWinningTile(33);
-        yaku.execute(gameContext, response);
+        request.setWinningTile(33);
+        yaku.execute(request, response);
 
         assertTrue(response.getPossibleHands().size() == 1);
         assertEquals(13, response.getPossibleHands().get(0).getHan());
@@ -55,11 +55,11 @@ public class KokushiMusouTest {
 
     @Test
     public void execute_isKokushiMusouTest_invalid() {
-        gameContext.getTiles()
+        request.getTiles()
                 .addAll(Arrays.asList(0, 8, 9, 17, 18, 26, 5, 28, 29, 30,
                         31, 32, 33, 33));
-        gameContext.setWinningTile(0);
-        yaku.execute(gameContext, response);
+        request.setWinningTile(0);
+        yaku.execute(request, response);
 
         assertTrue(response.getPossibleHands().size() == 0);
 
@@ -67,11 +67,11 @@ public class KokushiMusouTest {
 
     @Test
     public void execute_isKokushiMusouTest_invalid2() {
-        gameContext.getTiles()
+        request.getTiles()
                 .addAll(Arrays.asList(0, 8, 9, 17, 18, 26, 27, 28, 29,
                         30, 31, 33, 33, 33));
-        gameContext.setWinningTile(0);
-        yaku.execute(gameContext, response);
+        request.setWinningTile(0);
+        yaku.execute(request, response);
 
         assertTrue(response.getPossibleHands().size() == 0);
     }

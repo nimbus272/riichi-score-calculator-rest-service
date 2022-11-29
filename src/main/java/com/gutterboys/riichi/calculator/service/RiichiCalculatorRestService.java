@@ -14,8 +14,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.gutterboys.riichi.calculator.exception.InvalidHandException;
 import com.gutterboys.riichi.calculator.exception.RiichiCalculatorException;
-import com.gutterboys.riichi.calculator.model.GameContext;
 import com.gutterboys.riichi.calculator.model.GenericResponse;
+import com.gutterboys.riichi.calculator.model.RiichiCalculatorRequest;
 import com.gutterboys.riichi.calculator.model.ScoreResponse;
 import com.gutterboys.riichi.calculator.yaku.universal.UniversalYaku;
 
@@ -35,12 +35,12 @@ public class RiichiCalculatorRestService {
     Set<UniversalYaku> allYaku;
 
     @PostMapping("/gutterboys/evaluateHand")
-    public GenericResponse evaluateHand(@Valid @RequestBody GameContext gameContext) {
+    public GenericResponse evaluateHand(@Valid @RequestBody RiichiCalculatorRequest request) {
         LOGGER.info("Request recieved!");
 
         ScoreResponse response = new ScoreResponse();
         try {
-            service.evaluateHand(gameContext, response);
+            service.evaluateHand(request, response);
         } catch (RiichiCalculatorException e) {
             if (e instanceof InvalidHandException) {
                 LOGGER.info("Updating response code...");

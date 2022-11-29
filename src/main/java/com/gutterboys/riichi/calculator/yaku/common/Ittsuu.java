@@ -6,18 +6,18 @@ import java.util.List;
 import org.springframework.stereotype.Component;
 
 import com.gutterboys.riichi.calculator.constants.RiichiCalculatorConstants;
-import com.gutterboys.riichi.calculator.model.GameContext;
+import com.gutterboys.riichi.calculator.model.RiichiCalculatorRequest;
 import com.gutterboys.riichi.calculator.model.PossibleHand;
 
 @Component
 public class Ittsuu implements CommonYaku {
     @Override
-    public void execute(GameContext gameContext, PossibleHand possibleHand) {
+    public void execute(RiichiCalculatorRequest request, PossibleHand possibleHand) {
         List<Integer> tiles = possibleHand.getTiles();
         if (tiles.containsAll(RiichiCalculatorConstants.MAN) ||
                 tiles.containsAll(RiichiCalculatorConstants.SOU) ||
                 tiles.containsAll(RiichiCalculatorConstants.PIN)) {
-            if (gameContext.isOpened()) {
+            if (request.isOpened()) {
                 possibleHand.setHan(possibleHand.getHan() + 1);
             } else {
                 possibleHand.setHan(possibleHand.getHan() + 2);

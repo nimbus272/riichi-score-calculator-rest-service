@@ -6,14 +6,14 @@ import java.util.stream.Collectors;
 import org.springframework.stereotype.Component;
 
 import com.gutterboys.riichi.calculator.helper.CommonUtil;
-import com.gutterboys.riichi.calculator.model.GameContext;
+import com.gutterboys.riichi.calculator.model.RiichiCalculatorRequest;
 import com.gutterboys.riichi.calculator.model.PossibleHand;
 
 @Component
 public class Shousangen implements CommonYaku {
 
     @Override
-    public void execute(GameContext gameContext, PossibleHand possibleHand) {
+    public void execute(RiichiCalculatorRequest request, PossibleHand possibleHand) {
         List<List<Integer>> honorMelds = possibleHand.getMelds().stream().filter(meld -> {
             if (!CommonUtil.isChi(meld) && meld.get(0) > 26) {
                 return true;
