@@ -14,13 +14,13 @@ import com.gutterboys.riichi.calculator.exception.RiichiCalculatorException;
 import com.gutterboys.riichi.calculator.helper.HandSortUtil;
 import com.gutterboys.riichi.calculator.model.PossibleMelds;
 import com.gutterboys.riichi.calculator.model.RiichiCalculatorRequest;
-import com.gutterboys.riichi.calculator.model.ScoreResponse;
+import com.gutterboys.riichi.calculator.model.RiichiCalculatorResponse;
 
 public class HandSortUtilTest {
 
         RiichiCalculatorRequest request;
 
-        ScoreResponse response;
+        RiichiCalculatorResponse response;
 
         List<Integer> hand;
 
@@ -30,7 +30,7 @@ public class HandSortUtilTest {
         public void setUp() {
                 request = new RiichiCalculatorRequest();
                 hand = new ArrayList<Integer>();
-                response = new ScoreResponse();
+                response = new RiichiCalculatorResponse();
         }
 
         @Test

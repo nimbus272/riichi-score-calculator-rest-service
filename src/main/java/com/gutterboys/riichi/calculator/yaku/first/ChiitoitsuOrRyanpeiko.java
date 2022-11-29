@@ -13,7 +13,7 @@ import com.gutterboys.riichi.calculator.helper.HandSortUtil;
 import com.gutterboys.riichi.calculator.model.RiichiCalculatorRequest;
 import com.gutterboys.riichi.calculator.model.PossibleHand;
 import com.gutterboys.riichi.calculator.model.PossibleMelds;
-import com.gutterboys.riichi.calculator.model.ScoreResponse;
+import com.gutterboys.riichi.calculator.model.RiichiCalculatorResponse;
 
 @Component
 public class ChiitoitsuOrRyanpeiko implements FirstYaku {
@@ -22,7 +22,7 @@ public class ChiitoitsuOrRyanpeiko implements FirstYaku {
     HandSortUtil sortUtil;
 
     @Override
-    public void execute(RiichiCalculatorRequest request, ScoreResponse response) throws RiichiCalculatorException {
+    public void execute(RiichiCalculatorRequest request, RiichiCalculatorResponse response) throws RiichiCalculatorException {
         if (request.isOpened()) {
             return;
         }
@@ -91,7 +91,7 @@ public class ChiitoitsuOrRyanpeiko implements FirstYaku {
 
     }
 
-    private void generateMeldsForRyanpeiko(PossibleHand possibleHand, RiichiCalculatorRequest request, ScoreResponse response)
+    private void generateMeldsForRyanpeiko(PossibleHand possibleHand, RiichiCalculatorRequest request, RiichiCalculatorResponse response)
             throws RiichiCalculatorException {
 
         PossibleMelds possibleMelds = new PossibleMelds();

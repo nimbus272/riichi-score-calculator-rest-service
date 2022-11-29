@@ -14,7 +14,7 @@ import com.gutterboys.riichi.calculator.exception.RiichiCalculatorException;
 import com.gutterboys.riichi.calculator.model.RiichiCalculatorRequest;
 import com.gutterboys.riichi.calculator.model.PossibleHand;
 import com.gutterboys.riichi.calculator.model.PossibleMelds;
-import com.gutterboys.riichi.calculator.model.ScoreResponse;
+import com.gutterboys.riichi.calculator.model.RiichiCalculatorResponse;
 
 import ch.qos.logback.classic.Logger;
 
@@ -124,7 +124,7 @@ public class HandSortUtil {
         }
     }
 
-    public void reduceHand(RiichiCalculatorRequest request, ScoreResponse response, PossibleMelds possibleMelds)
+    public void reduceHand(RiichiCalculatorRequest request, RiichiCalculatorResponse response, PossibleMelds possibleMelds)
             throws InvalidHandException {
         int unsortedCount = (int) request.getTiles().stream().filter(x -> x != -1).count();
 
@@ -157,7 +157,7 @@ public class HandSortUtil {
     }
 
     public void reducePossibleMelds(PossibleMelds possibleMelds, RiichiCalculatorRequest request,
-            ScoreResponse response)
+            RiichiCalculatorResponse response)
             throws InvalidHandException {
         LOGGER.info("Reducing possible melds...");
         List<Integer> reducedHand = new ArrayList<>(request.getTiles());
@@ -249,7 +249,7 @@ public class HandSortUtil {
     }
 
     private void reduceAndAddHand(RiichiCalculatorRequest request, RiichiCalculatorRequest tempRequest,
-            ScoreResponse response,
+            RiichiCalculatorResponse response,
             List<List<Integer>> lockedMelds, List<Integer> meld) throws InvalidHandException {
         PossibleMelds tempPossibleMelds = new PossibleMelds();
         try {

@@ -9,21 +9,21 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import com.gutterboys.riichi.calculator.model.RiichiCalculatorRequest;
-import com.gutterboys.riichi.calculator.model.ScoreResponse;
+import com.gutterboys.riichi.calculator.model.RiichiCalculatorResponse;
 import com.gutterboys.riichi.calculator.yaku.first.KokushiMusou;
 
 public class KokushiMusouTest {
 
     RiichiCalculatorRequest request;
 
-    ScoreResponse response;
+    RiichiCalculatorResponse response;
 
     KokushiMusou yaku = new KokushiMusou();
 
     @BeforeEach
     public void setUp() {
         request = new RiichiCalculatorRequest();
-        response = new ScoreResponse();
+        response = new RiichiCalculatorResponse();
     }
 
     @Test

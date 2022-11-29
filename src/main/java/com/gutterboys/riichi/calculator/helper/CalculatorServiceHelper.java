@@ -4,7 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.gutterboys.riichi.calculator.model.RiichiCalculatorRequest;
-import com.gutterboys.riichi.calculator.model.ScoreResponse;
+import com.gutterboys.riichi.calculator.model.RiichiCalculatorResponse;
 
 @Component
 public class CalculatorServiceHelper {
@@ -14,7 +14,7 @@ public class CalculatorServiceHelper {
     @Autowired
     ScoreUtil scoreUtil;
 
-    public void stageRequestResponseData(RiichiCalculatorRequest request, ScoreResponse response) {
+    public void stageRequestResponseData(RiichiCalculatorRequest request, RiichiCalculatorResponse response) {
 
         if (request.getOpenMelds().size() > 0) {
             handSortUtil.addOpenMeldsToTiles(request);

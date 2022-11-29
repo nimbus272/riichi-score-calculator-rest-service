@@ -16,7 +16,7 @@ import com.gutterboys.riichi.calculator.exception.InvalidHandException;
 import com.gutterboys.riichi.calculator.exception.RiichiCalculatorException;
 import com.gutterboys.riichi.calculator.model.GenericResponse;
 import com.gutterboys.riichi.calculator.model.RiichiCalculatorRequest;
-import com.gutterboys.riichi.calculator.model.ScoreResponse;
+import com.gutterboys.riichi.calculator.model.RiichiCalculatorResponse;
 import com.gutterboys.riichi.calculator.yaku.universal.UniversalYaku;
 
 import ch.qos.logback.classic.Logger;
@@ -38,7 +38,7 @@ public class RiichiCalculatorRestService {
     public GenericResponse evaluateHand(@Valid @RequestBody RiichiCalculatorRequest request) {
         LOGGER.info("Request recieved!");
 
-        ScoreResponse response = new ScoreResponse();
+        RiichiCalculatorResponse response = new RiichiCalculatorResponse();
         try {
             service.evaluateHand(request, response);
         } catch (RiichiCalculatorException e) {

@@ -22,7 +22,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import com.gutterboys.riichi.calculator.exception.RiichiCalculatorException;
 import com.gutterboys.riichi.calculator.helper.HandSortUtil;
 import com.gutterboys.riichi.calculator.model.RiichiCalculatorRequest;
-import com.gutterboys.riichi.calculator.model.ScoreResponse;
+import com.gutterboys.riichi.calculator.model.RiichiCalculatorResponse;
 import com.gutterboys.riichi.calculator.yaku.first.ChiitoitsuOrRyanpeiko;
 
 @ExtendWith(MockitoExtension.class)
@@ -30,7 +30,7 @@ public class ChiitoitsuOrRyanpeikoTest {
 
     RiichiCalculatorRequest request;
 
-    ScoreResponse response;
+    RiichiCalculatorResponse response;
 
     @Mock
     HandSortUtil sortUtil;
@@ -41,7 +41,7 @@ public class ChiitoitsuOrRyanpeikoTest {
     @BeforeEach
     public void setUp() {
         request = new RiichiCalculatorRequest();
-        response = new ScoreResponse();
+        response = new RiichiCalculatorResponse();
     }
 
     @Test

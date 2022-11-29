@@ -10,7 +10,7 @@ import org.springframework.stereotype.Component;
 import com.gutterboys.riichi.calculator.exception.RiichiCalculatorException;
 import com.gutterboys.riichi.calculator.model.RiichiCalculatorRequest;
 import com.gutterboys.riichi.calculator.model.PossibleHand;
-import com.gutterboys.riichi.calculator.model.ScoreResponse;
+import com.gutterboys.riichi.calculator.model.RiichiCalculatorResponse;
 import com.gutterboys.riichi.calculator.yaku.common.Chinitsu;
 import com.gutterboys.riichi.calculator.yaku.common.CommonYaku;
 import com.gutterboys.riichi.calculator.yaku.common.Honitsu;
@@ -42,7 +42,7 @@ public class YakuEligibilityEngine {
 
     }
 
-    public void executeFirst(RiichiCalculatorRequest request, ScoreResponse response) throws RiichiCalculatorException {
+    public void executeFirst(RiichiCalculatorRequest request, RiichiCalculatorResponse response) throws RiichiCalculatorException {
         for (FirstYaku yaku : firstYaku) {
             yaku.execute(request, response);
         }

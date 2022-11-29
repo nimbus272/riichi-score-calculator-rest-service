@@ -16,7 +16,7 @@ import com.gutterboys.riichi.calculator.helper.ScoreUtil;
 import com.gutterboys.riichi.calculator.model.PossibleHand;
 import com.gutterboys.riichi.calculator.model.PossibleMelds;
 import com.gutterboys.riichi.calculator.model.RiichiCalculatorRequest;
-import com.gutterboys.riichi.calculator.model.ScoreResponse;
+import com.gutterboys.riichi.calculator.model.RiichiCalculatorResponse;
 import com.gutterboys.riichi.calculator.yaku.YakuEligibilityEngine;
 
 import ch.qos.logback.classic.Logger;
@@ -35,7 +35,7 @@ public class CalculatorService {
     @Autowired
     CalculatorServiceHelper helper;
 
-    public void evaluateHand(RiichiCalculatorRequest request, ScoreResponse response) throws RiichiCalculatorException {
+    public void evaluateHand(RiichiCalculatorRequest request, RiichiCalculatorResponse response) throws RiichiCalculatorException {
         LOGGER.info("Calculating score...");
 
         helper.stageRequestResponseData(request, response);

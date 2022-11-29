@@ -9,13 +9,13 @@ import com.gutterboys.riichi.calculator.constants.RiichiCalculatorConstants;
 
 import com.gutterboys.riichi.calculator.model.RiichiCalculatorRequest;
 import com.gutterboys.riichi.calculator.model.PossibleHand;
-import com.gutterboys.riichi.calculator.model.ScoreResponse;
+import com.gutterboys.riichi.calculator.model.RiichiCalculatorResponse;
 
 @Component
 public class KokushiMusou implements FirstYaku {
 
     @Override
-    public void execute(RiichiCalculatorRequest request, ScoreResponse response) {
+    public void execute(RiichiCalculatorRequest request, RiichiCalculatorResponse response) {
         if (request.isOpened()) {
             return;
         }

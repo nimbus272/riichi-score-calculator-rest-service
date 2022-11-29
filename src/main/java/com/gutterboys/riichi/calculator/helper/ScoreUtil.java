@@ -10,7 +10,7 @@ import com.gutterboys.riichi.calculator.constants.RiichiCalculatorConstants;
 import com.gutterboys.riichi.calculator.constants.SpecialScoringType;
 import com.gutterboys.riichi.calculator.model.RiichiCalculatorRequest;
 import com.gutterboys.riichi.calculator.model.PossibleHand;
-import com.gutterboys.riichi.calculator.model.ScoreResponse;
+import com.gutterboys.riichi.calculator.model.RiichiCalculatorResponse;
 import com.gutterboys.riichi.calculator.yaku.YakuEligibilityEngine;
 
 import ch.qos.logback.classic.Logger;
@@ -45,7 +45,7 @@ public class ScoreUtil {
         }
     }
 
-    public void determineScore(ScoreResponse response, RiichiCalculatorRequest request, PossibleHand possibleHand) {
+    public void determineScore(RiichiCalculatorResponse response, RiichiCalculatorRequest request, PossibleHand possibleHand) {
         LOGGER.info("Determining score...");
         possibleHand.setHan(possibleHand.getHan() + request.getDoraCount());
         if (possibleHand.getHan() > 4) {
