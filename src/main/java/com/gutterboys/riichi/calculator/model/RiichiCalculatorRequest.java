@@ -33,8 +33,6 @@ public class RiichiCalculatorRequest {
     private boolean tsumo;
     private boolean opened;
     private int honba;
-    private int ponCount;
-    private int chiCount;
     private int kanCount;
     private int pairCount;
     private int doraCount = 0;
@@ -53,22 +51,6 @@ public class RiichiCalculatorRequest {
 
     public void setPairCount(int pairCount) {
         this.pairCount = pairCount;
-    }
-
-    public int getPonCount() {
-        return ponCount;
-    }
-
-    public void setPonCount(int ponCount) {
-        this.ponCount = ponCount;
-    }
-
-    public int getChiCount() {
-        return chiCount;
-    }
-
-    public void setChiCount(int chiCount) {
-        this.chiCount = chiCount;
     }
 
     public int getKanCount() {

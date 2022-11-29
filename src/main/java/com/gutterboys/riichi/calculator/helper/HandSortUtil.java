@@ -113,7 +113,6 @@ public class HandSortUtil {
                         request.getMelds().add(request.getCurrentMeld(),
                                 new ArrayList<Integer>(Arrays.asList(tile, tile, tile)));
                         CommonUtil.removeAndAddPonFromList(request.getTiles(), tile, 3);
-                        request.setPonCount(request.getPonCount() + 1);
                         break;
                     case 4:
                         request.getMelds().add(request.getCurrentMeld(),
@@ -297,31 +296,27 @@ public class HandSortUtil {
         if (possibleChis.size() == 0) {
             switch (numberOfDuplicateTiles) {
                 case 1:
+                    // included in 0 chi's and only one of this tile:
+                    // error out as this tile doesn't fit into any melds.
+                    // It's likely this hand is invalid or 13 orphans
                     LOGGER.error("Invalid hand detected in reduceHand(): {}", request.getTiles());
                     throw new InvalidHandException("Invalid hand -- tile " + tile + " does not fit into meld");
                 case 2:
                     if (request.getPairCount() == 0) {
-                        // HEY WILL it turns out if we already have a pair and we find 2 of a tile
-                        // we cant error out, it could still be valid
-
-                        // ref [10, 10, 11, 11, 13, 13, 14, 14, 30, 30, 10, 22, 23, 24]
+                        // included in 0 chi's and 2 of this tile:
+                        // we have found the pair
                         request.getMelds().add(new ArrayList<Integer>(Arrays.asList(tile, tile)));
-
                         CommonUtil.removeAndAddPonFromList(request.getTiles(), tile, 2);
                         request.setPairCount(request.getPairCount() + 1);
-                        // } else {
-                        // throw new InvalidHandException("Invalid hand -- tile " + tile + " does not
-                        // fit into meld");
                     }
 
                     break;
                 case 3:
-                    // if we have three of a given tile, and that tile does not fit into a chi, it
-                    // must be a pon
+                    // included in 0 chi's and 3 of this tile:
+                    // we have found a pon
 
                     request.getMelds().add(Arrays.asList(tile, tile, tile));
                     CommonUtil.removeAndAddPonFromList(request.getTiles(), tile, 3);
-                    request.setPonCount(request.getPonCount() + 1);
                     request.setCurrentMeld(request.getCurrentMeld() + 1);
 
                     break;
@@ -343,7 +338,6 @@ public class HandSortUtil {
                     // increment currentMeld
                     CommonUtil.removeAndAddChiFromList(request.getTiles(), possibleChis.get(0).get(0));
                     request.getMelds().add(possibleChis.get(0));
-                    request.setChiCount(request.getChiCount() + 1);
                     request.setCurrentMeld(request.getCurrentMeld() + 1);
                     break;
                 case 2:
@@ -352,7 +346,6 @@ public class HandSortUtil {
                         // must be one of the melds
                         CommonUtil.removeAndAddChiFromList(request.getTiles(), possibleChis.get(0).get(0));
                         request.getMelds().add(possibleChis.get(0));
-                        request.setChiCount(request.getChiCount() + 1);
                         request.setCurrentMeld(request.getCurrentMeld() + 1);
                         break;
                     } else {

@@ -1,7 +1,6 @@
 package com.gutterboys.riichi.calculator.helper.test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.ArrayList;
@@ -13,8 +12,8 @@ import org.junit.jupiter.api.Test;
 
 import com.gutterboys.riichi.calculator.exception.RiichiCalculatorException;
 import com.gutterboys.riichi.calculator.helper.HandSortUtil;
-import com.gutterboys.riichi.calculator.model.RiichiCalculatorRequest;
 import com.gutterboys.riichi.calculator.model.PossibleMelds;
+import com.gutterboys.riichi.calculator.model.RiichiCalculatorRequest;
 import com.gutterboys.riichi.calculator.model.ScoreResponse;
 
 public class HandSortUtilTest {
@@ -141,7 +140,6 @@ public class HandSortUtilTest {
 
                 assertEquals(expectedHand, request.getTiles());
                 assertTrue(request.getMelds().size() == 1);
-                assertTrue(request.getPonCount() == 1);
                 assertEquals(expectedMeld, request.getMelds().get(0));
 
         }
@@ -167,7 +165,6 @@ public class HandSortUtilTest {
                 assertEquals(expectedHand, request.getTiles());
                 assertTrue(request.getMelds().size() == 2);
                 assertTrue(request.getPairCount() == 1);
-                assertTrue(request.getPonCount() == 1);
                 assertEquals(expectedMelds, request.getMelds());
 
         }
@@ -195,7 +192,6 @@ public class HandSortUtilTest {
                 assertEquals(expectedHand, request.getTiles());
                 assertTrue(request.getMelds().size() == 3);
                 assertTrue(request.getPairCount() == 1);
-                assertTrue(request.getPonCount() == 1);
                 assertTrue(request.getKanCount() == 1);
                 assertEquals(expectedMelds, request.getMelds());
 
@@ -223,7 +219,6 @@ public class HandSortUtilTest {
 
                 assertEquals(expectedHand, request.getTiles());
                 assertTrue(request.getMelds().size() == 3);
-                assertTrue(request.getPonCount() == 3);
                 assertEquals(expectedMelds, request.getMelds());
 
         }
@@ -282,7 +277,6 @@ public class HandSortUtilTest {
                 assertEquals(expectedHand, request.getTiles());
                 assertTrue(request.getMelds().size() == 5);
                 assertTrue(request.getKanCount() == 1);
-                assertTrue(request.getPonCount() == 3);
                 assertTrue(request.getPairCount() == 1);
                 assertEquals(expectedMelds, request.getMelds());
 
@@ -302,7 +296,6 @@ public class HandSortUtilTest {
                 assertEquals(expectedHand, request.getTiles());
                 assertTrue(request.getMelds().size() == 0);
                 assertTrue(request.getKanCount() == 0);
-                assertTrue(request.getPonCount() == 0);
                 assertTrue(request.getPairCount() == 0);
                 assertEquals(expectedMelds, request.getMelds());
 
