@@ -126,7 +126,7 @@ public class HandSortUtil {
         }
     }
 
-    public void reduceHand(CalculatorTracker tracker,
+    public void determineConfirmedMelds(CalculatorTracker tracker,
             RiichiCalculatorResponse response,
             PossibleMelds possibleMelds)
             throws InvalidHandException {
@@ -145,7 +145,7 @@ public class HandSortUtil {
 
         }
         if (unsortedCount > (int) tracker.getTiles().stream().filter(x -> x != -1).count()) {
-            reduceHand(tracker, response, possibleMelds);
+            determineConfirmedMelds(tracker, response, possibleMelds);
             return;
         }
 
@@ -160,7 +160,7 @@ public class HandSortUtil {
         return;
     }
 
-    public void reducePossibleMelds(PossibleMelds possibleMelds, CalculatorTracker tracker,
+    public void guessAndCheckPossibleMelds(PossibleMelds possibleMelds, CalculatorTracker tracker,
             RiichiCalculatorResponse response)
             throws InvalidHandException {
         LOGGER.info("Reducing possible melds...");
@@ -177,15 +177,10 @@ public class HandSortUtil {
                     tempTracker.getTiles().clear();
                 }
                 tempTracker.getTiles().addAll(tempHand);
-                // set temp pair count to one so we don't find a pair in reduceHand() and think
-                // that is this hand's pair, which would result in 2 pairs in the final
-                // evaluation
-                // ref [18, 18, 19, 19, 19, 19, 20, 20, 2, 3, 4, 13, 14, 15]
                 tempTracker.setPairCount(1);
                 try {
-                    reduceAndAddHand(tracker, tempTracker, response, lockedMelds, pair);
+                    determineConfirmedMeldsFromTempTracker(tracker, tempTracker, response, lockedMelds, reducedHand);
                 } catch (InvalidHandException e) {
-                    // this did not work, try another pair
                     continue;
                 }
             }
@@ -201,14 +196,9 @@ public class HandSortUtil {
                 tempHand.remove(pon.get(1));
                 tempHand.remove(pon.get(2));
                 tempTracker.getTiles().addAll(tempHand);
-                // set temp pair count to one so we don't find a pair in reduceHand() and think
-                // that is this hand's pair, which would result in 2 pairs in the final
-                // evaluation
-                // ref [18, 18, 19, 19, 19, 19, 20, 20, 2, 3, 4, 13, 14, 15]
                 try {
-                    reduceAndAddHand(tracker, tempTracker, response, lockedMelds, pon);
+                    determineConfirmedMeldsFromTempTracker(tracker, tempTracker, response, lockedMelds, pon);
                 } catch (InvalidHandException e) {
-                    // this did not work, try another pair
                     continue;
                 }
 
@@ -223,20 +213,14 @@ public class HandSortUtil {
                 tempHand.remove(chi.get(1));
                 tempHand.remove(chi.get(2));
                 tempTracker.getTiles().addAll(tempHand);
-                // set temp pair count to one so we don't find a pair in reduceHand() and think
-                // that is this hand's pair, which would result in 2 pairs in the final
-                // evaluation
-                // ref [18, 18, 19, 19, 19, 19, 20, 20, 2, 3, 4, 13, 14, 15]
                 try {
-                    reduceAndAddHand(tracker, tempTracker, response, lockedMelds, chi);
+                    determineConfirmedMeldsFromTempTracker(tracker, tempTracker, response, lockedMelds, chi);
                 } catch (InvalidHandException e) {
-                    // this did not work, try another pair
                     continue;
                 }
             }
         }
 
-        // probably wrong but we'll get there when we get there
         if (response.getPossibleHands().size() == 0) {
             LOGGER.error("Invalid hand detected in reducePossibleMelds(): {}",
                     tracker.getTiles());
@@ -250,16 +234,14 @@ public class HandSortUtil {
 
     }
 
-    private void reduceAndAddHand(CalculatorTracker mainTracker, CalculatorTracker tempTracker,
+    private void determineConfirmedMeldsFromTempTracker(CalculatorTracker mainTracker, CalculatorTracker tempTracker,
             RiichiCalculatorResponse response,
             List<List<Integer>> lockedMelds, List<Integer> meld) throws InvalidHandException {
         PossibleMelds tempPossibleMelds = new PossibleMelds();
         try {
-            reduceHand(tempTracker, response, tempPossibleMelds);
+            determineConfirmedMelds(tempTracker, response, tempPossibleMelds);
         } catch (InvalidHandException e) {
-            // this did not work, try another pair
             throw new InvalidHandException("Invalid hand detected.");
-
         }
 
         if (tempTracker.getTiles().stream().filter(x -> x != -1).count() == 0) {
@@ -295,28 +277,18 @@ public class HandSortUtil {
         if (possibleChis.size() == 0) {
             switch (numberOfDuplicates) {
                 case 1:
-                    // included in 0 chi's and only one of this tile:
-                    // error out as this tile doesn't fit into any melds.
-                    // It's likely this hand is invalid or 13 orphans
                     LOGGER.error("Invalid hand detected in reduceHand(): {}", tracker.getTiles());
                     throw new InvalidHandException("Invalid hand -- tile " + tile + " does not fit into meld");
                 case 2:
                     if (tracker.getPairCount() == 0) {
-                        // included in 0 chi's and 2 of this tile:
-                        // we have found the pair
                         tracker.getMelds().add(new ArrayList<Integer>(Arrays.asList(tile, tile)));
                         CommonUtil.removeAndAddPonFromList(tracker.getTiles(), tile, 2);
                         tracker.setPairCount(tracker.getPairCount() + 1);
                     }
-
                     break;
                 case 3:
-                    // included in 0 chi's and 3 of this tile:
-                    // we have found a pon
-
                     tracker.getMelds().add(Arrays.asList(tile, tile, tile));
                     CommonUtil.removeAndAddPonFromList(tracker.getTiles(), tile, 3);
-
                     break;
                 case 4:
                     tracker.getMelds().add(new ArrayList<Integer>(Arrays.asList(tile, tile, tile, tile)));
@@ -325,26 +297,19 @@ public class HandSortUtil {
                     break;
                 default:
                     break;
-
             }
         } else if (possibleChis.size() == 1) {
             switch (numberOfDuplicates) {
                 case 1:
-                    // if the tile only fits into one meld, that meld must be part of the hand
-                    // add those tiles to the current meld, then remove the tiles from the hand and
-                    // increment currentMeld
                     CommonUtil.removeAndAddChiFromList(tracker.getTiles(), possibleChis.get(0).get(0));
                     tracker.getMelds().add(possibleChis.get(0));
                     break;
                 case 2:
                     if (tracker.getPairCount() == 1) {
-                        // if we already know the pair, and there's only one possible chi, then that chi
-                        // must be one of the melds
                         CommonUtil.removeAndAddChiFromList(tracker.getTiles(), possibleChis.get(0).get(0));
                         tracker.getMelds().add(possibleChis.get(0));
                         break;
                     } else {
-                        // if we don't know the pair, add both melds to possibleMelds and continue
                         for (int j = 0; j < possibleChis.size(); j++) {
                             possibleMelds.getChis().add(possibleChis.get(j));
                         }
@@ -356,43 +321,34 @@ public class HandSortUtil {
             }
         } else if (possibleChis.size() == 2) {
             if (possibleChis.get(0).containsAll(possibleChis.get(1)) && tracker.getPairCount() == 1) {
-                // if there are only 2 possible chis and they are the same, and we've found a
-                // pair, we assume they are
-                // an identical sequence
-                if (tracker.getTiles().stream().filter(x -> x == possibleChis.get(0).get(0)).count() == 2L
-                        && tracker.getTiles().stream().filter(x -> x == possibleChis.get(0).get(1)).count() == 2L
-                        && tracker.getTiles().stream().filter(x -> x == possibleChis.get(0).get(2)).count() == 2L) {
-                    CommonUtil.removeAndAddChiFromList(tracker.getTiles(), possibleChis.get(0).get(0));
-                    CommonUtil.removeAndAddChiFromList(tracker.getTiles(), possibleChis.get(1).get(0));
-                    tracker.getMelds().add(possibleChis.get(0));
-                    tracker.getMelds().add(possibleChis.get(1));
-                } else {
-                    handleTooManyPossibilities(possibleChis, possibleMelds, numberOfDuplicates, tile);
-                }
+                checkMultipleDuplicateSequences(tracker, possibleChis, 2);
 
             } else {
                 handleTooManyPossibilities(possibleChis, possibleMelds, numberOfDuplicates, tile);
             }
-
         } else if (possibleChis.size() == 3 && tracker.getTiles().size() < 14) {
             if (possibleChis.get(0).containsAll(possibleChis.get(1))
                     && possibleChis.get(1).containsAll(possibleChis.get(2))) {
-                if (tracker.getTiles().stream().filter(x -> x == possibleChis.get(0).get(0)).count() == 3L
-                        && tracker.getTiles().stream().filter(x -> x == possibleChis.get(0).get(1)).count() == 3L
-                        && tracker.getTiles().stream().filter(x -> x == possibleChis.get(0).get(2)).count() == 3L) {
-                    CommonUtil.removeAndAddChiFromList(tracker.getTiles(), possibleChis.get(0).get(0));
-                    CommonUtil.removeAndAddChiFromList(tracker.getTiles(), possibleChis.get(1).get(0));
-                    CommonUtil.removeAndAddChiFromList(tracker.getTiles(), possibleChis.get(2).get(0));
-                    tracker.getMelds().add(possibleChis.get(0));
-                    tracker.getMelds().add(possibleChis.get(1));
-                    tracker.getMelds().add(possibleChis.get(2));
-                }
-
+                checkMultipleDuplicateSequences(tracker, possibleChis, 3);
             }
         } else {
 
             handleTooManyPossibilities(possibleChis, possibleMelds, numberOfDuplicates, tile);
 
+        }
+    }
+
+    private void checkMultipleDuplicateSequences(CalculatorTracker tracker, List<List<Integer>> possibleChis,
+            int numberOfChis) {
+        if (tracker.getTiles().stream().filter(x -> x == possibleChis.get(0).get(0)).count() == (long) numberOfChis
+                && tracker.getTiles().stream().filter(x -> x == possibleChis.get(0).get(1))
+                        .count() == (long) numberOfChis
+                && tracker.getTiles().stream().filter(x -> x == possibleChis.get(0).get(2))
+                        .count() == (long) numberOfChis) {
+            for (int i = 0; i < numberOfChis; i++) {
+                CommonUtil.removeAndAddChiFromList(tracker.getTiles(), possibleChis.get(0).get(0));
+                tracker.getMelds().add(possibleChis.get(i));
+            }
         }
     }
 

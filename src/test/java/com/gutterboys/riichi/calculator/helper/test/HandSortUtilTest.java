@@ -306,14 +306,14 @@ public class HandSortUtilTest {
         }
 
         @Test
-        public void testReduceHand_Fully_Sortable() {
+        public void testDetermineConfirmedMelds_Fully_Sortable() {
                 List<Integer> tiles = new ArrayList<Integer>(
                                 Arrays.asList(3, 3, 3, 12, 13, 14, 24, 25, 26, 22, 22, 30, 30, 30));
                 tracker.getTiles().addAll(tiles);
                 PossibleMelds possibleMelds = new PossibleMelds();
 
                 try {
-                        sortUtil.reduceHand(tracker, response, possibleMelds);
+                        sortUtil.determineConfirmedMelds(tracker, response, possibleMelds);
                 } catch (Exception e) {
 
                 }

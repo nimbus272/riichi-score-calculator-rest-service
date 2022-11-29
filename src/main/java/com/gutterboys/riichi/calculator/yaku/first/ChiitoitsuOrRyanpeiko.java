@@ -99,10 +99,10 @@ public class ChiitoitsuOrRyanpeiko implements FirstYaku {
 
         PossibleMelds possibleMelds = new PossibleMelds();
 
-        sortUtil.reduceHand(tracker, response, possibleMelds);
+        sortUtil.determineConfirmedMelds(tracker, response, possibleMelds);
 
         if (response.getPossibleHands().size() == 0) {
-            sortUtil.reducePossibleMelds(possibleMelds, tracker, response);
+            sortUtil.guessAndCheckPossibleMelds(possibleMelds, tracker, response);
         }
 
     }

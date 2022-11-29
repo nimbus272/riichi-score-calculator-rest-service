@@ -49,7 +49,7 @@ public class CalculatorService {
         determineYakuEligibility(request, tracker, response);
 
         determineScore(request, tracker, response);
-        
+
     }
 
     private void stageTrackerData(RiichiCalculatorRequest request,
@@ -83,12 +83,11 @@ public class CalculatorService {
         PossibleMelds possibleMelds = new PossibleMelds();
         if (response.getPossibleHands().isEmpty()) {
             LOGGER.info("Reducing hand...");
-            handSortUtil.reduceHand(tracker, response, possibleMelds);
-
+            handSortUtil.determineConfirmedMelds(tracker, response, possibleMelds);
         }
 
         if (response.getPossibleHands().isEmpty()) {
-            handSortUtil.reducePossibleMelds(possibleMelds, tracker, response);
+            handSortUtil.guessAndCheckPossibleMelds(possibleMelds, tracker, response);
         }
 
         if (response.getPossibleHands().isEmpty()) {
